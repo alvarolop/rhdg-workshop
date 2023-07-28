@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: RH Data Grid Workshop
-  url: https://alvarolop.github.io/rhdg-workshop
+  url: https://alvarolop.github.io/rhdg-workshop/main
   start_page: ROOT::index.adoc
 
 content:
