@@ -3,8 +3,8 @@ runtime:
 
 site:
   title: RH Data Grid Workshop
-  url: https://redhat-scholars.github.io/course-template
-  start_page: rhdg-workshop::index.adoc
+  url: https://alvarolop.github.io/rhdg-workshop
+  start_page: ROOT::index.adoc
 
 content:
   sources:
