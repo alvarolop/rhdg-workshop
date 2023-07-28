@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://redhat-scholars.github.io/course-template/main/01-setup.html</loc>
-<lastmod>2023-07-28T12:11:56.083Z</lastmod>
+<loc>https://alvarolop.github.io/rhdg-workshop/main/01-setup.html</loc>
+<lastmod>2023-07-28T12:15:21.538Z</lastmod>
 </url>
 <url>
-<loc>https://redhat-scholars.github.io/course-template/main/02-deploy.html</loc>
-<lastmod>2023-07-28T12:11:56.083Z</lastmod>
+<loc>https://alvarolop.github.io/rhdg-workshop/main/02-deploy.html</loc>
+<lastmod>2023-07-28T12:15:21.538Z</lastmod>
 </url>
 <url>
-<loc>https://redhat-scholars.github.io/course-template/main/index.html</loc>
-<lastmod>2023-07-28T12:11:56.083Z</lastmod>
+<loc>https://alvarolop.github.io/rhdg-workshop/main/index.html</loc>
+<lastmod>2023-07-28T12:15:21.538Z</lastmod>
 </url>
 </urlset>
