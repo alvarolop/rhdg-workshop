@@ -41,3 +41,18 @@ This workshop consists of the main Git repositories:
 * https://github.com/alvarolop/rhdg-workshop-app[RHDG Workshop Application]: Git repository containing the application and server configuration.
 * https://github.com/alvarolop/rhdg-workshop-infra[RHDG Workshop Infrastructure]: Git repository with the automation of the user's environment.
 
+== Build the workshop locally
+
+You can launch the environment locally using the following commands. First, update the dependencies:
+
+[source, bash]
+----
+npm install
+----
+
+Then, deploy the workshop locally:
+
+[source, bash]
+----
+gulp
+----
