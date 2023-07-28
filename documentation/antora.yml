@@ -1,6 +1,6 @@
-name: template-tutorial
-title: Template Tutorial
-version: master
+name: ROOT
+title: RHDG Workshop
+version: main
 nav:
   - modules/ROOT/nav.adoc
 
