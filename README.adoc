@@ -56,3 +56,5 @@ Then, deploy the workshop locally:
 ----
 gulp
 ----
+
+It will automatically open a URL in your browser with the Dev mode of the workshop: http://localhost:3000/ROOT/main/index.html
