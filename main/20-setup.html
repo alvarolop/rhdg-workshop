@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Setup :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/20-setup.html">
+    <link rel="prev" href="10-introduction.html">
+    <link rel="next" href="30-guided-exercises.html">
+    <meta name="generator" content="Antora 3.0.3">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://alvarolop.github.io/rhdg-workshop/main">RH Data Grid Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kafka-tutorial/" target="_blank">Kafka</a>
+            <a class="navbar-item" href="https://devsecops-workshop.github.io/" target="_blank">DevSecOps</a>
+            <a class="navbar-item" href="https://acidonper.github.io/redhat-workshop-cicd-gitops/redhat-workshop-cicd-gitops/" target="_blank">CI/CD & GitOps</a>
+            <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/" target="_blank">Gramola GitOps Guide</a>
+            <a class="navbar-item" href="https://luisarizmendi.github.io/tutorial-secure-onboarding/" target="_blank">Secure Edge device onboarding with RHEL and FDO</a>
+            <a class="navbar-item" href="https://xbryan1.github.io/rhte-2023-acm-docs/" target="_blank">Multicluster Application Deployment with Advanced Cluster Management and GitOps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="main">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-introduction.html">1. Introduction</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="20-setup.html">2. Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#prerequisite">Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#parameters">Parameters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#access-console">Access - OCP Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#access-cli">Access - OC Client</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="30-guided-exercises.html">3. Guided Exercises</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="#40-practical-application">4. Practical Application</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="50-troubleshooting.html">5. Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="60-conclusions.html">6. Conclusions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="99-do-it-yourself.html">7. Do it Yourself!</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">RHDG Workshop</a></li>
+    <li><a href="20-setup.html">2. Setup</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/20-setup.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Setup</h1>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>During this tutorial, will be required to work with different tools for running the exercises included. Please install the following software:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
+<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Windows</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Official Documentation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>oc</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac.tar.gz">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-windows.zip">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html">OC CLI - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Git</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/mac">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/win">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com">Git - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Podman</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/docs/installation#installing-on-linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/docs/installation#macos">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/docs/installation#windows">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/">Podman - Docs</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following CLI tools are optional for running the exercises in this tutorial.
+Although they are used in the tutorial, you could use others without any problem.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Only install Docker if you cannot use Podman.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
+<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Windows</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Official Documentation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Docker</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/linux-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/mac-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/windows-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/">Git - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>jq</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq">jq v1.6.0</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The instructor provides the users with the necessary Openshift credentials and other important parameters at the beginning of this tutorial to access and complete the laboratory.</p>
+</div>
+<div class="paragraph">
+<p>The following table includes the parameters that the instructor should provide you at the beginning of the laboratory:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Name</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Openshift Cluster API (Access CLI)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><em><a href="https://api.%CLUSTER%:6443" class="bare">https://api.%CLUSTER%:6443</a></em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Openshift Cluster Console</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><em><a href="https://console-openshift-console.apps.%CLUSTER%" class="bare">https://console-openshift-console.apps.%CLUSTER%</a></em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Username</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">{user}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Password</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">openshift</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">App Namespace Stage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">{user}-stage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">App Namespace Production</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">{user}-prod</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Continuous Deployment Namespace</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">{user}-continuous-deployment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">ArgoCD console</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><em><a href="https://openshift-gitops-server-openshift-gitops.apps.%CLUSTER%" class="bare">https://openshift-gitops-server-openshift-gitops.apps.%CLUSTER%</a></em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="access-console"><a class="anchor" href="#access-console"></a>Access - OCP Console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to check the laboratory environment, please access the Openshift Console via browser using your credentials:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://console-openshift-console.apps.{cluster}" class="bare">https://console-openshift-console.apps.{cluster}</a></p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocp_console.png" alt="ocp console">
+</div>
+<div class="title">Figure 1. Openshift Console</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <strong>lab-users</strong> section to log in with your credentials.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="access-cli"><a class="anchor" href="#access-cli"></a>Access - OC Client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The OpenShift Container Platform CLI (which needs to be installed first) exposes the commands for managing your applications as well as the lower-level tools to interact with each component of your system. With the <strong>oc</strong> command, you can create applications and manage OpenShift Container Platform projects from a terminal.</p>
+</div>
+<div class="paragraph">
+<p>Please check that you have followed the pre-requisites with your instructor and connect to the cluster executing the next command from your terminal:</p>
+</div>
+<div class="listingblock lines_space console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc login -u {user} -p {user} {cluster_api}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the login is successful, it should show an output similar to the following screenshot:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/oc_login_output.png" alt="OC CLI Login Output">
+</div>
+<div class="title">Figure 2. OC CLI Login Output</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Please pay special attention to <strong>oc CLI</strong> because you will need to use this tool several times during this tutorial.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="downloadtutorial"><a class="anchor" href="#downloadtutorial"></a>Get tutorial sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workshop consists of three Git repositories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/alvarolop/rhdg-workshop">RHDG Workshop Guides</a>: Main git repository containing the guides.</p>
+</li>
+<li>
+<p><a href="https://github.com/alvarolop/rhdg-workshop-app">RHDG Workshop Application</a>: Git repository containing the application and server configuration.</p>
+</li>
+<li>
+<p><a href="https://github.com/alvarolop/rhdg-workshop-infra">RHDG Workshop Infrastructure</a>: Git repository with the automation of the user&#8217;s environment.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The only repository that you must clone is the Application one. However, I give you the other two repos just in case you want to see how this workshop was prepared.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/alvarolop/rhdg-workshop-app" class="bare">https://github.com/alvarolop/rhdg-workshop-app</a></code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="next"><a href="30-guided-exercises.html">3. Guided Exercises</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

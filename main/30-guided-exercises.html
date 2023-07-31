@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Deploy Service :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/02-deploy.html">
-    <link rel="prev" href="01-setup.html">
+    <title>Guided Exercises :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/30-guided-exercises.html">
+    <link rel="prev" href="20-setup.html">
+    <link rel="next" href="50-troubleshooting.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -55,28 +56,40 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-introduction.html">1. Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="01-setup.html">1. Setup</a>
+    <a class="nav-link" href="20-setup.html">2. Setup</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+    <a class="nav-link" href="20-setup.html#prerequisite">Prerequisites</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-setup.html#minikube">Setup Minikube</a>
+    <a class="nav-link" href="20-setup.html#parameters">Parameters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="20-setup.html#access-console">Access - OCP Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="20-setup.html#access-cli">Access - OC Client</a>
   </li>
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02-deploy.html">2. Introduction</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#package">Build Service</a>
+    <a class="nav-link" href="30-guided-exercises.html">3. Guided Exercises</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#deploy">Deploy Dervice</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="#40-practical-application">4. Practical Application</a>
   </li>
-</ul>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="50-troubleshooting.html">5. Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="60-conclusions.html">6. Conclusions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="99-do-it-yourself.html">7. Do it Yourself!</a>
   </li>
 </ul>
   </li>
@@ -93,93 +106,18 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="02-deploy.html">2. Introduction</a></li>
+    <li><a href="30-guided-exercises.html">3. Guided Exercises</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/02-deploy.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/30-guided-exercises.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Deploy Service</h1>
-<div class="sect1">
-<h2 id="service"><a class="anchor" href="#service"></a>The Service</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code:</p>
-</div>
-<div class="listingblock lines_7 console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Main {
+<h1 class="page">Guided Exercises</h1>
 
-    public static void main(String[] args) {
-
-    }
-
-}
-
-./mvnw compile</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="package"><a class="anchor" href="#package"></a>Packaging the Service</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can package the next bash script:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/sh
-echo "Hello World"</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploy"><a class="anchor" href="#deploy"></a>Deploy the Service</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>And then you can deploy the service and execute commands inside:</p>
-</div>
-<div class="paragraph">
-<p>Check that the pod is up and running:</p>
-</div>
-<div class="listingblock lines_space console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pods</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                        READY   STATUS    RESTARTS   AGE
-apps   1/1     Running   0          5s</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then let&#8217;s go into the running pod to execute some commands:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl exec -ti apps /bin/bash</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Change the pod name with your pod name.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
 <nav class="pagination">
-  <span class="prev"><a href="01-setup.html">1. Setup</a></span>
+  <span class="prev"><a href="20-setup.html">2. Setup</a></span>
+  <span class="next"><a href="50-troubleshooting.html">5. Troubleshooting</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
