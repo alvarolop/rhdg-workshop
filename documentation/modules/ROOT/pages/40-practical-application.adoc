@@ -1,0 +1,2 @@
+= Practical Application
+include::_attributes.adoc[]

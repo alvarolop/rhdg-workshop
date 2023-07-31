@@ -1,0 +1,24 @@
+= Introduction
+include::_attributes.adoc[]
+
+Welcome to the "Infinispan Basics for Sysadmins" workshop! In this chapter, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
+
+Picture a team of passionate book enthusiasts who have developed an innovative application. Their platform offers a treasure trove of information, including details about the finest literary works ever written. Users can access valuable insights on book rankings, author profiles, and reader reviews, all fetched from databases.
+
+As the application gains immense popularity, more and more avid readers visit the platform daily, seeking literary inspiration. However, the soaring user traffic poses a challenge - the application's response time begins to lag, causing potential readers to wait longer than desired.
+
+In the following parts of the workshop, we will delve into how caches come to the rescue in this scenario. By implementing Red Hat Data Grid as an in-line cache between their application and the database, the team aims to boost response times and alleviate the database's workload. This strategic use of caches brings frequently accessed book data closer to the application, creating a seamless and delightful reading experience for their users.
+
+Join us to explore the world of caches, understand their importance, and learn how to skillfully manage them to optimize system performance. Let's embark on this exciting journey!
+
+
+
+// Welcome to the "Infinispan Basics for Sysadmins" workshop! In this chapter, we will explore the importance of caches through the real-life story of a thriving retail company with a simple website selling T-shirts.
+
+// Meet the owners of this retail business. Their website provides crucial information such as stock availability, product prices, and shop locations, all fetched from databases. Additionally, they rely on calculated data to optimize their operations, including determining the nearest store to a customer's location and planning efficient courier routes. To enhance user experience, they store HTTP session information containing shopping carts and user preferences.
+
+// As their website's popularity grows, so does the number of customer visits. However, this success comes with a challenge - the increasing load on their application causes longer response times. Frustrated by delayed responses, some potential customers leave the shop without making a purchase.
+
+// In the following parts of the workshop, we will explore how caches can be the solution to this problem. By implementing Red Hat Data Grid as an in-line cache between their application and the database, the retail company aims to improve response times and reduce database workload. This strategic move brings frequently accessed data closer to the web application, resulting in a seamless shopping experience for their customers.
+
+// Join us to learn more about caches, their benefits, and how to effectively manage them to optimize your system's performance. Let's dive in!

@@ -1,0 +1,22 @@
+The following CLI tools are optional for running the exercises in this tutorial.
+Although they are used in the tutorial, you could use others without any problem.
+
+WARNING: Only install Docker if you cannot use Podman.
+
+[cols="5*^,5*.",options="header,+attributes"]
+|===
+|**Tool**|**Fedora**|**macOS**|**Windows**|**Official Documentation**
+
+| Docker
+| https://docs.docker.com/desktop/install/linux-install/[Download]
+| https://docs.docker.com/desktop/install/mac-install/[Download]
+| https://docs.docker.com/desktop/install/windows-install/[Download]
+| https://docs.docker.com/[Git - Docs]
+
+| `jq`
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe[Download]
+| https://github.com/stedolan/jq[jq v1.6.0]
+
+|===

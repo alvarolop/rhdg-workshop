@@ -1,0 +1,73 @@
+= Setup
+include::_attributes.adoc[]
+
+[#prerequisites]
+== Prerequisites
+
+During this tutorial, will be required to work with different tools for running the exercises included. Please install the following software:
+
+include::partial$10-requirements.adoc[]
+
+include::partial$10-optional-requirements.adoc[]
+
+[#parameters]
+== Parameters
+
+The instructor provides the users with the necessary Openshift credentials and other important parameters at the beginning of this tutorial to access and complete the laboratory. 
+
+The following table includes the parameters that the instructor should provide you at the beginning of the laboratory:
+
+include::partial$10-parameters.adoc[]
+
+
+[#access-console]
+== Access - OCP Console
+
+In order to check the laboratory environment, please access the Openshift Console via browser using your credentials:
+
+* https://console-openshift-console.apps.{cluster}
+
+.Openshift Console
+image::ocp_console.png[]
+
+NOTE: Use *lab-users* section to log in with your credentials.
+
+[#access-cli]
+== Access - OC Client
+
+The OpenShift Container Platform CLI (which needs to be installed first) exposes the commands for managing your applications as well as the lower-level tools to interact with each component of your system. With the *oc* command, you can create applications and manage OpenShift Container Platform projects from a terminal.
+
+Please check that you have followed the pre-requisites with your instructor and connect to the cluster executing the next command from your terminal:
+
+[.lines_space]
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+oc login -u {user} -p {user} {cluster_api}
+----
+
+If the login is successful, it should show an output similar to the following screenshot:
+
+.OC CLI Login Output 
+image::oc_login_output.png["OC CLI Login Output"]
+
+TIP: Please pay special attention to *oc CLI* because you will need to use this tool several times during this tutorial.
+
+
+[#downloadtutorial]
+== Get tutorial sources
+
+This workshop consists of three Git repositories:
+
+* https://github.com/alvarolop/rhdg-workshop[RHDG Workshop Guides]: Main git repository containing the guides.
+* https://github.com/alvarolop/rhdg-workshop-app[RHDG Workshop Application]: Git repository containing the application and server configuration.
+* https://github.com/alvarolop/rhdg-workshop-infra[RHDG Workshop Infrastructure]: Git repository with the automation of the user's environment.
+
+The only repository that you must clone is the Application one. However, I give you the other two repos just in case you want to see how this workshop was prepared.
+
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+git clone https://github.com/alvarolop/rhdg-workshop-app
+----

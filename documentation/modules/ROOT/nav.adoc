@@ -1,7 +1,18 @@
-* xref:01-setup.adoc[1. Setup]
-** xref:01-setup.adoc#prerequisite[Prerequisites]
-** xref:01-setup.adoc#minikube[Setup Minikube]
+* xref:10-introduction.adoc[1. Introduction]
 
-* xref:02-deploy.adoc[2. Introduction]
-** xref:02-deploy.adoc#package[Build Service]
-** xref:02-deploy.adoc#deploy[Deploy Dervice]
+* xref:20-setup.adoc[2. Setup]
+** xref:20-setup.adoc#prerequisite[Prerequisites]
+** xref:20-setup.adoc#parameters[Parameters]
+** xref:20-setup.adoc#access-console[Access - OCP Console]
+** xref:20-setup.adoc#access-cli[Access - OC Client]
+
+
+* xref:30-guided-exercises.adoc[3. Guided Exercises]
+
+* xref:40-practical-application[4. Practical Application]
+
+* xref:50-troubleshooting.adoc[5. Troubleshooting]
+
+* xref:60-conclusions.adoc[6. Conclusions]
+
+* xref:99-do-it-yourself.adoc[7. Do it Yourself!]
