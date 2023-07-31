@@ -1,0 +1,34 @@
+= Troubleshooting
+include::_attributes.adoc[]
+
+
+== Retrieving Data Grid server pods
+
+
+
+== Retrieving the Openshift configuration
+
+
+* oc adm inspect namespace/<rhdg-namespace>
+* Or do it manually.
+
+
+== Retrieving the Data Grid server report
+
+https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift
+
+
+== Problems with cache configurations?
+
+https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations
+
+
+== Problems with the JVM memory on cluster pods?
+
+
+* Java Thread Dump
+* Java Heap Dump
+
+
+== Reached file limit descriptors on a pod?
+

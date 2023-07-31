@@ -1,0 +1,13 @@
+= Practical Application
+include::_attributes.adoc[]
+
+
+* Prometheus metrics and Grafana.
+
+* In-line caching vs side caching.
+
+* Openshift Helm Charts.
+
+* Datasources with SQL Database.
+
+* Authorization using RBAC.

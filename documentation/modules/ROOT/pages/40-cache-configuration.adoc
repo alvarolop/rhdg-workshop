@@ -1,0 +1,18 @@
+= Cache Configuration
+include::_attributes.adoc[]
+
+== Caches in Openshift
+
+* Caches in Openshift. Examples of configuration.
+
+== Encoding
+
+* Encoding. Understanding implications. If using Proto schemas => Need to upload proto to the server. So, need to take care that it works.
+
+== Expiration
+
+* Expiration. Configuring it and why
+
+== Memory
+
+* Eviction (Memory). How to calculate the size of the cache and limitation.

@@ -1,0 +1,18 @@
+= Guided Exercises
+include::_attributes.adoc[]
+
+== Security
+
+* Authentication and authorization using the operator and OCP secret.
+
+== Resources
+
+* Replicas, Memory, CPU and JVM arguments.
+
+== Encryption
+
+* Using OCP TLS certificates or using custom TLS certificates.
+
+== Cross-site replication
+
+* Cross-site replication in your own cluster.

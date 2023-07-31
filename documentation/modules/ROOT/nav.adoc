@@ -6,13 +6,14 @@
 ** xref:20-setup.adoc#access-console[Access - OCP Console]
 ** xref:20-setup.adoc#access-cli[Access - OC Client]
 
+* xref:30-server-configuration.adoc[3. Server Configuration]
 
-* xref:30-guided-exercises.adoc[3. Guided Exercises]
+* xref:40-cache-configuration.adoc[4. Cache Configuration]
 
-* xref:40-practical-application[4. Practical Application]
+* xref:50-practical-application.adoc[5. Practical Application]
 
-* xref:50-troubleshooting.adoc[5. Troubleshooting]
+* xref:60-troubleshooting.adoc[6. Troubleshooting]
 
-* xref:60-conclusions.adoc[6. Conclusions]
+* xref:70-conclusions.adoc[7. Conclusions]
 
-* xref:99-do-it-yourself.adoc[7. Do it Yourself!]
+* xref:99-do-it-yourself.adoc[9. Do it Yourself!]

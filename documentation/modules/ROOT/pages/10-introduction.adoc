@@ -1,7 +1,7 @@
 = Introduction
 include::_attributes.adoc[]
 
-Welcome to the "Infinispan Basics for Sysadmins" workshop! In this chapter, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
+Welcome to the *"Infinispan Infrastructure" workshop*! In this chapter, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
 
 Picture a team of passionate book enthusiasts who have developed an innovative application. Their platform offers a treasure trove of information, including details about the finest literary works ever written. Users can access valuable insights on book rankings, author profiles, and reader reviews, all fetched from databases.
 
