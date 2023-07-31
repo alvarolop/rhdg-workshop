@@ -35,7 +35,7 @@ toc::[]
 
 == Repositories
 
-This workshop consists of the main Git repositories:
+This workshop consists of three Git repositories:
 
 * https://github.com/alvarolop/rhdg-workshop[RHDG Workshop Guides]: Main git repository containing the guides.
 * https://github.com/alvarolop/rhdg-workshop-app[RHDG Workshop Application]: Git repository containing the application and server configuration.
@@ -58,3 +58,9 @@ gulp
 ----
 
 It will automatically open a URL in your browser with the Dev mode of the workshop: http://localhost:3000/ROOT/main/index.html
+
+
+The workshop is parametrized according to several settings of the specific environments and users. Therefore, in order to visualize it as the attendants will, you need to add URL parameters like this:
+
+
+http://localhost:3000/ROOT/main/index.html?USER=alvaro&CLUSTER=ocp.sandbox953.opentlc.com
