@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to Template Tutorial :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/index.html">
-    <link rel="next" href="10-introduction.html">
+    <title>Troubleshooting :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/60-troubleshooting.html">
+    <link rel="prev" href="50-practical-application.html">
+    <link rel="next" href="70-conclusions.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -84,7 +85,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="50-practical-application.html">5. Practical Application</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="60-troubleshooting.html">6. Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -104,52 +105,79 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="index.html">Welcome to Template Tutorial</a></li>
+    <li><a href="60-troubleshooting.html">6. Troubleshooting</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/60-troubleshooting.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to Template Tutorial</h1>
-<div class="sect1 text-center strong">
-<h2>Publish Services to Kubernetes</h2>
+<h1 class="page">Troubleshooting</h1>
+<div class="sect1">
+<h2 id="_retrieving_data_grid_server_pods"><a class="anchor" href="#_retrieving_data_grid_server_pods"></a>Retrieving Data Grid server pods</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_retrieving_the_openshift_configuration"><a class="anchor" href="#_retrieving_the_openshift_configuration"></a>Retrieving the Openshift configuration</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>oc adm inspect namespace/&lt;rhdg-namespace&gt;</p>
+</li>
+<li>
+<p>Or do it manually.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_retrieving_the_data_grid_server_report"><a class="anchor" href="#_retrieving_the_data_grid_server_report"></a>Retrieving the Data Grid server report</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A Kubernetes tutorial to show how you can deploy a Java service to a Kubernetes cluster as it was a child game.</p>
+<p><a href="https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift" class="bare">https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift</a></p>
 </div>
 </div>
 </div>
-<div class="sect1 tiles browse">
-<h2>Browse modules</h2>
+<div class="sect1">
+<h2 id="_problems_with_cache_configurations"><a class="anchor" href="#_problems_with_cache_configurations"></a>Problems with cache configurations?</h2>
 <div class="sectionbody">
-<div class="ulist tile">
-<div class="title"><a href="#01-setup.adoc" class="xref unresolved">Get Started</a></div>
+<div class="paragraph">
+<p><a href="https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations" class="bare">https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_problems_with_the_jvm_memory_on_cluster_pods"><a class="anchor" href="#_problems_with_the_jvm_memory_on_cluster_pods"></a>Problems with the JVM memory on cluster pods?</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
 <li>
-<p><a href="#01-setup.adoc#minikube" class="xref unresolved">Minikube</a></p>
+<p>Java Thread Dump</p>
+</li>
+<li>
+<p>Java Heap Dump</p>
 </li>
 </ul>
 </div>
-<div class="ulist tile">
-<div class="title"><a href="#02-deploy.adoc" class="xref unresolved">Deploying</a></div>
-<ul>
-<li>
-<p><a href="#02-deploy.adoc#package" class="xref unresolved">Package the Application</a></p>
-</li>
-<li>
-<p><a href="#02-deploy.adoc#deploy" class="xref unresolved">Deploy the Application</a></p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_reached_file_limit_descriptors_on_a_pod"><a class="anchor" href="#_reached_file_limit_descriptors_on_a_pod"></a>Reached file limit descriptors on a pod?</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="prev"><a href="50-practical-application.html">5. Practical Application</a></span>
+  <span class="next"><a href="70-conclusions.html">7. Conclusions</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

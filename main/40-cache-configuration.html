@@ -3,8 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Practical Application :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/40-practical-application.html">
+    <title>Cache Configuration :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/40-cache-configuration.html">
+    <link rel="prev" href="30-server-configuration.html">
+    <link rel="next" href="50-practical-application.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -75,19 +77,22 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="30-guided-exercises.html">3. Guided Exercises</a>
+    <a class="nav-link" href="30-server-configuration.html">3. Server Configuration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="40-cache-configuration.html">4. Cache Configuration</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="#40-practical-application">4. Practical Application</a>
+    <a class="nav-link" href="50-practical-application.html">5. Practical Application</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="50-troubleshooting.html">5. Troubleshooting</a>
+    <a class="nav-link" href="60-troubleshooting.html">6. Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="60-conclusions.html">6. Conclusions</a>
+    <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="99-do-it-yourself.html">7. Do it Yourself!</a>
+    <a class="nav-link" href="99-do-it-yourself.html">9. Do it Yourself!</a>
   </li>
 </ul>
   </li>
@@ -104,15 +109,66 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="40-practical-application.html">Practical Application</a></li>
+    <li><a href="40-cache-configuration.html">4. Cache Configuration</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/40-practical-application.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/alvarolop/rhdg-workshop/edit/main/documentation/modules/ROOT/pages/40-cache-configuration.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Practical Application</h1>
-
+<h1 class="page">Cache Configuration</h1>
+<div class="sect1">
+<h2 id="_caches_in_openshift"><a class="anchor" href="#_caches_in_openshift"></a>Caches in Openshift</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Caches in Openshift. Examples of configuration.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_encoding"><a class="anchor" href="#_encoding"></a>Encoding</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Encoding. Understanding implications. If using Proto schemas &#8658; Need to upload proto to the server. So, need to take care that it works.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expiration"><a class="anchor" href="#_expiration"></a>Expiration</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Expiration. Configuring it and why</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_memory"><a class="anchor" href="#_memory"></a>Memory</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Eviction (Memory). How to calculate the size of the cache and limitation.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="30-server-configuration.html">3. Server Configuration</a></span>
+  <span class="next"><a href="50-practical-application.html">5. Practical Application</a></span>
+</nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
