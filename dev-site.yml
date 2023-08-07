@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: RH Data Grid Workshop(Dev Mode)
-  url: http://localhost:3000/rhdg-workshop/index.html
+  url: http://localhost:3000/ROOT/main/index.html
   start_page: ROOT::index.adoc
 
 content:
@@ -15,12 +15,19 @@ asciidoc:
   attributes:
     title: RH Data Grid Workshop(Dev Mode)
   extensions:
-    - ./lib/remote-include-processor.js
     - ./lib/tab-block.js
+    - ./lib/remote-include-processor.js
+
 ui:
   bundle:
     url: https://github.com/aolle/rhd-tutorial-ui/releases/download/v0.1.12/ui-bundle.zip
     snapshot: true
-  supplemental_files: ./supplemental-ui
+  supplemental_files:
+    - path: partials/toolbar.hbs
+      contents: ./supplemental-ui/partials/toolbar.hbs
+    - path: .nojekyll
+    - path: ui.yml
+      contents: "static_files: [ .nojekyll ]"
+
 output:
   dir: ./gh-pages
