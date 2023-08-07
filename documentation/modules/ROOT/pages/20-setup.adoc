@@ -4,7 +4,7 @@ include::_attributes.adoc[]
 [#prerequisites]
 == Prerequisites
 
-During this tutorial, will be required to work with different tools for running the exercises included. Please install the following software:
+During this tutorial, will be *required* to work with different tools for running the exercises included. Please install the following software:
 
 include::partial$10-requirements.adoc[]
 

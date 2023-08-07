@@ -1,4 +1,4 @@
-The following CLI tools are optional for running the exercises in this tutorial.
+The following CLI tools are *optional* for running the exercises in this tutorial.
 Although they are used in the tutorial, you could use others without any problem.
 
 WARNING: Only install Docker if you cannot use Podman.

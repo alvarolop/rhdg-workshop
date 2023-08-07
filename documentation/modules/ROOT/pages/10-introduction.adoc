@@ -1,7 +1,7 @@
 = Introduction
 include::_attributes.adoc[]
 
-Welcome to the *"Infinispan Infrastructure" workshop*! In this chapter, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
+Welcome to the *Red Hat Data Grid Infrastructure workshop*! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
 
 Picture a team of passionate book enthusiasts who have developed an innovative application. Their platform offers a treasure trove of information, including details about the finest literary works ever written. Users can access valuable insights on book rankings, author profiles, and reader reviews, all fetched from databases.
 
@@ -9,7 +9,7 @@ As the application gains immense popularity, more and more avid readers visit th
 
 In the following parts of the workshop, we will delve into how caches come to the rescue in this scenario. By implementing Red Hat Data Grid as an in-line cache between their application and the database, the team aims to boost response times and alleviate the database's workload. This strategic use of caches brings frequently accessed book data closer to the application, creating a seamless and delightful reading experience for their users.
 
-Join us to explore the world of caches, understand their importance, and learn how to skillfully manage them to optimize system performance. Let's embark on this exciting journey!
+Join us to explore the world of caches, understand their importance, and learn how to skillfully manage them to optimize system performance. *Let's embark on this exciting journey!*
 
 
 

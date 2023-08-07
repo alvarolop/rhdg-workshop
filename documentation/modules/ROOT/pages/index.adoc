@@ -1,22 +1,43 @@
-= Welcome to Template Tutorial
+= Welcome to the Red Hat Data Grid Infrastructure workshop
 :page-layout: home
 :!sectids:
 
-:cluster: %CLUSTER%
-
 [.text-center.strong]
-== Publish Services to Kubernetes
+== Introduction
 
-A Kubernetes tutorial to show how you can deploy a Java service to a Kubernetes cluster as it was a child game.
+Welcome to the *Red Hat Data Grid Infrastructure workshop*! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
+
 
 [.tiles.browse]
 == Browse modules
 
 [.tile]
-.xref:01-setup.adoc[Get Started]
-* xref:01-setup.adoc#minikube[Minikube]
+.xref:20-setup.adoc[Setup]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
+* xref:20-setup.adoc#parameters[Parameters]
+* xref:20-setup.adoc#access-console[Access - OCP Console]
+* xref:20-setup.adoc#access-cli[Access - OC Client]
 
 [.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
-* xref:02-deploy.adoc#deploy[Deploy the Application]
+.xref:30-server-configuration.adoc[Server Configuration]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
+
+[.tile]
+.xref:40-cache-configuration.adoc[Cache Configuration]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
+
+[.tile]
+.xref:50-practical-application.adoc[Practical Application]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
+
+[.tile]
+.xref:60-troubleshooting.adoc[Troubleshooting]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
+
+[.tile]
+.xref:70-conclusions.adoc[Conclusions]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
+
+[.tile]
+.xref:99-do-it-yourself.adoc[Do it Yourself!]
+* xref:20-setup.adoc#prerequisite[Prerequisites]
