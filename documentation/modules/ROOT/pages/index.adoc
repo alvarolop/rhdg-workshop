@@ -12,7 +12,7 @@ Welcome to the *Red Hat Data Grid Infrastructure workshop*! In this workshop, we
 == Browse modules
 
 [.tile]
-.xref:20-setup.adoc[Setup]
+.xref:20-setup.adoc[Environment Setup]
 * xref:20-setup.adoc#prerequisite[Prerequisites]
 * xref:20-setup.adoc#parameters[Parameters]
 * xref:20-setup.adoc#access-console[Access - OCP Console]

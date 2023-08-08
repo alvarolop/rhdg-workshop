@@ -1,6 +1,6 @@
 * xref:10-introduction.adoc[1. Introduction]
 
-* xref:20-setup.adoc[2. Setup]
+* xref:20-setup.adoc[2. Environment Setup]
 ** xref:20-setup.adoc#prerequisite[Prerequisites]
 ** xref:20-setup.adoc#parameters[Parameters]
 ** xref:20-setup.adoc#access-console[Access - OCP Console]

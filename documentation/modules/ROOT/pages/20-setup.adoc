@@ -1,4 +1,4 @@
-= Setup
+= Environment Setup
 include::_attributes.adoc[]
 
 [#prerequisites]

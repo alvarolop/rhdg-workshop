@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 Alright, we're all set! Our server is up and running smoothly, with foundational settings neatly configured. It might be tempting to consider this sufficient for a Data Grid administrator. But beneath the surface lies a more intricate narrative.
 
-In the realm of Data Grid, invaluable information takes residence within caches, whose configuration is typically a terrain overseen by development teams. However, the configuration of these caches holds the potential to profoundly influence your infrastructure's performance. That's precisely why it's essential to delve into mastering it.
+In the realm of Data Grid, the information takes residence within caches, whose configuration is typically a terrain overseen by development teams. However, the configuration of these caches holds the potential to profoundly influence your infrastructure's performance. That's precisely why it's essential to delve into mastering it.
 
 
 == Caches in Openshift
