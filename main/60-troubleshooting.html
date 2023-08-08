@@ -60,7 +60,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="20-setup.html">2. Setup</a>
+    <a class="nav-link" href="20-setup.html">2. Environment Setup</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="20-setup.html#prerequisite">Prerequisites</a>
@@ -116,15 +116,39 @@
 </div>  <div class="content">
 <article class="doc">
 <h1 class="page">Troubleshooting</h1>
-<div class="sect1">
-<h2 id="_retrieving_data_grid_server_pods"><a class="anchor" href="#_retrieving_data_grid_server_pods"></a>Retrieving Data Grid server pods</h2>
+<div id="preamble">
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>As we move forward to our final phase, we enter the Troubleshooting Section. Here, we provide you with essential tools and techniques to tackle any issues that come your way. As an administrator of the infrastructure, you&#8217;ll master the art of collecting cluster information for effective debugging. Join us in this enlightening section to strengthen your troubleshooting skills and enhance your cache optimization abilities.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s start by collecting important details about the Openshift setup, including CRDs and pod logs and events. Then, we&#8217;ll dig into examining the Data Grid server, getting the caches' configuration and a complete server report. Lastly, we&#8217;ll focus on JVM debugging, getting info from the Java Heap Dump and Java Thread Dump.</p>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_retrieving_the_openshift_configuration"><a class="anchor" href="#_retrieving_the_openshift_configuration"></a>Retrieving the Openshift configuration</h2>
+<h2 id="_openshift_information"><a class="anchor" href="#_openshift_information"></a>Openshift information</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_retrieving_the_list_of_server_pods"><a class="anchor" href="#_retrieving_the_list_of_server_pods"></a>Retrieving the list of server pods</h3>
+<div class="paragraph">
+<p>This might seem trivial, but we need to list the pods to then execute other commands inside the pods. Execute the following command to retrieve the full list of pods:</p>
+</div>
+<div class="listingblock lines_space console-input">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n {user}-rhdg</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">Output of the previous command</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc login -u {user} -p openshift {cluster_api}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_retrieving_the_openshift_configuration"><a class="anchor" href="#_retrieving_the_openshift_configuration"></a>Retrieving the Openshift configuration</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -137,25 +161,33 @@
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_retrieving_the_data_grid_server_report"><a class="anchor" href="#_retrieving_the_data_grid_server_report"></a>Retrieving the Data Grid server report</h2>
+<h2 id="_server_debugging"><a class="anchor" href="#_server_debugging"></a>Server debugging</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_retrieving_the_data_grid_server_report"><a class="anchor" href="#_retrieving_the_data_grid_server_report"></a>Retrieving the Data Grid server report</h3>
 <div class="paragraph">
 <p><a href="https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift" class="bare">https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift</a></p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_problems_with_cache_configurations"><a class="anchor" href="#_problems_with_cache_configurations"></a>Problems with cache configurations?</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_problems_with_cache_configurations"><a class="anchor" href="#_problems_with_cache_configurations"></a>Problems with cache configurations?</h3>
 <div class="paragraph">
 <p><a href="https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations" class="bare">https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations</a></p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_problems_with_protobuf"><a class="anchor" href="#_problems_with_protobuf"></a>Problems with Protobuf?</h3>
+
+</div>
+</div>
 </div>
 <div class="sect1">
-<h2 id="_problems_with_the_jvm_memory_on_cluster_pods"><a class="anchor" href="#_problems_with_the_jvm_memory_on_cluster_pods"></a>Problems with the JVM memory on cluster pods?</h2>
+<h2 id="_jvm_debugging"><a class="anchor" href="#_jvm_debugging"></a>JVM debugging</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_problems_with_the_jvm_memory_on_cluster_pods"><a class="anchor" href="#_problems_with_the_jvm_memory_on_cluster_pods"></a>Problems with the JVM memory on cluster pods?</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -167,11 +199,10 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_reached_file_limit_descriptors_on_a_pod"><a class="anchor" href="#_reached_file_limit_descriptors_on_a_pod"></a>Reached file limit descriptors on a pod?</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_reached_file_limit_descriptors_on_a_pod"><a class="anchor" href="#_reached_file_limit_descriptors_on_a_pod"></a>Reached file limit descriptors on a pod?</h3>
 
+</div>
 </div>
 </div>
 <nav class="pagination">
