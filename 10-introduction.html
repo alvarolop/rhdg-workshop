@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Cache Configuration :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/main/40-cache-configuration.html">
-    <link rel="prev" href="30-server-configuration.html">
-    <link rel="next" href="50-practical-application.html">
+    <title>Introduction :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/main/10-introduction.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="20-setup.html">
     <meta name="generator" content="Antora 3.0.3">
-    <link rel="stylesheet" href="../_/css/site.css">
-<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
   </head>
   <body class="article">
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="./_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
       <a class="navbar-item" style="font-size: 24px; color: white" href="https://alvarolop.github.io/rhdg-workshop/main">RH Data Grid Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="ROOT" data-version="main">
+<div class="nav-container" data-component="ROOT" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -55,7 +55,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="10-introduction.html">1. Introduction</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -79,7 +79,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="30-server-configuration.html">3. Server Configuration</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="40-cache-configuration.html">4. Cache Configuration</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -109,74 +109,31 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="40-cache-configuration.html">4. Cache Configuration</a></li>
+    <li><a href="10-introduction.html">1. Introduction</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Cache Configuration</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Introduction</h1>
 <div class="paragraph">
-<p>Alright, we&#8217;re all set! Our server is up and running smoothly, with foundational settings neatly configured. It might be tempting to consider this sufficient for a Data Grid administrator. But beneath the surface lies a more intricate narrative.</p>
+<p>Welcome to the <strong>Red Hat Data Grid Infrastructure workshop</strong>! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.</p>
 </div>
 <div class="paragraph">
-<p>In the realm of Data Grid, the information takes residence within caches, whose configuration is typically a terrain overseen by development teams. However, the configuration of these caches holds the potential to profoundly influence your infrastructure&#8217;s performance. That&#8217;s precisely why it&#8217;s essential to delve into mastering it.</p>
+<p>Picture a team of passionate book enthusiasts who have developed an innovative application. Their platform offers a treasure trove of information, including details about the finest literary works ever written. Users can access valuable insights on book rankings, author profiles, and reader reviews, all fetched from databases.</p>
 </div>
+<div class="paragraph">
+<p>As the application gains immense popularity, more and more avid readers visit the platform daily, seeking literary inspiration. However, the soaring user traffic poses a challenge - the application&#8217;s response time begins to lag, causing potential readers to wait longer than desired.</p>
 </div>
+<div class="paragraph">
+<p>In the following parts of the workshop, we will delve into how caches come to the rescue in this scenario. By implementing Red Hat Data Grid as an in-line cache between their application and the database, the team aims to boost response times and alleviate the database&#8217;s workload. This strategic use of caches brings frequently accessed book data closer to the application, creating a seamless and delightful reading experience for their users.</p>
 </div>
-<div class="sect1">
-<h2 id="_caches_in_openshift"><a class="anchor" href="#_caches_in_openshift"></a>Caches in Openshift</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Caches in Openshift. Examples of configuration.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_encoding"><a class="anchor" href="#_encoding"></a>Encoding</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Encoding. Understanding implications. If using Proto schemas &#8658; Need to upload proto to the server. So, need to take care that it works.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_expiration"><a class="anchor" href="#_expiration"></a>Expiration</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Expiration. Configuring it and why</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_memory"><a class="anchor" href="#_memory"></a>Memory</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Eviction (Memory). How to calculate the size of the cache and limitation.</p>
-</li>
-</ul>
-</div>
-</div>
+<div class="paragraph">
+<p>Join us to explore the world of caches, understand their importance, and learn how to skillfully manage them to optimize system performance. <strong>Let&#8217;s embark on this exciting journey!</strong></p>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="30-server-configuration.html">3. Server Configuration</a></span>
-  <span class="next"><a href="50-practical-application.html">5. Practical Application</a></span>
+  <span class="prev"><a href="index.html">RHDG Workshop</a></span>
+  <span class="next"><a href="20-setup.html">2. Environment Setup</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -188,8 +145,8 @@
 <footer class="footer">
   <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
 </footer>
-<script src="../_/js/vendor/clipboard.js"></script>
-<script src="../_/js/site.js"></script>
-<script async src="../_/js/vendor/highlight.js"></script>
+<script src="./_/js/vendor/clipboard.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
   </body>
 </html>
