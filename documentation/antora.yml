@@ -1,6 +1,6 @@
 name: ROOT
 title: RHDG Workshop
-version: main
+version: master
 nav:
   - modules/ROOT/nav.adoc
 
