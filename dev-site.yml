@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: RH Data Grid Workshop(Dev Mode)
-  url: http://localhost:3000/ROOT/main/index.html
+  url: http://localhost:3000/ROOT/index.html
   start_page: ROOT::index.adoc
 
 content:
