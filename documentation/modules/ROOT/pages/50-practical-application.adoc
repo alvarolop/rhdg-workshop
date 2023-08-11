@@ -2,12 +2,28 @@
 include::_attributes.adoc[]
 
 
-* Prometheus metrics and Grafana.
+== Prometheus metrics and Grafana.
 
-* In-line caching vs side caching.
+* For both client and server side.
+* List the most important metrics.
 
-* Openshift Helm Charts.
+== In-line caching vs side caching.
 
-* Datasources with SQL Database.
+== Openshift Helm Charts.
 
-* Authorization using RBAC.
+== Datasources with SQL Database.
+
+== Authorization using RBAC.
+
+== Access the DG cluster from outside
+
+Two options if doing it from your laptop:
+
+* expose through a Route.
+* Use oc port-forward.
+
+== Testing the cluster using the REST API
+
+* Create three caches: one for Proto, one for Plain/text, one for JSON.
+* Perform CRUD operations over all of them using the curl command.
+* Perform a Query using REST to check that it works fine.

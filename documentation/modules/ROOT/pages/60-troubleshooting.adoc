@@ -37,7 +37,9 @@ oc login -u {user} -p openshift {cluster_api}
 
 
 
-== Server debugging
+
+
+== Server debugging and maintaining
 
 
 === Retrieving the Data Grid server report
@@ -50,7 +52,21 @@ https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift
 https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations
 
 
-=== Problems with Protobuf?
+
+== Other useful REST API operations
+
+
+* Problems with Protobuf? You can list all the `.proto` files using the REST API.
+* Problems with cache definitions? Retrieve the list of caches, its configuration and its status (Healthy or not).
+* Problems with Server tasks? List them using REST.
+* Problems with the content of a cache? Empty the cache using REST.
+* Problems with indexes? Reindex a cache.
+
+
+== When should add here a section about cross-site replication
+
+
+
 
 
 == JVM debugging
