@@ -55,7 +55,7 @@ TIP: Please pay special attention to *oc CLI* because you will need to use this 
 
 
 [#downloadtutorial]
-== Get tutorial sources
+== Do it yourself!
 
 This workshop consists of three Git repositories:
 

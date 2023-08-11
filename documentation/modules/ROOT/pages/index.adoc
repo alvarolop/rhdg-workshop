@@ -37,7 +37,3 @@ Welcome to the *Red Hat Data Grid Infrastructure workshop*! In this workshop, we
 [.tile]
 .xref:70-conclusions.adoc[Conclusions]
 * xref:20-setup.adoc#prerequisite[Prerequisites]
-
-[.tile]
-.xref:99-do-it-yourself.adoc[Do it Yourself!]
-* xref:20-setup.adoc#prerequisite[Prerequisites]

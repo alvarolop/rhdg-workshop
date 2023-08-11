@@ -15,5 +15,3 @@
 * xref:60-troubleshooting.adoc[6. Troubleshooting]
 
 * xref:70-conclusions.adoc[7. Conclusions]
-
-* xref:99-do-it-yourself.adoc[9. Do it Yourself!]

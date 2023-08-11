@@ -1,2 +1,0 @@
-= Do it Yourself!
-include::_attributes.adoc[]
