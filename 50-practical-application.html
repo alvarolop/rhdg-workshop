@@ -91,9 +91,6 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="99-do-it-yourself.html">9. Do it Yourself!</a>
-  </li>
 </ul>
   </li>
 </ul>
@@ -115,24 +112,80 @@
 </div>  <div class="content">
 <article class="doc">
 <h1 class="page">Practical Application</h1>
+<div class="sect1">
+<h2 id="_prometheus_metrics_and_grafana"><a class="anchor" href="#_prometheus_metrics_and_grafana"></a>Prometheus metrics and Grafana.</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Prometheus metrics and Grafana.</p>
+<p>For both client and server side.</p>
 </li>
 <li>
-<p>In-line caching vs side caching.</p>
-</li>
-<li>
-<p>Openshift Helm Charts.</p>
-</li>
-<li>
-<p>Datasources with SQL Database.</p>
-</li>
-<li>
-<p>Authorization using RBAC.</p>
+<p>List the most important metrics.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_in_line_caching_vs_side_caching"><a class="anchor" href="#_in_line_caching_vs_side_caching"></a>In-line caching vs side caching.</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openshift_helm_charts"><a class="anchor" href="#_openshift_helm_charts"></a>Openshift Helm Charts.</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datasources_with_sql_database"><a class="anchor" href="#_datasources_with_sql_database"></a>Datasources with SQL Database.</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authorization_using_rbac"><a class="anchor" href="#_authorization_using_rbac"></a>Authorization using RBAC.</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_access_the_dg_cluster_from_outside"><a class="anchor" href="#_access_the_dg_cluster_from_outside"></a>Access the DG cluster from outside</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two options if doing it from your laptop:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>expose through a Route.</p>
+</li>
+<li>
+<p>Use oc port-forward.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_the_cluster_using_the_rest_api"><a class="anchor" href="#_testing_the_cluster_using_the_rest_api"></a>Testing the cluster using the REST API</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Create three caches: one for Proto, one for Plain/text, one for JSON.</p>
+</li>
+<li>
+<p>Perform CRUD operations over all of them using the curl command.</p>
+</li>
+<li>
+<p>Perform a Query using REST to check that it works fine.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="40-cache-configuration.html">4. Cache Configuration</a></span>
