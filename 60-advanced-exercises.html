@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Troubleshooting :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/60-troubleshooting.html">
-    <link rel="prev" href="50-practical-application.html">
+    <title>Practical Application :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/60-advanced-exercises.html">
+    <link rel="prev" href="50-troubleshooting.html">
     <link rel="next" href="70-conclusions.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
@@ -83,10 +83,10 @@
     <a class="nav-link" href="40-cache-configuration.html">4. Cache Configuration</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="50-practical-application.html">5. Practical Application</a>
+    <a class="nav-link" href="50-troubleshooting.html">5. Troubleshooting</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="60-troubleshooting.html">6. Troubleshooting</a>
+    <a class="nav-link" href="60-advanced-exercises.html">6. Advanced Exercises</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
@@ -105,130 +105,90 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="60-troubleshooting.html">6. Troubleshooting</a></li>
+    <li><a href="60-advanced-exercises.html">6. Advanced Exercises</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Troubleshooting</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>As we move forward to our final phase, we enter the Troubleshooting Section. Here, we provide you with essential tools and techniques to tackle any issues that come your way. As an administrator of the infrastructure, you&#8217;ll master the art of collecting cluster information for effective debugging. Join us in this enlightening section to strengthen your troubleshooting skills and enhance your cache optimization abilities.</p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s start by collecting important details about the Openshift setup, including CRDs and pod logs and events. Then, we&#8217;ll dig into examining the Data Grid server, getting the caches' configuration and a complete server report. Lastly, we&#8217;ll focus on JVM debugging, getting info from the Java Heap Dump and Java Thread Dump.</p>
-</div>
-</div>
-</div>
+<h1 class="page">Practical Application</h1>
 <div class="sect1">
-<h2 id="_openshift_information"><a class="anchor" href="#_openshift_information"></a>Openshift information</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_retrieving_the_list_of_server_pods"><a class="anchor" href="#_retrieving_the_list_of_server_pods"></a>Retrieving the list of server pods</h3>
-<div class="paragraph">
-<p>This might seem trivial, but we need to list the pods to then execute other commands inside the pods. Execute the following command to retrieve the full list of pods:</p>
-</div>
-<div class="listingblock lines_space console-input">
-<div class="title">Example</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n {user}-rhdg</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">Output of the previous command</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc login -u {user} -p openshift {cluster_api}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_retrieving_the_openshift_configuration"><a class="anchor" href="#_retrieving_the_openshift_configuration"></a>Retrieving the Openshift configuration</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>oc adm inspect namespace/&lt;rhdg-namespace&gt;</p>
-</li>
-<li>
-<p>Or do it manually.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_server_debugging_and_maintaining"><a class="anchor" href="#_server_debugging_and_maintaining"></a>Server debugging and maintaining</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_retrieving_the_data_grid_server_report"><a class="anchor" href="#_retrieving_the_data_grid_server_report"></a>Retrieving the Data Grid server report</h3>
-<div class="paragraph">
-<p><a href="https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift" class="bare">https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_problems_with_cache_configurations"><a class="anchor" href="#_problems_with_cache_configurations"></a>Problems with cache configurations?</h3>
-<div class="paragraph">
-<p><a href="https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations" class="bare">https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_other_useful_rest_api_operations"><a class="anchor" href="#_other_useful_rest_api_operations"></a>Other useful REST API operations</h2>
+<h2 id="_prometheus_metrics_and_grafana"><a class="anchor" href="#_prometheus_metrics_and_grafana"></a>Prometheus metrics and Grafana.</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Problems with Protobuf? You can list all the <code>.proto</code> files using the REST API.</p>
+<p>For both client and server side.</p>
 </li>
 <li>
-<p>Problems with cache definitions? Retrieve the list of caches, its configuration and its status (Healthy or not).</p>
-</li>
-<li>
-<p>Problems with Server tasks? List them using REST.</p>
-</li>
-<li>
-<p>Problems with the content of a cache? Empty the cache using REST.</p>
-</li>
-<li>
-<p>Problems with indexes? Reindex a cache.</p>
+<p>List the most important metrics.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_when_should_add_here_a_section_about_cross_site_replication"><a class="anchor" href="#_when_should_add_here_a_section_about_cross_site_replication"></a>When should add here a section about cross-site replication</h2>
+<h2 id="_in_line_caching_vs_side_caching"><a class="anchor" href="#_in_line_caching_vs_side_caching"></a>In-line caching vs side caching.</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_jvm_debugging"><a class="anchor" href="#_jvm_debugging"></a>JVM debugging</h2>
+<h2 id="_openshift_helm_charts"><a class="anchor" href="#_openshift_helm_charts"></a>Openshift Helm Charts.</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_problems_with_the_jvm_memory_on_cluster_pods"><a class="anchor" href="#_problems_with_the_jvm_memory_on_cluster_pods"></a>Problems with the JVM memory on cluster pods?</h3>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datasources_with_sql_database"><a class="anchor" href="#_datasources_with_sql_database"></a>Datasources with SQL Database.</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authorization_using_rbac"><a class="anchor" href="#_authorization_using_rbac"></a>Authorization using RBAC.</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_access_the_dg_cluster_from_outside"><a class="anchor" href="#_access_the_dg_cluster_from_outside"></a>Access the DG cluster from outside</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two options if doing it from your laptop:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Java Thread Dump</p>
+<p>expose through a Route.</p>
 </li>
 <li>
-<p>Java Heap Dump</p>
+<p>Use oc port-forward.</p>
 </li>
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_reached_file_limit_descriptors_on_a_pod"><a class="anchor" href="#_reached_file_limit_descriptors_on_a_pod"></a>Reached file limit descriptors on a pod?</h3>
-
+</div>
+<div class="sect1">
+<h2 id="_testing_the_cluster_using_the_rest_api"><a class="anchor" href="#_testing_the_cluster_using_the_rest_api"></a>Testing the cluster using the REST API</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Create three caches: one for Proto, one for Plain/text, one for JSON.</p>
+</li>
+<li>
+<p>Perform CRUD operations over all of them using the curl command.</p>
+</li>
+<li>
+<p>Perform a Query using REST to check that it works fine.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="50-practical-application.html">5. Practical Application</a></span>
+  <span class="prev"><a href="50-troubleshooting.html">5. Troubleshooting</a></span>
   <span class="next"><a href="70-conclusions.html">7. Conclusions</a></span>
 </nav>
 </article>
