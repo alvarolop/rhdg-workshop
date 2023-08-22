@@ -10,8 +10,8 @@
 
 * xref:40-cache-configuration.adoc[4. Cache Configuration]
 
-* xref:50-practical-application.adoc[5. Practical Application]
+* xref:50-troubleshooting.adoc[5. Troubleshooting]
 
-* xref:60-troubleshooting.adoc[6. Troubleshooting]
+* xref:60-advanced-exercises.adoc[6. Advanced Exercises]
 
 * xref:70-conclusions.adoc[7. Conclusions]

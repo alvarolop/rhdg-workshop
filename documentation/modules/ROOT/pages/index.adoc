@@ -7,33 +7,34 @@
 
 Welcome to the *Red Hat Data Grid Infrastructure workshop*! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
 
+The exercises within this workshop are designed for self-paced exploration, allowing you to tailor your experience based on your interests and prior knowledge.
 
 [.tiles.browse]
-== Browse modules
+== Day 1
 
-[.tile]
-.xref:20-setup.adoc[Environment Setup]
-* xref:20-setup.adoc#prerequisite[Prerequisites]
-* xref:20-setup.adoc#parameters[Parameters]
-* xref:20-setup.adoc#access-console[Access - OCP Console]
-* xref:20-setup.adoc#access-cli[Access - OC Client]
+On the first day, your focus will be on grasping the fundamentals of Data Grid Infrastructure. These exercises comprise commands and configurations to be applied to your server.
 
-[.tile]
-.xref:30-server-configuration.adoc[Server Configuration]
-* xref:20-setup.adoc#prerequisite[Prerequisites]
+xref:20-setup.adoc[Environment Setup]
 
-[.tile]
-.xref:40-cache-configuration.adoc[Cache Configuration]
-* xref:20-setup.adoc#prerequisite[Prerequisites]
+xref:30-server-configuration.adoc[Server Configuration]
 
-[.tile]
-.xref:50-practical-application.adoc[Practical Application]
-* xref:20-setup.adoc#prerequisite[Prerequisites]
+xref:40-cache-configuration.adoc[Cache Configuration]
 
-[.tile]
-.xref:60-troubleshooting.adoc[Troubleshooting]
-* xref:20-setup.adoc#prerequisite[Prerequisites]
+xref:50-troubleshooting.adoc[Troubleshooting]
 
-[.tile]
-.xref:70-conclusions.adoc[Conclusions]
-* xref:20-setup.adoc#prerequisite[Prerequisites]
+
+[.tiles.browse]
+== Day 2
+
+On the second day, we invite you to take a step further. We will present intricate configurations along with helpful hints to guide you through the process. In this segment, you will delve into complex configurations to be executed in your own environment.
+
+These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.
+
+
+xref:60-advanced-exercises.adoc[Advanced Exercises]
+
+xref:70-conclusions.adoc[Conclusions]
+
+// [.tile]
+// .xref:70-conclusions.adoc[Conclusions]
+// * xref:20-setup.adoc#prerequisite[Prerequisites]
