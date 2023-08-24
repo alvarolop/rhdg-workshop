@@ -14,6 +14,7 @@ content:
 asciidoc:
   attributes:
     title: RH Data Grid Workshop(Dev Mode)
+    page-pagination: true
   extensions:
     - ./lib/tab-block.js
     - ./lib/remote-include-processor.js
