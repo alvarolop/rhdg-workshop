@@ -10,6 +10,12 @@ In the realm of Data Grid, the information takes residence within caches, whose 
 
 * Caches in Openshift. Examples of configuration.
 
+** Add caches in config-map.
+** Add caches using the Cache CRD.
+
+
+== Cache Templates
+
 == Encoding
 
 * Encoding. Understanding implications. If using Proto schemas => Need to upload proto to the server. So, need to take care that it works.
