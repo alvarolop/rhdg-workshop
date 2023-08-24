@@ -10,14 +10,14 @@ include::partial$10-requirements.adoc[]
 
 include::partial$10-optional-requirements.adoc[]
 
-[#parameters]
-== Parameters
+// [#parameters]
+// == Parameters
 
-The instructor provides the users with the necessary Openshift credentials and other important parameters at the beginning of this tutorial to access and complete the laboratory. 
+// The instructor provides the users with the necessary Openshift credentials and other important parameters at the beginning of this tutorial to access and complete the laboratory. 
 
-The following table includes the parameters that the instructor should provide you at the beginning of the laboratory:
+// The following table includes the parameters that the instructor should provide you at the beginning of the laboratory:
 
-include::partial$10-parameters.adoc[]
+// include::partial$10-parameters.adoc[]
 
 
 [#access-console]
@@ -28,9 +28,7 @@ In order to check the laboratory environment, please access the Openshift Consol
 * https://console-openshift-console.apps.{cluster}
 
 .Openshift Console
-image::ocp_console.png[]
-
-NOTE: Use *lab-users* section to log in with your credentials.
+image::2-setup-ocp-console.png[]
 
 [#access-cli]
 == Access - OC Client
@@ -49,7 +47,7 @@ oc login -u {user} -p {user} {cluster_api}
 If the login is successful, it should show an output similar to the following screenshot:
 
 .OC CLI Login Output 
-image::oc_login_output.png["OC CLI Login Output"]
+image::2-setup-oc-login-output.png["OC CLI Login Output"]
 
 TIP: Please pay special attention to *oc CLI* because you will need to use this tool several times during this tutorial.
 
