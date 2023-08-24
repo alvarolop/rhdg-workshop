@@ -1,4 +1,4 @@
-= Guided Exercises
+= Security
 include::_attributes.adoc[]
 
 
@@ -6,25 +6,187 @@ include::_attributes.adoc[]
 
 With the essentials in place, it's time to tighten security. As you learn to authenticate using the operator and OCP secret, keep in mind that this layer of protection is the springboard for the security enhancements to come.
 
-// * Authentication using the operator and OCP secret.
+The Red Hat Data Grid operator enables authentication by default. This configuration enforces that
+application users need credentials to access Data Grid clusters. Authentication in Data Grid is based on
+Security Realms. You can configure the following options:
 
-== Security II: Authorization
+* *LDAP Realm*: LDAP realms connect to LDAP servers, such as OpenLDAP, Red Hat Directory Server,
+Apache Directory Server, or Microsoft Active Directory, to authenticate users and obtain membership
+information.
+* *Properties Realm*: Property realms use property files to define users and groups.
+* *Token Realm*: Token realms use external services to validate tokens and require providers that are
+compatible with RFC-7662 (OAuth2 Token Introspection), such as Red Hat SSO.
+* *Truststore Realm*: Trust store realms use certificates, or certificate chains, that verify Data Grid
+Server and client identities when they negotiate connections.
 
-Taking security up a notch, we add a crucial layer of authorization to the authentication setup. Keep these combined security measures in mind as you navigate through the more intricate security configurations.
+To ensure that we learn gradually all the aspects of the server configuration, we are going to start with the *Properties Realm*. Configuring Properties Realm authentication using the operator consists of two steps.
 
-// * Add authorization to the authentication of the previous section using the operator and OCP secret.
+.Level up!
+TIP: If you are interested in other Realms you can investigate further during the second day of the workshop. Especially, you will find some tips for the LDAP Realm in the Advanced Exercises Section.
+
+
+*Step 1: Create a secret with the credentials*
+
+First, create a Secret that contains all the users and their passwords:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-credentials
+type: Opaque 
+stringData: 
+  identities.yaml: |-     
+    credentials:
+    - username: developer
+      password: developer
+    - username: admin
+      password: password
+    - username: $YOUR_USERNAME
+      password: openshift
+----
+
+In this case, there will be three users. Remember to change `$YOUR_USERNAME` with the real value.
+
+*Step 2: Enable authentication and add the secret to the CR*
+
+In the configuration of the `Infinispan` CR, set up authentication and link it to the previous secret:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointAuthentication: true
+    endpointSecretName: cluster-credentials
+----
+
+Try to access the web console again, you will see a prompt requesting you to introduce `username` and `password`. You can use any from the previous secret, as we have not enabled authorization yet. 
+
+== Security II: Authorization with RBAC
+
+Authorization is a security feature that requires users to have certain permissions before they can access
+caches or interact with Data Grid resources. You assign roles to users that provide different levels of
+permissions, from read-only access to full, superuser privileges. 
+
+.Level up!
+TIP: Do you want to make sure that users belong to a role with sufficient permissions before they can perform operations on a specific Cache? You can explore that configuration in the Advanced Exercises Section.
+
+Let's make sure that the admin user has ADMIN rights to the Data Grid cluster, but the user1 has monitor and read-only capabilities. Configuring authorization using the operator consists of two steps.
+
+
+*Step 1: Modify the credentials secret with the roles*
+
+Data Grid includes several roles that provide users with permissions to access caches and Data Grid resources.
+
+* *admin*: Superuser with all permissions including control of the Cache Manager lifecycle.
+* *deployer*: Can create and delete Data Grid resources in addition to application permissions.
+* *application*: Has read and write access to Data Grid resources in addition to observer permissions. Can also listen to events and execute server tasks and scripts.
+* *observer*: Has read access to Data Grid resources in addition to monitor permissions.
+* *monitor*: Can view statistics via JMX and the metrics endpoint.
+
+
+In order to test all the possibilities, you can define the following roles. Scroll down to see what to expect from each user:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-credentials
+type: Opaque 
+stringData: 
+  identities.yaml: |-     
+    credentials:
+    - username: developer
+      password: developer
+    - username: admin
+      password: password
+      roles:
+        - admin
+    - username: $YOUR_USERNAME
+      password: openshift
+      roles:
+        - application
+----
+
+
+*Step 2: Enable authorization in the Infinispan CR*
+
+We will enable authorization at the cluster level just with the property `spec.security.authorization.enabled = true`:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointAuthentication: true
+    endpointSecretName: cluster-credentials
+    authorization:
+      enabled: true
+----
+
+
+If you log in to the web console, you will quickly see the differences between each user: The `admin` has a button to create caches; `user1` does not, but can check the server statistics; `developer` cannot retrieve the statistics as he does not belong to a role with the MONITOR permission.
+
+
+.Web console for the user admin
+image::32-server-rhdg-console-admin.png[]
+
+
+.Web console for the user user1
+image::32-server-rhdg-console-user1.png[]
+
+
+.Web console for the user developer
+image::32-server-rhdg-console-developer.png[]
+
 
 
 == Security III: Encryption
 
-As we continue, the focus shifts to data protection. Whether you opt for OCP TLS certificates or custom ones, remember that encryption is pivotal for safeguarding your cache infrastructure and maintaining data integrity.
+Encryption allows encrypting connections between clients and Data Grid pods with Red Hat OpenShift service certificates or custom TLS certificates. Whether you opt for one or the other, remember that encryption is a great tool for safeguarding your cache infrastructure and keeping your cache information safe during transit.
+
+With the service certificates, the Data Grid Operator automatically generates TLS certificates that are signed by the Red Hat OpenShift service CA. Data Grid Operator then stores the certificates and keys in a k8s Secret so you can retrieve them and use them with remote clients.
+
+.Level up!
+TIP: Do you want to explore the usage of custom certificates? You can explore that configuration in the Advanced Exercises Section.
 
 
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointEncryption:
+      type: Service
+----
 
-// We'll guide you through two distinct approaches: utilizing OCP TLS certificates and implementing custom TLS certificates. Elevate your cache security to the next level.
+After setting this configuration and waiting for a few seconds, all the pods will automatically restart and will just accept HTTPS connections. Therefore, change the protocol in the URL or just execute the following command to get the URL:
 
-// * Using OCP TLS certificates or using custom TLS certificates.
+[.console-input]
+[source, bash]
+----
+# Modify the command according to your user.
+oc get routes --template='https://{{(index .items 0).spec.host }}' 
+----
 
+After accepting that `Your connection is not private` because the certificate is auto-signed using the OCP CA, you will be able to access Data Grid pods using HTTPS instead of HTTP.
 
 
 == Wrap Up!
