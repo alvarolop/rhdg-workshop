@@ -17,7 +17,7 @@ include::_attributes.adoc[]
 
 == Access the DG cluster from outside
 
-Two options if doing it from your laptop:
+Two options for doing it from your laptop:
 
 * expose through a Route.
 * Use oc port-forward.
@@ -27,3 +27,7 @@ Two options if doing it from your laptop:
 * Create three caches: one for Proto, one for Plain/text, one for JSON.
 * Perform CRUD operations over all of them using the curl command.
 * Perform a Query using REST to check that it works fine.
+
+== Cross-site replication
+
+Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.
