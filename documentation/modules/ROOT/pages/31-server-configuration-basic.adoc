@@ -1,4 +1,4 @@
-= Guided Exercises
+= Basic Configuration
 include::_attributes.adoc[]
 
 Welcome to the next workshop segment! We'll start by mastering essential use cases, which serve as a stepping stone to tackling more intricate scenarios. Following that, we'll delve into the Infinispan CRD's configuration options, equipping you to optimize performance, fine-tune settings, and effectively safeguard your cache infrastructure.
@@ -126,12 +126,12 @@ oc get routes --template='http://{{(index .items 0).spec.host }}'
 Once you access the web console, you will see a welcome message. You just need to click on **Open the console**. 
 
 .Data Grid web console welcome message
-image::3-server-rhdg-console-welcome.png[]
+image::31-server-rhdg-console-welcome.png[]
 
 This is the main dashboard. You can use it to see Cache and cluster metrics, Cache configuration, clustering information, server version, cache entries, etc.
 
 .Data Grid web console dashboard
-image::3-server-rhdg-console-dashboard.png[]
+image::31-server-rhdg-console-dashboard.png[]
 
 
 
