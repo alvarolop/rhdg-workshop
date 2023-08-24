@@ -16,11 +16,9 @@ On the first day, your focus will be on grasping the fundamentals of Data Grid I
 
 xref:20-setup.adoc[Environment Setup]
 
-xref:30-server-configuration.adoc[Server Configuration]
+xref:31-server-configuration-basic.adoc[Server Configuration]
 
 xref:40-cache-configuration.adoc[Cache Configuration]
-
-xref:50-troubleshooting.adoc[Troubleshooting]
 
 
 [.tiles.browse]
@@ -30,6 +28,7 @@ On the second day, we invite you to take a step further. We will present intrica
 
 These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.
 
+xref:50-troubleshooting.adoc[Troubleshooting]
 
 xref:60-advanced-exercises.adoc[Advanced Exercises]
 
