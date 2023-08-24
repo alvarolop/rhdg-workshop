@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Guided Exercises :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/31-server-configuration-basic.html">
+    <link rel="prev" href="20-setup.html">
+    <link rel="next" href="32-server-configuration-security.html">
+    <meta name="generator" content="Antora 3.0.3">
+    <link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="./_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://alvarolop.github.io/rhdg-workshop">RH Data Grid Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kafka-tutorial/" target="_blank">Kafka</a>
+            <a class="navbar-item" href="https://devsecops-workshop.github.io/" target="_blank">DevSecOps</a>
+            <a class="navbar-item" href="https://acidonper.github.io/redhat-workshop-cicd-gitops/redhat-workshop-cicd-gitops/" target="_blank">CI/CD & GitOps</a>
+            <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/" target="_blank">Gramola GitOps Guide</a>
+            <a class="navbar-item" href="https://luisarizmendi.github.io/tutorial-secure-onboarding/" target="_blank">Secure Edge device onboarding with RHEL and FDO</a>
+            <a class="navbar-item" href="https://xbryan1.github.io/rhte-2023-acm-docs/" target="_blank">Multicluster Application Deployment with Advanced Cluster Management and GitOps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-introduction.html">1. Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="20-setup.html">2. Environment Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="20-setup.html#prerequisite">Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="20-setup.html#access-console">Access - OCP Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="20-setup.html#access-cli">Access - OC Client</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">3. Server Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="31-server-configuration-basic.html">3.1. Basic Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="32-server-configuration-security.html">3.2. Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="40-cache-configuration.html">4. Cache Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="50-troubleshooting.html">5. Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="60-advanced-exercises.html">6. Advanced Exercises</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">RHDG Workshop</a></li>
+    <li>3. Server Configuration</li>
+    <li><a href="31-server-configuration-basic.html">3.1. Basic Configuration</a></li>
+  </ul>
+</nav>
+  <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
+</div>  <div class="content">
+<article class="doc">
+<h1 class="page">Guided Exercises</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Welcome to the next workshop segment! We&#8217;ll start by mastering essential use cases, which serve as a stepping stone to tackling more intricate scenarios. Following that, we&#8217;ll delve into the Infinispan CRD&#8217;s configuration options, equipping you to optimize performance, fine-tune settings, and effectively safeguard your cache infrastructure.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Unless instructed, we expect you to execute all your exercises in the main namespace: <code>$USER-rhdg</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This workshop was prepared for the following versions of the infrastructure:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Openshift version: 4.13.9</p>
+</li>
+<li>
+<p>RHDG operator version: 4.4.6</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_first_cluster"><a class="anchor" href="#_first_cluster"></a>First cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kicking off your journey, let&#8217;s build a strong foundation with the most basic Red Hat Data Grid setup. As you venture through each subsequent section, remember that these initial steps will serve as a reference point for the advanced concepts we&#8217;ll delve into.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  replicas: 1 <i class="conum" data-value="1"></i><b>(1)</b>
+  security: <i class="conum" data-value="2"></i><b>(2)</b>
+    endpointAuthentication: false
+    endpointEncryption:
+      type: None
+  service:
+    container:
+      ephemeralStorage: true <i class="conum" data-value="3"></i><b>(3)</b>
+    type: DataGrid <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Only one replica for the simplest deployment.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Disable both authentication and encryption. (They come enabled by default).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Don&#8217;t request a PVC, as it won&#8217;t be needed by now.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><code>type: DataGrid</code> is the full version.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After creating this CR in your namespace, you should see that the operator triggers the creation of several resources and after a few seconds, two pods will be running in your namespace:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>cluster-0</code> is the real pod of Data Grid. It contains the server itself.</p>
+</li>
+<li>
+<p><code>cluster-config-listener-&#8230;&#8203;</code> is an extra pod deployed per Data Grid cluster that synchronizes the cache configurations with the pods of a cluster to keep consistency. This pod is optional but recommended. We will take advantage of it in the following section.</p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Did I Get It Right?</div>
+<div class="paragraph">
+<p>Access the logs to check that the Data Grid server is up and running. Either using the web console or the command line, access the logs of the pod <code>cluster-0</code>. You should see the following logs at the end:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">14:10:11,635 INFO (main) [org.infinispan.CLUSTER] ISPN000079: Channel `cluster` local address is `cluster-0-12182`, physical addresses are `[10.131.1.53:7800]`
+14:10:11,646 INFO (main) [org.infinispan.CONTAINER] ISPN000390: Persisted state, version=14.0.11.Final-redhat-00001 timestamp=2023-08-23T14:10:11.645602320Z
+//...
+14:10:12,241 INFO (main) [org.infinispan.SERVER] ISPN080034: Server 'cluster-0-12182' listening on http://0.0.0.0:11222
+14:10:12,251 INFO (main) [org.infinispan.SERVER] ISPN080018: Started connector HotRod (internal)
+//...
+14:10:12,304 INFO (main) [org.infinispan.SERVER] ISPN080001: Red Hat Data Grid Server 8.4.3.GA started in 4084ms</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_console"><a class="anchor" href="#_web_console"></a>Web Console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Explore the 'Web Console' to gain insights into your configuration and the server performance. Easily access it by exposing it using an OCP route, providing an external window into your cache setup.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s modify the previous <code>Infinispan</code> object to add the route at the end of the previous YAML:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  expose:
+    annotations: {}
+    type: Route</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s all! Wait less than a second and you should see a new route in your namespace. Use the following command if you don&#8217;t find it:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Modify the command according to your user.
+oc get routes --template='http://{{(index .items 0).spec.host }}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once you access the web console, you will see a welcome message. You just need to click on <strong>Open the console</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/3-server-rhdg-console-welcome.png" alt="3 server rhdg console welcome">
+</div>
+<div class="title">Figure 1. Data Grid web console welcome message</div>
+</div>
+<div class="paragraph">
+<p>This is the main dashboard. You can use it to see Cache and cluster metrics, Cache configuration, clustering information, server version, cache entries, etc.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/3-server-rhdg-console-dashboard.png" alt="3 server rhdg console dashboard">
+</div>
+<div class="title">Figure 2. Data Grid web console dashboard</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_high_availability_using_several_replicas"><a class="anchor" href="#_high_availability_using_several_replicas"></a>High availability using several replicas</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In a production environment, you will always be interested in a high-availability configuration with several replicas, so that restarts of a container in Openshift don&#8217;t impact the availability of the Data Grid cluster. Enabling it is as simple as modifying the number of replicas of your cluster. You can play with the YAML definition to change the number of replicas.</p>
+</div>
+<div class="paragraph">
+<p>First, configure three replicas of your cluster by modifying the following configuration:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  replicas: 3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait a few seconds, and you should see a larger list of pods. Execute the following command to monitor the deployment status:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -w</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods
+NAME                                       READY   STATUS    RESTARTS   AGE
+cluster-0                                  1/1     Running   0          21m
+cluster-1                                  1/1     Running   0          4m40s
+cluster-2                                  1/1     Running   0          4m33s
+cluster-config-listener-7db8d897bc-ft59v   1/1     Running   0          21m</code></pre>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Did I Get It Right?</div>
+<div class="paragraph">
+<p>Access the logs of all the Data Grid pods to check that they clustered automagically and without errors. You should find logs like these in all the DG pods:</p>
+</div>
+<div class="listingblock">
+<div class="title">cluster-2 logs</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">15:15:09,998 INFO  (main) [org.jgroups.protocols.FD_SOCK2] server listening on *.57800
+15:15:10,047 INFO  (main) [org.infinispan.CLUSTER] ISPN000094: Received new cluster view for channel cluster: [cluster-0-34641|2] (3) [cluster-0-34641, cluster-1-35873, cluster-2-12580]
+15:15:10,103 INFO  (main) [org.infinispan.CLUSTER] ISPN000079: Channel `cluster` local address is `cluster-2-12580`, physical addresses are `[10.131.1.63:7800]`
+# ...
+15:15:10,929 INFO  (non-blocking-thread--p2-t1) [org.infinispan.LIFECYCLE] [Context=___hotRodTopologyCache_hotrod-admin][Scope=cluster-2-12580]ISPN100010: Finished rebalance with members [cluster-0-34641, cluster-1-35873, cluster-2-12580], topology id 6
+# ...
+15:15:10,973 INFO  (main) [org.infinispan.SERVER] ISPN080001: Red Hat Data Grid Server 8.4.3.GA started in 2326ms</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Please, before continuing to the next section, scale down the cluster to two replicas to save resources in Openshift.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_memory_and_cpu"><a class="anchor" href="#_memory_and_cpu"></a>Memory and CPU</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Mastering the control of requests and limits will form the cornerstone of your cache management expertise. It is as simple as adding the following configuration to your already running cluster. Please, do not just add this configuration at the end of the YAML, as the operator adds default values for memory. Look for the <code>container</code> section and add your values:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  container:
+    cpu: "2000m:100m"
+    memory: "1Gi:1Gi"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After confirming the new definition of the Infinispan CR, the operator will trigger an ordered restart of the cluster with the new configuration ensuring that there is no loss of service.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This configuration is strongly recommended to ensure that the server does not restart due to an OutOfMemory error or the Java Garbage Collector does not have enough resources to perform efficiently.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_labels"><a class="anchor" href="#_labels"></a>Labels</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As you progress through this workshop, it&#8217;s time to explore how to apply labels to services and pods, enabling streamlined filtering based on these labels. Additionally, these labels can be utilized to enrich Prometheus metrics.</p>
+</div>
+<div class="paragraph">
+<p>You can check the  labels of the cluster pods using the following command:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{
+  "app": "infinispan-pod",
+  "app.kubernetes.io/created-by": "cluster",
+  "clusterName": "cluster",
+  "controller-revision-hash": "cluster-788688979",
+  "infinispan_cr": "cluster",
+  "rht.comp": "Data_Grid",
+  "rht.comp_ver": "8.4.3",
+  "rht.prod_name": "Red_Hat_Runtimes",
+  "rht.prod_ver": "2023-Q2",
+  "rht.subcomp_t": "application",
+  "statefulset.kubernetes.io/pod-name": "cluster-0"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, add two new labels for the Infinispan CR, for example, <code>domain = bookshop</code> and <code>user = $YOUR_USER</code>:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  labels:
+    domain: bookshop
+    user: userX</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see after new labels to your Infinispan CR, those labels are not populated to the server pods:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Therefore, we need to add some annotations to instruct the operator to propagate those labels to pods and/or services. There are two:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>infinispan.org/targetLabels</code> to add those labels to the services.</p>
+</li>
+<li>
+<p><code>infinispan.org/podTargetLabels</code> to add those labels to the pods.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As we need them in the following exercises, let&#8217;s add <code>domain</code> and <code>user</code> labels to the pods, but only <code>domain</code> to the services.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  annotations:
+    infinispan.org/podTargetLabels: 'domain,user'
+    infinispan.org/targetLabels: domain
+  labels:
+    domain: bookshop
+    user: userX</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will automatically relabel the pods without restarting them:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{
+  "app": "infinispan-pod",
+  "app.kubernetes.io/created-by": "cluster",
+  "clusterName": "cluster",
+  "controller-revision-hash": "cluster-788688979",
+  "domain": "bookshop",
+  "infinispan_cr": "cluster",
+  "rht.comp": "Data_Grid",
+  "rht.comp_ver": "8.4.3",
+  "rht.prod_name": "Red_Hat_Runtimes",
+  "rht.prod_ver": "2023-Q2",
+  "rht.subcomp_t": "application",
+  "statefulset.kubernetes.io/pod-name": "cluster-0",
+  "user": "user1"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jvm_settings"><a class="anchor" href="#_jvm_settings"></a>JVM settings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To wrap up this segment on foundational settings, let&#8217;s delve into the option of incorporating additional JVM parameters. While you have the freedom to choose any parameter, some common ones include adjusting the timezone, configuring an alternate Garbage Collector, or setting up GC logs. For now, we&#8217;ll focus on modifying the timezone; later, you can explore the remaining options in the concluding section.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  container:
+    extraJvmOpts: '-Duser.timezone="Europe/Madrid"'
+      # Here the MEM and CPU resources #</code></pre>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Did I Get It Right?</div>
+<div class="paragraph">
+<p>Access the logs of all the Data Grid pods to check the JVM parameters:</p>
+</div>
+<div class="listingblock">
+<div class="title">cluster-0 logs</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">10:06:21,721 INFO (main) [BOOT] JVM OpenJDK 64-Bit Server VM Red Hat, Inc. 17.0.7+7-LTS
+10:06:21,726 INFO (main) [BOOT] JVM arguments = [-server, --add-exports, java.naming/com.sun.jndi.ldap=ALL-UNNAMED, --add-opens, java.base/java.util=ALL-UNNAMED, --add-opens, java.base/java.util.concurrent=ALL-UNNAMED, -Xlog:gc*:file=/opt/infinispan/server/log/gc.log:time,uptimemillis:filecount=5,filesize=3M, -Duser.timezone=Europe/Madrid, -Xmx512m, -XX:+ExitOnOutOfMemoryError, -XX:MetaspaceSize=32m, -XX:MaxMetaspaceSize=96m, -Djava.net.preferIPv4Stack=true, -Djava.awt.headless=true, -Dvisualvm.display.name=redhat-datagrid-server, -Djava.util.logging.manager=org.infinispan.server.loader.LogManager, -Dinfinispan.server.home.path=/opt/infinispan, -classpath, :/opt/infinispan/boot/infinispan-server-runtime-14.0.11.Final-redhat-00001-loader.jar, org.infinispan.server.loader.Loader, org.infinispan.server.Bootstrap, --bind-address=0.0.0.0, -l, /opt/infinispan/server/conf/operator/log4j.xml, -c, operator/infinispan-base.xml, -c, operator/infinispan-admin.xml]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see in the middle of the second log line, the <code>-Duser.timezone=Europe/Madrid</code> was concatenated to the JVM arguments and the log date/time is now correct.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="20-setup.html">2. Environment Setup</a></span>
+  <span class="next"><a href="32-server-configuration-security.html">3.2. Security</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="./_/js/vendor/clipboard.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+  </body>
+</html>

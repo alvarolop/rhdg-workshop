@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Guided Exercises :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/30-server-configuration.html">
-    <link rel="prev" href="20-setup.html">
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/32-server-configuration-security.html">
+    <link rel="prev" href="31-server-configuration-basic.html">
     <link rel="next" href="40-cache-configuration.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
@@ -66,9 +66,6 @@
     <a class="nav-link" href="20-setup.html#prerequisite">Prerequisites</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="20-setup.html#parameters">Parameters</a>
-  </li>
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="20-setup.html#access-console">Access - OCP Console</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -76,8 +73,17 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="30-server-configuration.html">3. Server Configuration</a>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">3. Server Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="31-server-configuration-basic.html">3.1. Basic Configuration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="32-server-configuration-security.html">3.2. Security</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="40-cache-configuration.html">4. Cache Configuration</a>
@@ -105,79 +111,48 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="30-server-configuration.html">3. Server Configuration</a></li>
+    <li>3. Server Configuration</li>
+    <li><a href="32-server-configuration-security.html">3.2. Security</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
 <h1 class="page">Guided Exercises</h1>
-<div id="preamble">
+<div class="sect1">
+<h2 id="_security_i_authentication"><a class="anchor" href="#_security_i_authentication"></a>Security I: Authentication</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to the next workshop segment! We&#8217;ll start by mastering essential use cases, which serve as a stepping stone to tackling more intricate scenarios. Following that, we&#8217;ll delve into the Infinispan CRD&#8217;s configuration options, equipping you to optimize performance, fine-tune settings, and effectively safeguard your cache infrastructure.</p>
+<p>With the essentials in place, it&#8217;s time to tighten security. As you learn to authenticate using the operator and OCP secret, keep in mind that this layer of protection is the springboard for the security enhancements to come.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_resources"><a class="anchor" href="#_resources"></a>Resources</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Replicas, Memory, CPU and JVM arguments.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_security"><a class="anchor" href="#_security"></a>Security</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Authentication and authorization using the operator and OCP secret.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_encryption"><a class="anchor" href="#_encryption"></a>Encryption</h2>
+<h2 id="_security_ii_authorization"><a class="anchor" href="#_security_ii_authorization"></a>Security II: Authorization</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We&#8217;ll guide you through two distinct approaches: utilizing OCP TLS certificates and implementing custom TLS certificates. Elevate your cache security to the next level.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Using OCP TLS certificates or using custom TLS certificates.</p>
-</li>
-</ul>
+<p>Taking security up a notch, we add a crucial layer of authorization to the authentication setup. Keep these combined security measures in mind as you navigate through the more intricate security configurations.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cross_site_replication"><a class="anchor" href="#_cross_site_replication"></a>Cross-site replication</h2>
+<h2 id="_security_iii_encryption"><a class="anchor" href="#_security_iii_encryption"></a>Security III: Encryption</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Unravel the complexities of this advanced feature, ensuring seamless data synchronization and distribution across different locations.</p>
+<p>As we continue, the focus shifts to data protection. Whether you opt for OCP TLS certificates or custom ones, remember that encryption is pivotal for safeguarding your cache infrastructure and maintaining data integrity.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Cross-site replication in your own cluster.</p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_wrap_up"><a class="anchor" href="#_wrap_up"></a>Wrap Up!</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>With each section, you gained a deeper understanding of key Red Hat Data Grid concepts, empowering you to optimize cache management and elevate your infrastructure expertise. Let&#8217;s continue our journey of exploration and learning!</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="20-setup.html">2. Environment Setup</a></span>
+  <span class="prev"><a href="31-server-configuration-basic.html">3.1. Basic Configuration</a></span>
   <span class="next"><a href="40-cache-configuration.html">4. Cache Configuration</a></span>
 </nav>
 </article>
