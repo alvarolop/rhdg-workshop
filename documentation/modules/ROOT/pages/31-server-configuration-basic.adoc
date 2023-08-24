@@ -1,0 +1,379 @@
+= Guided Exercises
+include::_attributes.adoc[]
+
+Welcome to the next workshop segment! We'll start by mastering essential use cases, which serve as a stepping stone to tackling more intricate scenarios. Following that, we'll delve into the Infinispan CRD's configuration options, equipping you to optimize performance, fine-tune settings, and effectively safeguard your cache infrastructure.
+
+
+TIP: Unless instructed, we expect you to execute all your exercises in the main namespace: `$USER-rhdg`.
+
+[NOTE]
+====
+This workshop was prepared for the following versions of the infrastructure:
+
+* Openshift version: 4.13.9
+* RHDG operator version: 4.4.6
+====
+
+
+== First cluster
+
+Kicking off your journey, let's build a strong foundation with the most basic Red Hat Data Grid setup. As you venture through each subsequent section, remember that these initial steps will serve as a reference point for the advanced concepts we'll delve into.
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  replicas: 1 <1>
+  security: <2>
+    endpointAuthentication: false
+    endpointEncryption:
+      type: None
+  service: 
+    container:
+      ephemeralStorage: true <3>
+    type: DataGrid <4>
+----
+
+<1> Only one replica for the simplest deployment.
+<2> Disable both authentication and encryption. (They come enabled by default).
+<3> Don't request a PVC, as it won't be needed by now.
+<4> `type: DataGrid` is the full version.
+
+After creating this CR in your namespace, you should see that the operator triggers the creation of several resources and after a few seconds, two pods will be running in your namespace:
+
+* `cluster-0` is the real pod of Data Grid. It contains the server itself.
+* `cluster-config-listener-...` is an extra pod deployed per Data Grid cluster that synchronizes the cache configurations with the pods of a cluster to keep consistency. This pod is optional but recommended. We will take advantage of it in the following section.
+
+
+
+.Did I Get It Right?
+****
+Access the logs to check that the Data Grid server is up and running. Either using the web console or the command line, access the logs of the pod `cluster-0`. You should see the following logs at the end:
+
+[source, txt]
+----
+14:10:11,635 INFO (main) [org.infinispan.CLUSTER] ISPN000079: Channel `cluster` local address is `cluster-0-12182`, physical addresses are `[10.131.1.53:7800]`
+14:10:11,646 INFO (main) [org.infinispan.CONTAINER] ISPN000390: Persisted state, version=14.0.11.Final-redhat-00001 timestamp=2023-08-23T14:10:11.645602320Z
+//...
+14:10:12,241 INFO (main) [org.infinispan.SERVER] ISPN080034: Server 'cluster-0-12182' listening on http://0.0.0.0:11222
+14:10:12,251 INFO (main) [org.infinispan.SERVER] ISPN080018: Started connector HotRod (internal)
+//...
+14:10:12,304 INFO (main) [org.infinispan.SERVER] ISPN080001: Red Hat Data Grid Server 8.4.3.GA started in 4084ms
+----
+
+****
+
+
+
+
+
+== Web Console
+
+Explore the 'Web Console' to gain insights into your configuration and the server performance. Easily access it by exposing it using an OCP route, providing an external window into your cache setup.
+
+Let's modify the previous `Infinispan` object to add the route at the end of the previous YAML:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  expose:
+    annotations: {}
+    type: Route
+----
+
+// This is the real full definition of the object:
+// [.console-input]
+// [source, yaml]
+// ----
+// apiVersion: infinispan.org/v1
+// kind: Infinispan
+// metadata:
+//   name: cluster
+// spec:
+//   replicas: 1 
+//   security: 
+//     endpointAuthentication: false
+//     endpointEncryption:
+//       type: None
+//   service:
+//     container:
+//       ephemeralStorage: true 
+//     type: DataGrid 
+//   expose:
+//     annotations: {}
+//     type: Route
+// ----
+
+That's all! Wait less than a second and you should see a new route in your namespace. Use the following command if you don't find it:
+
+[.console-input]
+[source, bash]
+----
+# Modify the command according to your user.
+oc get routes --template='http://{{(index .items 0).spec.host }}' 
+----
+
+Once you access the web console, you will see a welcome message. You just need to click on **Open the console**. 
+
+.Data Grid web console welcome message
+image::3-server-rhdg-console-welcome.png[]
+
+This is the main dashboard. You can use it to see Cache and cluster metrics, Cache configuration, clustering information, server version, cache entries, etc.
+
+.Data Grid web console dashboard
+image::3-server-rhdg-console-dashboard.png[]
+
+
+
+
+
+
+== High availability using several replicas
+
+In a production environment, you will always be interested in a high-availability configuration with several replicas, so that restarts of a container in Openshift don't impact the availability of the Data Grid cluster. Enabling it is as simple as modifying the number of replicas of your cluster. You can play with the YAML definition to change the number of replicas. 
+
+First, configure three replicas of your cluster by modifying the following configuration:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  replicas: 3
+----
+
+Wait a few seconds, and you should see a larger list of pods. Execute the following command to monitor the deployment status:
+
+[.console-input]
+[source, bash]
+----
+oc get pods -w 
+----
+
+[.console-output]
+[source, bash]
+----
+oc get pods 
+NAME                                       READY   STATUS    RESTARTS   AGE
+cluster-0                                  1/1     Running   0          21m
+cluster-1                                  1/1     Running   0          4m40s
+cluster-2                                  1/1     Running   0          4m33s
+cluster-config-listener-7db8d897bc-ft59v   1/1     Running   0          21m
+----
+
+.Did I Get It Right?
+****
+Access the logs of all the Data Grid pods to check that they clustered automagically and without errors. You should find logs like these in all the DG pods:
+
+.cluster-2 logs
+[source, txt]
+----
+15:15:09,998 INFO  (main) [org.jgroups.protocols.FD_SOCK2] server listening on *.57800
+15:15:10,047 INFO  (main) [org.infinispan.CLUSTER] ISPN000094: Received new cluster view for channel cluster: [cluster-0-34641|2] (3) [cluster-0-34641, cluster-1-35873, cluster-2-12580]
+15:15:10,103 INFO  (main) [org.infinispan.CLUSTER] ISPN000079: Channel `cluster` local address is `cluster-2-12580`, physical addresses are `[10.131.1.63:7800]`
+# ...
+15:15:10,929 INFO  (non-blocking-thread--p2-t1) [org.infinispan.LIFECYCLE] [Context=___hotRodTopologyCache_hotrod-admin][Scope=cluster-2-12580]ISPN100010: Finished rebalance with members [cluster-0-34641, cluster-1-35873, cluster-2-12580], topology id 6
+# ...
+15:15:10,973 INFO  (main) [org.infinispan.SERVER] ISPN080001: Red Hat Data Grid Server 8.4.3.GA started in 2326ms
+----
+
+****
+
+IMPORTANT: Please, before continuing to the next section, scale down the cluster to two replicas to save resources in Openshift. 
+
+
+
+
+
+
+
+
+
+
+== Memory and CPU
+
+Mastering the control of requests and limits will form the cornerstone of your cache management expertise. It is as simple as adding the following configuration to your already running cluster. Please, do not just add this configuration at the end of the YAML, as the operator adds default values for memory. Look for the `container` section and add your values:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  container:
+    cpu: "2000m:100m"
+    memory: "1Gi:1Gi"
+----
+
+After confirming the new definition of the Infinispan CR, the operator will trigger an ordered restart of the cluster with the new configuration ensuring that there is no loss of service.
+
+NOTE: This configuration is strongly recommended to ensure that the server does not restart due to an OutOfMemory error or the Java Garbage Collector does not have enough resources to perform efficiently.
+  
+
+
+
+
+== Labels
+
+As you progress through this workshop, it's time to explore how to apply labels to services and pods, enabling streamlined filtering based on these labels. Additionally, these labels can be utilized to enrich Prometheus metrics. 
+
+You can check the  labels of the cluster pods using the following command:
+
+[.console-input]
+[source, bash]
+----
+oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq
+----
+
+[.console-output]
+[source, bash]
+----
+{
+  "app": "infinispan-pod",
+  "app.kubernetes.io/created-by": "cluster",
+  "clusterName": "cluster",
+  "controller-revision-hash": "cluster-788688979",
+  "infinispan_cr": "cluster",
+  "rht.comp": "Data_Grid",
+  "rht.comp_ver": "8.4.3",
+  "rht.prod_name": "Red_Hat_Runtimes",
+  "rht.prod_ver": "2023-Q2",
+  "rht.subcomp_t": "application",
+  "statefulset.kubernetes.io/pod-name": "cluster-0"
+}
+----
+
+
+Now, add two new labels for the Infinispan CR, for example, `domain = bookshop` and `user = $YOUR_USER`:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  labels:
+    domain: bookshop
+    user: userX
+----
+
+You will see after new labels to your Infinispan CR, those labels are not populated to the server pods:
+
+[.console-input]
+[source, bash]
+----
+oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq
+----
+
+
+Therefore, we need to add some annotations to instruct the operator to propagate those labels to pods and/or services. There are two:
+
+* `infinispan.org/targetLabels` to add those labels to the services.
+* `infinispan.org/podTargetLabels` to add those labels to the pods.
+
+As we need them in the following exercises, let's add `domain` and `user` labels to the pods, but only `domain` to the services. 
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  annotations:
+    infinispan.org/podTargetLabels: 'domain,user'
+    infinispan.org/targetLabels: domain
+  labels:
+    domain: bookshop
+    user: userX
+----
+
+This will automatically relabel the pods without restarting them:
+
+[.console-input]
+[source, bash]
+----
+oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq
+----
+
+[.console-output]
+[source, bash]
+----
+{
+  "app": "infinispan-pod",
+  "app.kubernetes.io/created-by": "cluster",
+  "clusterName": "cluster",
+  "controller-revision-hash": "cluster-788688979",
+  "domain": "bookshop",
+  "infinispan_cr": "cluster",
+  "rht.comp": "Data_Grid",
+  "rht.comp_ver": "8.4.3",
+  "rht.prod_name": "Red_Hat_Runtimes",
+  "rht.prod_ver": "2023-Q2",
+  "rht.subcomp_t": "application",
+  "statefulset.kubernetes.io/pod-name": "cluster-0",
+  "user": "user1"
+}
+----
+
+
+== JVM settings
+
+
+To wrap up this segment on foundational settings, let's delve into the option of incorporating additional JVM parameters. While you have the freedom to choose any parameter, some common ones include adjusting the timezone, configuring an alternate Garbage Collector, or setting up GC logs. For now, we'll focus on modifying the timezone; later, you can explore the remaining options in the concluding section.
+
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+# Here the previous YAML content #
+  container:
+    extraJvmOpts: '-Duser.timezone="Europe/Madrid"'
+      # Here the MEM and CPU resources #
+
+----
+
+
+
+.Did I Get It Right?
+****
+Access the logs of all the Data Grid pods to check the JVM parameters:
+
+.cluster-0 logs
+[source, txt]
+----
+10:06:21,721 INFO (main) [BOOT] JVM OpenJDK 64-Bit Server VM Red Hat, Inc. 17.0.7+7-LTS
+10:06:21,726 INFO (main) [BOOT] JVM arguments = [-server, --add-exports, java.naming/com.sun.jndi.ldap=ALL-UNNAMED, --add-opens, java.base/java.util=ALL-UNNAMED, --add-opens, java.base/java.util.concurrent=ALL-UNNAMED, -Xlog:gc*:file=/opt/infinispan/server/log/gc.log:time,uptimemillis:filecount=5,filesize=3M, -Duser.timezone=Europe/Madrid, -Xmx512m, -XX:+ExitOnOutOfMemoryError, -XX:MetaspaceSize=32m, -XX:MaxMetaspaceSize=96m, -Djava.net.preferIPv4Stack=true, -Djava.awt.headless=true, -Dvisualvm.display.name=redhat-datagrid-server, -Djava.util.logging.manager=org.infinispan.server.loader.LogManager, -Dinfinispan.server.home.path=/opt/infinispan, -classpath, :/opt/infinispan/boot/infinispan-server-runtime-14.0.11.Final-redhat-00001-loader.jar, org.infinispan.server.loader.Loader, org.infinispan.server.Bootstrap, --bind-address=0.0.0.0, -l, /opt/infinispan/server/conf/operator/log4j.xml, -c, operator/infinispan-base.xml, -c, operator/infinispan-admin.xml]
+----
+
+As you can see in the middle of the second log line, the `-Duser.timezone=Europe/Madrid` was concatenated to the JVM arguments and the log date/time is now correct.
+
+****
+
+
+
+
+

@@ -2,11 +2,12 @@
 
 * xref:20-setup.adoc[2. Environment Setup]
 ** xref:20-setup.adoc#prerequisite[Prerequisites]
-** xref:20-setup.adoc#parameters[Parameters]
 ** xref:20-setup.adoc#access-console[Access - OCP Console]
 ** xref:20-setup.adoc#access-cli[Access - OC Client]
 
-* xref:30-server-configuration.adoc[3. Server Configuration]
+* 3. Server Configuration
+** xref:31-server-configuration-basic.adoc[3.1. Basic Configuration]
+** xref:32-server-configuration-security.adoc[3.2. Security]
 
 * xref:40-cache-configuration.adoc[4. Cache Configuration]
 
