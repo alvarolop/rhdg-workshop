@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Guided Exercises :: RH Data Grid Workshop</title>
+    <title>Security :: RH Data Grid Workshop</title>
     <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/32-server-configuration-security.html">
     <link rel="prev" href="31-server-configuration-basic.html">
     <link rel="next" href="40-cache-configuration.html">
@@ -119,20 +119,218 @@
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Guided Exercises</h1>
+<h1 class="page">Security</h1>
 <div class="sect1">
 <h2 id="_security_i_authentication"><a class="anchor" href="#_security_i_authentication"></a>Security I: Authentication</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>With the essentials in place, it&#8217;s time to tighten security. As you learn to authenticate using the operator and OCP secret, keep in mind that this layer of protection is the springboard for the security enhancements to come.</p>
 </div>
+<div class="paragraph">
+<p>The Red Hat Data Grid operator enables authentication by default. This configuration enforces that
+application users need credentials to access Data Grid clusters. Authentication in Data Grid is based on
+Security Realms. You can configure the following options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>LDAP Realm</strong>: LDAP realms connect to LDAP servers, such as OpenLDAP, Red Hat Directory Server,
+Apache Directory Server, or Microsoft Active Directory, to authenticate users and obtain membership
+information.</p>
+</li>
+<li>
+<p><strong>Properties Realm</strong>: Property realms use property files to define users and groups.</p>
+</li>
+<li>
+<p><strong>Token Realm</strong>: Token realms use external services to validate tokens and require providers that are
+compatible with RFC-7662 (OAuth2 Token Introspection), such as Red Hat SSO.</p>
+</li>
+<li>
+<p><strong>Truststore Realm</strong>: Trust store realms use certificates, or certificate chains, that verify Data Grid
+Server and client identities when they negotiate connections.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To ensure that we learn gradually all the aspects of the server configuration, we are going to start with the <strong>Properties Realm</strong>. Configuring Properties Realm authentication using the operator consists of two steps.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Level up!</div>
+If you are interested in other Realms you can investigate further during the second day of the workshop. Especially, you will find some tips for the LDAP Realm in the Advanced Exercises Section.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Step 1: Create a secret with the credentials</strong></p>
+</div>
+<div class="paragraph">
+<p>First, create a Secret that contains all the users and their passwords:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-credentials
+type: Opaque
+stringData:
+  identities.yaml: |-
+    credentials:
+    - username: developer
+      password: developer
+    - username: admin
+      password: password
+    - username: $YOUR_USERNAME
+      password: openshift</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, there will be three users. Remember to change <code>$YOUR_USERNAME</code> with the real value.</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 2: Enable authentication and add the secret to the CR</strong></p>
+</div>
+<div class="paragraph">
+<p>In the configuration of the <code>Infinispan</code> CR, set up authentication and link it to the previous secret:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointAuthentication: true
+    endpointSecretName: cluster-credentials</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Try to access the web console again, you will see a prompt requesting you to introduce <code>username</code> and <code>password</code>. You can use any from the previous secret, as we have not enabled authorization yet.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_security_ii_authorization"><a class="anchor" href="#_security_ii_authorization"></a>Security II: Authorization</h2>
+<h2 id="_security_ii_authorization_with_rbac"><a class="anchor" href="#_security_ii_authorization_with_rbac"></a>Security II: Authorization with RBAC</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Taking security up a notch, we add a crucial layer of authorization to the authentication setup. Keep these combined security measures in mind as you navigate through the more intricate security configurations.</p>
+<p>Authorization is a security feature that requires users to have certain permissions before they can access
+caches or interact with Data Grid resources. You assign roles to users that provide different levels of
+permissions, from read-only access to full, superuser privileges.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Level up!</div>
+Do you want to make sure that users belong to a role with sufficient permissions before they can perform operations on a specific Cache? You can explore that configuration in the Advanced Exercises Section.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s make sure that the admin user has ADMIN rights to the Data Grid cluster, but the user1 has monitor and read-only capabilities. Configuring authorization using the operator consists of two steps.</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 1: Modify the credentials secret with the roles</strong></p>
+</div>
+<div class="paragraph">
+<p>Data Grid includes several roles that provide users with permissions to access caches and Data Grid resources.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>admin</strong>: Superuser with all permissions including control of the Cache Manager lifecycle.</p>
+</li>
+<li>
+<p><strong>deployer</strong>: Can create and delete Data Grid resources in addition to application permissions.</p>
+</li>
+<li>
+<p><strong>application</strong>: Has read and write access to Data Grid resources in addition to observer permissions. Can also listen to events and execute server tasks and scripts.</p>
+</li>
+<li>
+<p><strong>observer</strong>: Has read access to Data Grid resources in addition to monitor permissions.</p>
+</li>
+<li>
+<p><strong>monitor</strong>: Can view statistics via JMX and the metrics endpoint.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In order to test all the possibilities, you can define the following roles. Scroll down to see what to expect from each user:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-credentials
+type: Opaque
+stringData:
+  identities.yaml: |-
+    credentials:
+    - username: developer
+      password: developer
+    - username: admin
+      password: password
+      roles:
+        - admin
+    - username: $YOUR_USERNAME
+      password: openshift
+      roles:
+        - application</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Step 2: Enable authorization in the Infinispan CR</strong></p>
+</div>
+<div class="paragraph">
+<p>We will enable authorization at the cluster level just with the property <code>spec.security.authorization.enabled = true</code>:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointAuthentication: true
+    endpointSecretName: cluster-credentials
+    authorization:
+      enabled: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you log in to the web console, you will quickly see the differences between each user: The <code>admin</code> has a button to create caches; <code>user1</code> does not, but can check the server statistics; <code>developer</code> cannot retrieve the statistics as he does not belong to a role with the MONITOR permission.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/32-server-rhdg-console-admin.png" alt="32 server rhdg console admin">
+</div>
+<div class="title">Figure 1. Web console for the user admin</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/32-server-rhdg-console-user1.png" alt="32 server rhdg console user1">
+</div>
+<div class="title">Figure 2. Web console for the user user1</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/32-server-rhdg-console-developer.png" alt="32 server rhdg console developer">
+</div>
+<div class="title">Figure 3. Web console for the user developer</div>
 </div>
 </div>
 </div>
@@ -140,7 +338,47 @@
 <h2 id="_security_iii_encryption"><a class="anchor" href="#_security_iii_encryption"></a>Security III: Encryption</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As we continue, the focus shifts to data protection. Whether you opt for OCP TLS certificates or custom ones, remember that encryption is pivotal for safeguarding your cache infrastructure and maintaining data integrity.</p>
+<p>Encryption allows encrypting connections between clients and Data Grid pods with Red Hat OpenShift service certificates or custom TLS certificates. Whether you opt for one or the other, remember that encryption is a great tool for safeguarding your cache infrastructure and keeping your cache information safe during transit.</p>
+</div>
+<div class="paragraph">
+<p>With the service certificates, the Data Grid Operator automatically generates TLS certificates that are signed by the Red Hat OpenShift service CA. Data Grid Operator then stores the certificates and keys in a k8s Secret so you can retrieve them and use them with remote clients.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Level up!</div>
+Do you want to explore the usage of custom certificates? You can explore that configuration in the Advanced Exercises Section.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointEncryption:
+      type: Service</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After setting this configuration and waiting for a few seconds, all the pods will automatically restart and will just accept HTTPS connections. Therefore, change the protocol in the URL or just execute the following command to get the URL:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Modify the command according to your user.
+oc get routes --template='https://{{(index .items 0).spec.host }}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After accepting that <code>Your connection is not private</code> because the certificate is auto-signed using the OCP CA, you will be able to access Data Grid pods using HTTPS instead of HTTP.</p>
 </div>
 </div>
 </div>
