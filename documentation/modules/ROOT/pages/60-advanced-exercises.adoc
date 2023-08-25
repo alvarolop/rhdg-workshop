@@ -7,11 +7,15 @@ include::_attributes.adoc[]
 * For both client and server side.
 * List the most important metrics.
 
-== In-line caching vs side caching.
+
+Take into account this: https://docs.openshift.com/container-platform/4.13/monitoring/managing-metrics.html#querying-metrics-for-user-defined-projects-as-a-developer_managing-metrics
 
 == Openshift Helm Charts.
 
 == Datasources with SQL Database.
+
+
+In-line caching vs side caching.
 
 == Authorization using RBAC.
 
@@ -24,7 +28,7 @@ Two options for doing it from your laptop:
 
 == Testing the cluster using the REST API
 
-* Create three caches: one for Proto, one for Plain/text, one for JSON.
+* Create three caches: one for Proto, one for Plain/text, and one for JSON.
 * Perform CRUD operations over all of them using the curl command.
 * Perform a Query using REST to check that it works fine.
 
