@@ -125,91 +125,197 @@
 <p>As we move forward to our final phase, we enter the Troubleshooting Section. Here, we provide you with essential tools and techniques to tackle any issues that come your way. As an administrator of the infrastructure, you&#8217;ll master the art of collecting cluster information for effective debugging. Join us in this enlightening section to strengthen your troubleshooting skills and enhance your cache optimization abilities.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s start by collecting important details about the Openshift setup, including CRDs and pod logs and events. Then, we&#8217;ll dig into examining the Data Grid server, getting the caches' configuration and a complete server report. Lastly, we&#8217;ll focus on JVM debugging, getting info from the Java Heap Dump and Java Thread Dump.</p>
+<p>Let&#8217;s start by collecting important details about the Openshift setup, including CRDs, and pod logs and events. Then, we&#8217;ll dig into examining the Data Grid server, getting the caches' configuration and a complete server report. Lastly, we&#8217;ll focus on JVM debugging, getting info from the Java Heap Dump and Java Thread Dump.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_openshift_information"><a class="anchor" href="#_openshift_information"></a>Openshift information</h2>
+<h2 id="_collecting_openshift_resources"><a class="anchor" href="#_collecting_openshift_resources"></a>Collecting Openshift resources</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Ok, we don&#8217;t know yet what is going on. This section will help us to identify all the components of our installation and give us a methodic way of examining issues.</p>
+</div>
 <div class="sect2">
 <h3 id="_retrieving_the_list_of_server_pods"><a class="anchor" href="#_retrieving_the_list_of_server_pods"></a>Retrieving the list of server pods</h3>
 <div class="paragraph">
 <p>This might seem trivial, but we need to list the pods to then execute other commands inside the pods. Execute the following command to retrieve the full list of pods:</p>
 </div>
-<div class="listingblock lines_space console-input">
-<div class="title">Example</div>
+<div class="listingblock console-input">
+<div class="title">Get the full list of pods</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n {user}-rhdg</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -l user=$YOUR_USER</code></pre>
 </div>
 </div>
 <div class="listingblock console-output">
-<div class="title">Output of the previous command</div>
+<div class="title">Output</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc login -u {user} -p openshift {cluster_api}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME        READY   STATUS    RESTARTS   AGE
+cluster-0   1/1     Running   0          19m
+cluster-1   1/1     Running   0          19m</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_retrieving_all_the_logs_for_investigation"><a class="anchor" href="#_retrieving_all_the_logs_for_investigation"></a>Retrieving all the logs for investigation</h3>
+<div class="paragraph">
+<p>Here you have to take into account that three main components take part in the configuration and you should know their responsibilities:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>infinispan-operator-controller-manager</code>: This is the operator itself and runs in this workshop in a different namespace named <code>rhdg-operator</code>. It synchronizes the configuration of the CRDs with Openshift objects and the Infinispan server itself. There is an exception for the Cache CRD when the <code>.spec.configListener.enabled</code> = true in the Infinispan CRD - which is enabled by default-, this sync is delegated to the config-listener deployed for each cluster.</p>
+<div class="listingblock console-input">
+<div class="title">Check the logs of the operator pod</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f $(oc get pods -n rhdg-operator --template="{{(index .items 0).metadata.name }}") -n rhdg-operator</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>cluster-config-listener</code>: There is one per cluster and it can be disabled when <code>.spec.configListener.enabled</code> = false in the Infinispan CRD. It is responsible for the bidirectional reconciliation of cache configurations between the Data Grid server and the Cache CRD.</p>
+<div class="listingblock console-input">
+<div class="title">Check the logs of the config-listener pod</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f $(oc get pods -l app=infinispan-config-listener-pod --template="{{(index .items 0).metadata.name }}")</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>cluster-pods</code>: These are the actual pods of the cluster. In its logs, you can see issues related to server configuration, the clustering based on JGroups, and access logs.</p>
+<div class="listingblock console-input">
+<div class="title">Check the logs of the server pods</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f cluster-0</code></pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_retrieving_the_openshift_configuration"><a class="anchor" href="#_retrieving_the_openshift_configuration"></a>Retrieving the Openshift configuration</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>oc adm inspect namespace/&lt;rhdg-namespace&gt;</p>
-</li>
-<li>
-<p>Or do it manually.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This information is essential for the Data Grid support team to have a clear idea of the issue that you are facing. The recommended way to collect information is using the inspect command:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get the full report of the namespace</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc adm inspect namespace/$YOUR_USER-rhdg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t have enough permissions to execute the above command, you will need that information manually.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_server_debugging_and_maintaining"><a class="anchor" href="#_server_debugging_and_maintaining"></a>Server debugging and maintaining</h2>
+<h2 id="_the_data_grid_server_report"><a class="anchor" href="#_the_data_grid_server_report"></a>The Data Grid server report</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_retrieving_the_data_grid_server_report"><a class="anchor" href="#_retrieving_the_data_grid_server_report"></a>Retrieving the Data Grid server report</h3>
 <div class="paragraph">
-<p><a href="https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift" class="bare">https://github.com/alvarolop/rhdg8-server#retrieve-server-reports-from-openshift</a></p>
+<p>Data Grid Server provides aggregated reports in tar.gz archives that contain diagnostic information about server instances and host systems. The report provides details about CPU, memory, open files, network sockets and routing, and threads, in addition to configuration and log files.</p>
+</div>
+<div class="paragraph">
+<p>Retrieving the server report takes several steps, as you have to use the Infinispan CLI. In the following command, I have automated the process so that you can generate it and download it easily:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get the server report</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Generate the report
+oc exec cluster-0 -- bash -c 'echo "server report" | ./bin/cli.sh --trustall -c https://admin:password@$HOSTNAME:11222 -f -'
+# Download the report
+oc exec cluster-0 -- bash -c 'files=( *tar.gz* ); cat "${files[0]}"' &gt; $(date +"%Y-%m-%d-%H-%M")-cluster-0-report.tar.gz</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The report comprises the execution of several useful commands that will help you understand the reasons why the server might be misconfigured:</p>
+</div>
+<div class="listingblock console-output">
+<div class="title">Server report output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ ls -1 cluster-0-report
+    184
+    conf
+    cpuinfo
+    data
+    df
+    ip-address
+    ip-maddress
+    ip-mroute
+    ip-route
+    log
+    lsof
+    meminfo
+    os-release
+    ss-tcp
+    ss-udp
+    uname</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_rest_api_to_retrieve_information_from_the_cluster"><a class="anchor" href="#_using_the_rest_api_to_retrieve_information_from_the_cluster"></a>Using the REST API to retrieve information from the cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section compiles a set of REST endpoints useful to retrieve configuration from the server.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for you for the Advanced Exercises Section.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_protobuf"><a class="anchor" href="#_problems_with_protobuf"></a>Problems with Protobuf?</h3>
+<div class="paragraph">
+<p>You can list all the <code>.proto</code> files using the REST API.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve the Proto files</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_problems_with_cache_configurations"><a class="anchor" href="#_problems_with_cache_configurations"></a>Problems with cache configurations?</h3>
+<h3 id="_problems_with_cache_definitions"><a class="anchor" href="#_problems_with_cache_definitions"></a>Problems with cache definitions?</h3>
+<div class="paragraph">
+<p>Retrieve the list of caches, its configuration and its status (Healthy or not).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_server_tasks"><a class="anchor" href="#_problems_with_server_tasks"></a>Problems with Server tasks?</h3>
+<div class="paragraph">
+<p>List them using REST.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_the_content_of_a_cache"><a class="anchor" href="#_problems_with_the_content_of_a_cache"></a>Problems with the content of a cache?</h3>
+<div class="paragraph">
+<p>Empty the cache using REST.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_indexes"><a class="anchor" href="#_problems_with_indexes"></a>Problems with indexes?</h3>
+<div class="paragraph">
+<p>Reindex a cache.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_converting_cache_definitions_using_the_rest_api"><a class="anchor" href="#_converting_cache_definitions_using_the_rest_api"></a>Converting Cache definitions using the REST API</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations" class="bare">https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations</a></p>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_other_useful_rest_api_operations"><a class="anchor" href="#_other_useful_rest_api_operations"></a>Other useful REST API operations</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Problems with Protobuf? You can list all the <code>.proto</code> files using the REST API.</p>
-</li>
-<li>
-<p>Problems with cache definitions? Retrieve the list of caches, its configuration and its status (Healthy or not).</p>
-</li>
-<li>
-<p>Problems with Server tasks? List them using REST.</p>
-</li>
-<li>
-<p>Problems with the content of a cache? Empty the cache using REST.</p>
-</li>
-<li>
-<p>Problems with indexes? Reindex a cache.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_when_should_add_here_a_section_about_cross_site_replication"><a class="anchor" href="#_when_should_add_here_a_section_about_cross_site_replication"></a>When should add here a section about cross-site replication</h2>
-<div class="sectionbody">
-
 </div>
 </div>
 <div class="sect1">
