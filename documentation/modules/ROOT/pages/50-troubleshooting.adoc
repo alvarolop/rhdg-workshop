@@ -134,35 +134,158 @@ This section compiles a set of REST endpoints useful to retrieve configuration f
 
 TIP: Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for you for the Advanced Exercises Section.
 
+The following REST requests have been done using the `curl` command, adapt it to any method you consider more convenient.
+
+[IMPORTANT]
+====
+You need to define the env var with the REST Endpoint before executing the next commands:
+
+.Set Data Grid server URL
+[.console-input]
+[source, bash]
+----
+RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }})
+----
+
+====
+
+
+
+=== Problems with Server Config?
+
+You can retrieve the actual configuration of the Red Hat Data Grid server. As you know, the final configuration is the result of a merge operation between several configuration files. You can see all of them checking the command executed in the JVM (First line of the pod logs).
+
+If you want to show the resulting configuration, execute the following command:
+
+.Curl command to retrieve Server Config
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .
+----
+
+
+
 === Problems with Protobuf? 
 
 
-You can list all the `.proto` files using the REST API.
+You can list all the `.proto` files and also all the Proto types using the REST API.
 
 
 .Curl command to retrieve the Proto files
 [.console-input]
 [source, bash]
 ----
-curl 
+curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .
+----
+
+.Curl command to retrieve the Proto Types (Primitives)
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .
 ----
 
 
 === Problems with cache definitions? 
 
-Retrieve the list of caches, its configuration and its status (Healthy or not).
+At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:
+
+.Get all caches
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches | jq .
+----
+
+
+.Check the status of the cluster and all the caches
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/cache-managers/default/health | jq .
+----
+
+
+.Check cache config and stats
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -P .
+----
+
+
 
 
 === Problems with Server tasks? 
 
-List them using REST.
+You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:
+
+.List all the available Server Tasks
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .
+----
+
 
 === Problems with the content of a cache?
-Empty the cache using REST.
 
-=== Problems with indexes?
+You can also fully interact with the cache, creating, modifying, listing and removing contents of every cache compatible with the REST interface (For example, you cannot create Java Serialized objects). Here we list some commands to get the status and debug issues. Go to the Exercises section for more tasks about the REST endpoint.
 
-Reindex a cache.
+.List all the entries of the cache
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=entries | jq .
+----
+
+.Clear a cache
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=clear
+----
+
+
+
+=== Problems with indexes and queries?
+
+
+Queries and indexes also provide some specific endpoints for debugging and reconfiguration. First, queries are executed over indexed caches. When you delete fields or change index field definitions, you must rebuild the index to ensure the index is consistent with the data in the cache. You can do that using the following endpoint:
+
+
+.Reindex a cache.
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/indexes?action=reindex
+----
+
+
+Once you begin to execute queries over the cache, you will be interested in debugging based on statistics. Obtain information about queries and indexes in caches with GET requests:
+
+ 
+
+.Get cache index and query statistics
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/stats | jq .
+----
+
+
+
+
+
+
+
+== Changing logging config without restart
 
 
 
