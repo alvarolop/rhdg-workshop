@@ -13,6 +13,6 @@
 
 * xref:50-troubleshooting.adoc[5. Troubleshooting]
 
-* xref:60-advanced-exercises.adoc[6. Advanced Exercises]
+* xref:60-exercises.adoc[6. Exercises]
 
 * xref:70-conclusions.adoc[7. Conclusions]

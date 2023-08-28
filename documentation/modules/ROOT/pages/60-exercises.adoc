@@ -1,8 +1,10 @@
 = Practical Application
 include::_attributes.adoc[]
 
+== Level I
 
-== Prometheus metrics and Grafana.
+
+=== Prometheus metrics and Grafana.
 
 * For both client and server side.
 * List the most important metrics.
@@ -10,28 +12,54 @@ include::_attributes.adoc[]
 
 Take into account this: https://docs.openshift.com/container-platform/4.13/monitoring/managing-metrics.html#querying-metrics-for-user-defined-projects-as-a-developer_managing-metrics
 
-== Openshift Helm Charts.
-
-== Datasources with SQL Database.
+=== Openshift Helm Charts.
 
 
-In-line caching vs side caching.
-
-== Authorization using RBAC.
-
-== Access the DG cluster from outside
+=== Access the DG cluster from outside
 
 Two options for doing it from your laptop:
 
 * expose through a Route.
 * Use oc port-forward.
 
-== Testing the cluster using the REST API
+=== Affinity and anti-affinity
+
+
+
+
+
+
+
+== Level II
+
+
+=== Datasources with SQL Database.
+
+In-line caching vs side caching.
+
+
+
+=== Testing the cluster using the REST API
 
 * Create three caches: one for Proto, one for Plain/text, and one for JSON.
 * Perform CRUD operations over all of them using the curl command.
 * Perform a Query using REST to check that it works fine.
 
-== Cross-site replication
+
+=== LDAP-based Authorization 
+
+
+
+
+
+
+
+== Level III
+
+
+=== Authorization using RBAC.
+
+
+=== Cross-site replication
 
 Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.

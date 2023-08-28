@@ -30,7 +30,7 @@ These activities are generally independent of one another. However, if there are
 
 xref:50-troubleshooting.adoc[Troubleshooting]
 
-xref:60-advanced-exercises.adoc[Advanced Exercises]
+xref:60-exercises.adoc[Exercises]
 
 xref:70-conclusions.adoc[Conclusions]
 
