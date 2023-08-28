@@ -6,7 +6,7 @@
     <title>Troubleshooting :: RH Data Grid Workshop</title>
     <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/50-troubleshooting.html">
     <link rel="prev" href="40-cache-configuration.html">
-    <link rel="next" href="60-advanced-exercises.html">
+    <link rel="next" href="60-exercises.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -93,7 +93,7 @@
     <a class="nav-link" href="50-troubleshooting.html">5. Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="60-advanced-exercises.html">6. Advanced Exercises</a>
+    <a class="nav-link" href="60-exercises.html">6. Exercises</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
@@ -272,42 +272,148 @@ Some of the objects of this section might be new to you: Proto files, server tas
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>The following REST requests have been done using the <code>curl</code> command, adapt it to any method you consider more convenient.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You need to define the env var with the REST Endpoint before executing the next commands:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Set Data Grid server URL</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }})</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_server_config"><a class="anchor" href="#_problems_with_server_config"></a>Problems with Server Config?</h3>
+<div class="paragraph">
+<p>You can retrieve the actual configuration of the Red Hat Data Grid server. As you know, the final configuration is the result of a merge operation between several configuration files. You can see all of them checking the command executed in the JVM (First line of the pod logs).</p>
+</div>
+<div class="paragraph">
+<p>If you want to show the resulting configuration, execute the following command:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve Server Config</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .</code></pre>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_problems_with_protobuf"><a class="anchor" href="#_problems_with_protobuf"></a>Problems with Protobuf?</h3>
 <div class="paragraph">
-<p>You can list all the <code>.proto</code> files using the REST API.</p>
+<p>You can list all the <code>.proto</code> files and also all the Proto types using the REST API.</p>
 </div>
 <div class="listingblock console-input">
 <div class="title">Curl command to retrieve the Proto files</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve the Proto Types (Primitives)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_problems_with_cache_definitions"><a class="anchor" href="#_problems_with_cache_definitions"></a>Problems with cache definitions?</h3>
 <div class="paragraph">
-<p>Retrieve the list of caches, its configuration and its status (Healthy or not).</p>
+<p>At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get all caches</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/caches | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Check the status of the cluster and all the caches</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/cache-managers/default/health | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Check cache config and stats</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -P .</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_problems_with_server_tasks"><a class="anchor" href="#_problems_with_server_tasks"></a>Problems with Server tasks?</h3>
 <div class="paragraph">
-<p>List them using REST.</p>
+<p>You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">List all the available Server Tasks</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_problems_with_the_content_of_a_cache"><a class="anchor" href="#_problems_with_the_content_of_a_cache"></a>Problems with the content of a cache?</h3>
 <div class="paragraph">
-<p>Empty the cache using REST.</p>
+<p>You can also fully interact with the cache, creating, modifying, listing and removing contents of every cache compatible with the REST interface (For example, you cannot create Java Serialized objects). Here we list some commands to get the status and debug issues. Go to the Exercises section for more tasks about the REST endpoint.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">List all the entries of the cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=entries | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Clear a cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=clear</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_problems_with_indexes"><a class="anchor" href="#_problems_with_indexes"></a>Problems with indexes?</h3>
+<h3 id="_problems_with_indexes_and_queries"><a class="anchor" href="#_problems_with_indexes_and_queries"></a>Problems with indexes and queries?</h3>
 <div class="paragraph">
-<p>Reindex a cache.</p>
+<p>Queries and indexes also provide some specific endpoints for debugging and reconfiguration. First, queries are executed over indexed caches. When you delete fields or change index field definitions, you must rebuild the index to ensure the index is consistent with the data in the cache. You can do that using the following endpoint:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Reindex a cache.</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/indexes?action=reindex</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Once you begin to execute queries over the cache, you will be interested in debugging based on statistics. Obtain information about queries and indexes in caches with GET requests:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get cache index and query statistics</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/stats | jq .</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_changing_logging_config_without_restart"><a class="anchor" href="#_changing_logging_config_without_restart"></a>Changing logging config without restart</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 <div class="sect1">
@@ -342,7 +448,7 @@ Some of the objects of this section might be new to you: Proto files, server tas
 </div>
 <nav class="pagination">
   <span class="prev"><a href="40-cache-configuration.html">4. Cache Configuration</a></span>
-  <span class="next"><a href="60-advanced-exercises.html">6. Advanced Exercises</a></span>
+  <span class="next"><a href="60-exercises.html">6. Exercises</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
