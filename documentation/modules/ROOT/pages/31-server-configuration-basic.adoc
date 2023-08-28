@@ -91,29 +91,6 @@ spec:
     type: Route
 ----
 
-// This is the real full definition of the object:
-// [.console-input]
-// [source, yaml]
-// ----
-// apiVersion: infinispan.org/v1
-// kind: Infinispan
-// metadata:
-//   name: cluster
-// spec:
-//   replicas: 1 
-//   security: 
-//     endpointAuthentication: false
-//     endpointEncryption:
-//       type: None
-//   service:
-//     container:
-//       ephemeralStorage: true 
-//     type: DataGrid 
-//   expose:
-//     annotations: {}
-//     type: Route
-// ----
-
 That's all! Wait less than a second and you should see a new route in your namespace. Use the following command if you don't find it:
 
 [.console-input]

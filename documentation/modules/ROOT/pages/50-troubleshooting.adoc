@@ -79,6 +79,16 @@ oc adm inspect namespace/$YOUR_USER-rhdg
 
 If you don't have enough permissions to execute the above command, you will need that information manually.
 
+The `oc adm inspect` command does not collect Custom resources. Therefore, you will need to collect the separately:
+
+.Get the custom resources
+[.console-input]
+[source, bash]
+----
+oc get infinispan -o yaml > infinispan.yaml
+
+oc get cache -o yaml > caches.yaml
+----
 
 
 
@@ -285,13 +295,38 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search
 
 
 
-== Changing logging config without restart
+== Adjusting log levels
+
+Change levels for different Data Grid logging categories when you need to debug issues. You can also adjust log levels to reduce the number of messages for certain categories to minimize the use of container resources. You can try to change the logging configuration without restarting by adding the following lines in the Infinispan CR:
+
+
+.Add custom log levels
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  logging:
+    categories:
+      org.infinispan.REST_ACCESS_LOG: trace
+----
+
+Then, you can execute the following query and you will see that access logs per REST call are only logged to stdout if `REST_ACCESS_LOG` = `trace`:
+
+.Get cache index and query statistics
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=entries
+----
 
 
 
-== Converting Cache definitions using the REST API
 
-https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations
 
 
 
@@ -299,12 +334,137 @@ https://github.com/alvarolop/rhdg8-server#annex-convert-cache-configurations
 == JVM debugging
 
 
-=== Problems with the JVM memory on cluster pods?
+=== Java Thread Dump
 
 
-* Java Thread Dump
-* Java Heap Dump
+A *Java thread dump* is a snapshot of what every thread in the JVM is doing at a particular point in time. Each thread in the JVM is listed with its name and ID, its current state and the Java call stack showing what monitor it has locked or is waiting on.
 
 
-=== Reached file limit descriptors on a pod?
 
+.Get a Thread Dump
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/server/threads
+----
+
+
+
+=== Java Heap Dump
+
+A *Java Heap Dump* is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful for troubleshooting memory leak problems and optimizing memory usage in Java applications. Heap dumps are usually stored in binary format `hprof` files.
+
+
+.Get a Heap Dump
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/server/memory?action=heap-dump
+# Take the filename from the output to copy it to your machine
+oc cp cluster-0:/opt/infinispan/server/data/$DUMP_FILENAME.prof . heapdump-cluster-0.hprof
+----
+
+
+
+=== Logging GC messages
+
+The Data Grid Operator does not log Garbage Collector (GC) messages by default. You can direct GC messages to stdout with the following JVM options:
+
+
+.Configure GC messages to stdout
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  container:
+    # If you want to keep the timezone config, just append the following to the existing config
+    extraJvmOpts: "-Xlog:gc*:stdout:time,level,tags"
+----
+
+If instead, you want the logs in a separate file (as it might be quite verbose), you can use a configuration like the following:
+
+.Configure GC messages to file
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  container:
+    # If you want to keep the timezone config, just append the following to the existing config
+    extraJvmOpts: "-Xlog:gc*=info:file=/tmp/gc.log:time,level,tags,uptimemillis:filecount=10,filesize=1m"
+----
+
+
+
+=== Analyzing File descriptions
+
+A file descriptor is a number that uniquely identifies an open file in a computer's operating system. It describes a data resource, and how that resource may be accessed. It is needed to open *files*, *network sockets*, etc. There is a *default limit* to the number of opened file descriptors. If you suspect that you are matching that limit, you can check with the following command:
+
+.Get the opened file descriptors
+[.console-input]
+[source, bash]
+----
+oc exec cluster-0 -- lsof -P > lsof-cluster-0.txt
+----
+
+
+
+
+
+
+
+
+
+
+== Converting Cache definitions using the REST API
+
+Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definitionin a different format and would like to convert it? That's easy! There are two use cases here. 
+
+If the cache is already in a cluster, you can retrieve it in any of the three formats just sending the proper header. Let's use the same cache as in previous exercises:
+
+
+.Get Cache Definition in different formats
+[.console-input]
+[source, bash]
+----
+# Accept YAML
+curl -s -k -u admin:password -H "Accept: application/yaml" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+# Accept XML
+curl -s -k -u admin:password -H "Accept: application/xml" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+# Accept JSON
+curl -s -k -u admin:password -H "Accept: application/json" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+----
+
+However, if the cache is not present in the cluster, you can use the convert action of the caches endpoint: 
+
+.Conver from XML to YAML
+[.console-input]
+[source, bash]
+----
+curl $RHDG_URL/rest/v2/caches?action=convert \
+  --digest -u admin:password \
+  -X POST -k \
+  -H "Accept: application/yaml" \
+  -H "Content-Type: application/xml" \
+  -d '<?xml version="1.0" encoding="UTF-8"?><replicated-cache mode="SYNC" statistics="false"><encoding media-type="application/x-protostream"/><expiration lifespan="300000" /><memory max-size="400MB" when-full="REMOVE"/><state-transfer enabled="true" await-initial-transfer="false"/></replicated-cache>'
+----
+
+TIP: This endpoint also validates the cache configuration and migrates from deprecated parameters to up-to-date ones!!
+
+
+== Useful KCS
+
+Do you have other needs and you would like to have the `jcmd` command inside the pod? Try the documentation of this KCS:
+
+* KCS: https://access.redhat.com/solutions/6964022[Alternatives for creating heap dump and thread dump in a DG 8 even without the JDK].
+* KCS: https://access.redhat.com/solutions/6968671[Troubleshoot options for Data Grid pod crash].
+* KCS: https://access.redhat.com/solutions/6962483[Using inspect for DG 8 troubleshooting].
+* KCS: https://access.redhat.com/solutions/6452611[DG 8 Troubleshooting steps for issues in OCP 4].
