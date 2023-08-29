@@ -20,7 +20,6 @@
     "gulp": "^4.0.0",
     "yaml-js": "^0.2.3"
   },
-  "devDependencies": {},
   "scripts": {
     "dev": "gulp",
     "clean": "gulp clean",

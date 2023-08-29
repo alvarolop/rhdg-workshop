@@ -229,7 +229,7 @@ This workshop is focused on the infrastructure side of Data Grid, but maybe you 
 * And much more!
 
 
-In such case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy a RHDG client in a few steps: https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift
+In such a case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy an RHDG client in a few steps: https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift
 
 
 
