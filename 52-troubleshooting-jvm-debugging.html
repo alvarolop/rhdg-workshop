@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Troubleshooting :: RH Data Grid Workshop</title>
+    <title>JVM debugging :: RH Data Grid Workshop</title>
     <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/52-troubleshooting-jvm-debugging.html">
     <link rel="prev" href="51-troubleshooting-rest-api.html">
     <link rel="next" href="60-exercises.html">
@@ -152,12 +152,10 @@
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Troubleshooting</h1>
+<h1 class="page">JVM debugging</h1>
 <div class="sect1">
-<h2 id="_jvm_debugging"><a class="anchor" href="#_jvm_debugging"></a>JVM debugging</h2>
+<h2 id="_java_thread_dump"><a class="anchor" href="#_java_thread_dump"></a>Java Thread Dump</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_java_thread_dump"><a class="anchor" href="#_java_thread_dump"></a>Java Thread Dump</h3>
 <div class="paragraph">
 <p>A <strong>Java thread dump</strong> is a snapshot of what every thread in the JVM is doing at a particular point in time. Each thread in the JVM is listed with its name and ID, its current state and the Java call stack showing what monitor it has locked or is waiting on.</p>
 </div>
@@ -168,8 +166,10 @@
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_java_heap_dump"><a class="anchor" href="#_java_heap_dump"></a>Java Heap Dump</h3>
+</div>
+<div class="sect1">
+<h2 id="_java_heap_dump"><a class="anchor" href="#_java_heap_dump"></a>Java Heap Dump</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A <strong>Java Heap Dump</strong> is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful for troubleshooting memory leak problems and optimizing memory usage in Java applications. Heap dumps are usually stored in binary format <code>hprof</code> files.</p>
 </div>
@@ -183,8 +183,10 @@ oc cp cluster-0:/opt/infinispan/server/data/$DUMP_FILENAME.prof . heapdump-clust
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_logging_gc_messages"><a class="anchor" href="#_logging_gc_messages"></a>Logging GC messages</h3>
+</div>
+<div class="sect1">
+<h2 id="_logging_gc_messages"><a class="anchor" href="#_logging_gc_messages"></a>Logging GC messages</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The Data Grid Operator does not log Garbage Collector (GC) messages by default. You can direct GC messages to stdout with the following JVM options:</p>
 </div>
@@ -218,8 +220,10 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_analyzing_file_descriptions"><a class="anchor" href="#_analyzing_file_descriptions"></a>Analyzing File descriptions</h3>
+</div>
+<div class="sect1">
+<h2 id="_analyzing_file_descriptions"><a class="anchor" href="#_analyzing_file_descriptions"></a>Analyzing File descriptions</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A file descriptor is a number that uniquely identifies an open file in a computer&#8217;s operating system. It describes a data resource, and how that resource may be accessed. It is needed to open <strong>files</strong>, <strong>network sockets</strong>, etc. There is a <strong>default limit</strong> to the number of opened file descriptors. If you suspect that you are matching that limit, you can check with the following command:</p>
 </div>
@@ -227,7 +231,6 @@ spec:
 <div class="title">Get the opened file descriptors</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc exec cluster-0 -- lsof -P &gt; lsof-cluster-0.txt</code></pre>
-</div>
 </div>
 </div>
 </div>
