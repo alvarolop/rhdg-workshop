@@ -303,7 +303,7 @@ charts. A chart is a collection of files that describe a related set of Kubernet
 <p>You can install the Helm chart in three quick steps:</p>
 </div>
 <div class="listingblock console-input">
-<div class="title">Install the cluster</div>
+<div class="title">Install the cluster using Helm Charts</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1) Add the OpenShift Helm Charts repository.
 helm repo add openshift-helm-charts https://charts.openshift.io/
@@ -332,30 +332,119 @@ helm install cluster-helm openshift-helm-charts/redhat-data-grid</code></pre>
 <h2 id="_level_ii"><a class="anchor" href="#_level_ii"></a>Level II</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_2_1_testing_the_cluster_using_the_rest_api"><a class="anchor" href="#_2_1_testing_the_cluster_using_the_rest_api"></a>2.1. Testing the cluster using the REST API</h3>
+<h3 id="_2_1_rest_api_for_caches"><a class="anchor" href="#_2_1_rest_api_for_caches"></a>2.1. REST API for Caches</h3>
+<div class="paragraph">
+<p>Learn how to work with Caches using the REST API and various data formats.</p>
+</div>
+<div class="paragraph">
+<p><strong>First</strong>, you will need to create three caches with similar configuration. Use the knowledge of the section <code>Cache Configuration</code> to create three caches with its corresponding encoding format:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Create three caches: one for Proto, one for Plain/text, and one for JSON.</p>
+<p><code>rest-plain</code>: Encoding <code>text/plain</code>.</p>
 </li>
 <li>
-<p>Perform CRUD operations over all of them using the curl command.</p>
+<p><code>rest-json</code>: Encoding <code>application/json</code>.</p>
 </li>
 <li>
-<p>Perform a Query using REST to check that it works fine.</p>
+<p><code>rest-proto</code>: Encoding <code>application/x-protostream</code>.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>You can use either the Cache CR, the REST API, etc. <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_rest_api/rest_v2_api#rest_v2_create_cache">Here</a> is how to create a cache using the REST API.</p>
+</div>
+<div class="paragraph">
+<p>Use the command you learned in the Troubleshooting section to check that the caches are present in the cluster.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+I recommend you use the same configuration for all of them. Use a Distributed cache with two owners. Avoid setting expiration and memory. Just keep it simple! You can use the official documentation for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/index">Cache Configuration</a> and for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/cache_encoding_and_marshalling/index#cache-encoding">Encoding and Marshalling</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Second</strong>, you will create entries in all three caches in different formats depending on the cache encoding:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Put an entry in the cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0 --data "Hello World"
+
+# application/json
+curl -X POST -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 --data '{"Hello": "World", "foo": "bar", "john": "doe"}'
+
+# application/x-protostream
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 --data "Hello World"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Third</strong>, retrieve the entries also using the REST API.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Retrieve entries from the cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0
+
+# application/json
+curl -X GET -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 | jq .
+{
+  "Hello": "World",
+  "foo": "bar",
+  "john": "doe"
+}
+
+# application/x-protostream
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 | jq .
+{
+  "_type": "string",
+  "_value": "Hello World"
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+See how, with a proto cache, you can interact with <code>text/plain</code> format in your REST queries, but it then stores the entries in Protostream format. This simplifies interoperability and allows you to consume it as Java Objects directly from a Java Hot Rod client.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.</p>
+</div>
+<div class="paragraph">
+<p>Also, in general, developers will use Protostream to store complex classes defined with a <code>.proto</code> file. Please, check how to create and delete <code>.proto</code> files with the REST API. Then, interact with the cache in the same way.</p>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_2_2_ldap_based_authorization"><a class="anchor" href="#_2_2_ldap_based_authorization"></a>2.2. LDAP-based Authorization</h3>
+<h3 id="_2_2_deploying_a_java_client"><a class="anchor" href="#_2_2_deploying_a_java_client"></a>2.2 Deploying a Java client</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_2_3_datasources_with_sql_database"><a class="anchor" href="#_2_3_datasources_with_sql_database"></a>2.3. Datasources with SQL Database.</h3>
-<div class="paragraph">
-<p>In-line caching vs side caching.</p>
-</div>
+<h3 id="_2_3_ldap_based_authorization"><a class="anchor" href="#_2_3_ldap_based_authorization"></a>2.3. LDAP-based Authorization</h3>
+
 </div>
 </div>
 </div>
@@ -363,11 +452,17 @@ helm install cluster-helm openshift-helm-charts/redhat-data-grid</code></pre>
 <h2 id="_level_iii"><a class="anchor" href="#_level_iii"></a>Level III</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_3_1_authorization_using_rbac"><a class="anchor" href="#_3_1_authorization_using_rbac"></a>3.1. Authorization using RBAC.</h3>
+<h3 id="_3_1_datasources_with_sql_database"><a class="anchor" href="#_3_1_datasources_with_sql_database"></a>3.1. Datasources with SQL Database.</h3>
+<div class="paragraph">
+<p>In-line caching vs side caching.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_2_authorization_using_rbac"><a class="anchor" href="#_3_2_authorization_using_rbac"></a>3.2. Authorization using RBAC.</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_3_2_cross_site_replication"><a class="anchor" href="#_3_2_cross_site_replication"></a>3.2. Cross-site replication</h3>
+<h3 id="_3_3_cross_site_replication"><a class="anchor" href="#_3_3_cross_site_replication"></a>3.3. Cross-site replication</h3>
 <div class="paragraph">
 <p>Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.</p>
 </div>
