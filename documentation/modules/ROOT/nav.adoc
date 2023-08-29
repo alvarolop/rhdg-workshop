@@ -3,8 +3,9 @@
 * xref:20-setup.adoc[2. Environment Setup]
 
 * 3. Server Configuration
-** xref:31-server-configuration-basic.adoc[3.1. Basic Configuration]
-** xref:32-server-configuration-security.adoc[3.2. Security]
+** xref:31-server-configuration-basic.adoc[3.1. Initial Deployment]
+** xref:32-server-configuration-resources.adoc[3.2. Resourcing and labels]
+** xref:33-server-configuration-security.adoc[3.3. Security]
 
 
 * 4. Cache Configuration
