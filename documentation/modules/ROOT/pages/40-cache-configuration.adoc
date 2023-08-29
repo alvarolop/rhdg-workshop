@@ -127,7 +127,6 @@ spec:
           mediaType: application/x-protostream
       expiration:
         lifespan: "60000"
-        maxIdle: "-1"
   updates:
     strategy: recreate
 ----
@@ -171,7 +170,6 @@ spec:
           mediaType: application/x-protostream
       expiration:
         lifespan: "60000"
-        maxIdle: "-1"
       memory:
         maxSize: "200MB"
         whenFull: "REMOVE"
