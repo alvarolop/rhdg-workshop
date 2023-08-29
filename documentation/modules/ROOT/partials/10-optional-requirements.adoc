@@ -1,7 +1,13 @@
 The following CLI tools are *optional* for running the exercises in this tutorial.
 Although they are used in the tutorial, you could use others without any problem.
 
-WARNING: Only install Docker if you cannot use Podman.
+[WARNING]
+====
+* Only install Docker if you cannot use Podman.
+* `jq` and `yq` are optional but very welcome. They prettify the output of the REST responses and will help you to understand the contents of the workshop better. `jq` works for JSON, while `yq` works for YAML and JSON.
+* Don't install `curl` if you don't want to. In such case, you will need to adapt the commands to your own tool.
+====
+
 
 [cols="5*^,5*.",options="header,+attributes"]
 |===
@@ -14,9 +20,27 @@ WARNING: Only install Docker if you cannot use Podman.
 | https://docs.docker.com/[Git - Docs]
 
 | `jq`
-| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64[Download]
 | https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64[Download]
 | https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe[Download]
 | https://github.com/stedolan/jq[jq v1.6.0]
+
+| `yq`
+| https://github.com/mikefarah/yq/#latest-version[Download]
+| https://github.com/mikefarah/yq/#macos--linux-via-homebrew[Download]
+| https://github.com/mikefarah/yq/#latest-version[Download]
+| https://mikefarah.gitbook.io/yq/how-it-works[yq 4.x - Docs]
+
+| `helm`
+| https://helm.sh/docs/intro/install/#from-script[Download]
+| https://helm.sh/docs/intro/install/#from-homebrew-macos[Download]
+| https://helm.sh/docs/intro/install/#from-script[Download]
+| https://helm.sh/docs/[Helm -Docs]
+
+| `curl`
+| https://everything.curl.dev/get/linux[Download]
+| https://everything.curl.dev/get/macos[Download]
+| https://everything.curl.dev/get/windows[Download]
+| https://everything.curl.dev/[curl -Docs]
 
 |===
