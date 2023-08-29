@@ -119,48 +119,212 @@
 </div>  <div class="content">
 <article class="doc">
 <h1 class="page">Practical Application</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we wrap up this workshop series, it&#8217;s your turn to explore exercises that catch your attention. I recommend starting with <strong>Level I</strong>. Here, you&#8217;ll dive into monitoring capabilities, set up server pod affinity and anti-affinity within the cluster, and master the art of deploying other clusters in versions not supported by the operator resources.</p>
+</div>
+<div class="paragraph">
+<p>Moving on to <strong>Level II</strong>, you&#8217;ll delve into the realm of Proto caches, learning how to interact with them using various data formats. Next up, you&#8217;ll transition into LDAP-based authorization, where user management shifts from an OCP secret to an external LDAP system. And that&#8217;s not all—you&#8217;ll also master the art of configuring a datasource to persist cache entries in a SQL database.</p>
+</div>
+<div class="paragraph">
+<p>As you reach <strong>Level III</strong>, the focus shifts towards controlling cache access through RBAC. This advanced skillset empowers you to grant cache access to specific users, based on defined roles. But that&#8217;s not the end of the journey. You&#8217;ll also harness the cross-site replication feature, as you deploy a second Data Grid cluster. Get ready to enable cache replication through cross-site replication, facilitating seamless data sharing between clusters.</p>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="_level_i"><a class="anchor" href="#_level_i"></a>Level I</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_prometheus_metrics_and_grafana"><a class="anchor" href="#_prometheus_metrics_and_grafana"></a>Prometheus metrics and Grafana.</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>For both client and server side.</p>
-</li>
-<li>
-<p>List the most important metrics.</p>
-</li>
-</ul>
+<h3 id="_1_1_affinity_and_anti_affinity"><a class="anchor" href="#_1_1_affinity_and_anti_affinity"></a>1.1. Affinity and anti-affinity</h3>
+<div class="paragraph">
+<p>Kubernetes includes anti-affinity capabilities that protect workloads from single points of failure. Anti-affinity works by distributing Data Grid nodes across OpenShift nodes, ensuring that your Data Grid clusters remain available even if hardware failures occur.</p>
 </div>
 <div class="paragraph">
-<p>Take into account this: <a href="https://docs.openshift.com/container-platform/4.13/monitoring/managing-metrics.html#querying-metrics-for-user-defined-projects-as-a-developer_managing-metrics" class="bare">https://docs.openshift.com/container-platform/4.13/monitoring/managing-metrics.html#querying-metrics-for-user-defined-projects-as-a-developer_managing-metrics</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_openshift_helm_charts"><a class="anchor" href="#_openshift_helm_charts"></a>Openshift Helm Charts.</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_access_the_dg_cluster_from_outside"><a class="anchor" href="#_access_the_dg_cluster_from_outside"></a>Access the DG cluster from outside</h3>
-<div class="paragraph">
-<p>Two options for doing it from your laptop:</p>
+<p>The Data Grid operator provides three different settings regarding pod distribution on OpenShift:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>expose through a Route.</p>
+<p><strong>nodeAffinity</strong>: Describes node affinity scheduling rules for the pod (e.g. avoid placing pods in nodes
+that are not intended for Data Grid).</p>
 </li>
 <li>
-<p>Use oc port-forward.</p>
+<p><strong>podAffinity</strong>: Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone,
+etc. as some other pod(s)).</p>
+</li>
+<li>
+<p><strong>podAntiAffinity</strong>: Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same
+node, zone, etc. as some other pod(s)).</p>
 </li>
 </ul>
 </div>
+<div class="exampleblock">
+<div class="title">Example 1. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>The Openshift cluster for this workshop is pretty simple, so there aren&#8217;t many configurations that you can do in this regard here. Anyway, we have three zones for the worker nodes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>topology.kubernetes.io/zone: eu-west-3a</code>.</p>
+</li>
+<li>
+<p><code>topology.kubernetes.io/zone: eu-west-3b</code>.</p>
+</li>
+<li>
+<p><code>topology.kubernetes.io/zone: eu-west-3c</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Configure your Infinispan CR to deploy your cluster with affinity to one zone. Please, in order to spread the pods homogeneously, use the zone that corresponds to the modulus of your user number divided by 3. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>zone A: user1, user4, user7&#8230;&#8203;</p>
+</li>
+<li>
+<p>zone B: user2, user5, user8&#8230;&#8203;</p>
+</li>
+<li>
+<p>zone C: user3, user6, user9&#8230;&#8203;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you want to try another configuration, there is one Postgresql pod in each namespace <code>$YOUR_USERNAME-rhdg</code> - You will use it later to configure Datasources. Please, configure a <code>podAffinity</code> rule so that your Data Grid cluster pods are collocated in the same node.</p>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you&#8217;re interested in learning more, you can find additional information at this <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#anti-affinity">link</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_affinity_and_anti_affinity"><a class="anchor" href="#_affinity_and_anti_affinity"></a>Affinity and anti-affinity</h3>
+<h3 id="_1_2_prometheus_metrics_and_grafana"><a class="anchor" href="#_1_2_prometheus_metrics_and_grafana"></a>1.2. Prometheus metrics and Grafana.</h3>
+<div class="paragraph">
+<p>Data Grid exposes metrics that can be used by Prometheus and Grafana for monitoring and visualizing the cluster state. Data Grid 8 exposes metrics via a <code>/metrics</code> endpoint for integration with metrics tooling such as Prometheus. If you want to begin exploring the Data Grid metrics, start enabling metrics with the Infinispan CR annotation:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Configure Data Grid to send metrics to the user-workload Prometheus</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  annotations:
+    # Set the monitoring field to true &lt;---
+    infinispan.org/monitoring: 'true'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait for a minute and go to the <code>Developer Perspective</code> &gt; <code>Observe</code> &gt; <code>Metrics</code> tab &gt; <code>Custom Query</code>. Query any metric beginning with <code>vendor_</code> and you will see your Data Grid cluster pods.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/60-exercises-metrics-dashboard.png" alt="60 exercises metrics dashboard">
+</div>
+<div class="title">Figure 1. View metrics of a pod from the OCP web console</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>Please, explore all the metrics. My recommendation is to access the <code>/metrics</code> endpoint in the Data Grid console route. Take a metric that you can monitor through time and execute changes to the cache to check how it varies through time.</p>
+</div>
+<div class="paragraph">
+<p>It is important to know the metrics in order to improve performance.</p>
+</div>
+<div class="paragraph">
+<p>Also, please, check that all the Data Grid metrics have the <code>domain</code> tag. This is the tag that you manually added in the <code>Server Configuration &gt; Basic</code> section yesterday. Add new tags to see how they are automatically included!</p>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>There are plenty of resources that you can read to get a better understanding of this topic. I recommend this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Docs: <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#monitoring-services">Monitoring Data Grid services</a>.</p>
+</li>
+<li>
+<p>Docs: <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_performance_and_sizing_guide/deployment-planning#performance-metric-considerations_deployment-planning">Performance metric considerations</a>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_1_3_openshift_helm_chart"><a class="anchor" href="#_1_3_openshift_helm_chart"></a>1.3. Openshift Helm Chart.</h3>
+<div class="paragraph">
+<p>Helm is a tool to help you define, install, and upgrade applications running on Kubernetes. At its most basic,
+Helm is a templating engine that creates Kubernetes manifests. Helm uses a packaging format called
+charts. A chart is a collection of files that describe a related set of Kubernetes resources.</p>
+</div>
+<div class="paragraph">
+<p>You may want to install the Data Grid cluster using Helm Charts due to two main reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>There is already an operator in the latest version and you want to deploy an old version of Data Grid for testing or to prepare for upgrades. The DG operator version 8.4 <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_8.4_release_notes/index#rhdg-operator-84GA_rhdg-operator-releases">only supports</a> deploying Data Grid clusters 8.3.1 and 8.4.x.</p>
+</li>
+<li>
+<p>To customize the Data Grid cluster with a specific configuration that is not supported with the Data Grid operator (Please, check if that is supported with the Helm Chart before going to production :) ).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can install the Helm chart in three quick steps:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Install the cluster</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1) Add the OpenShift Helm Charts repository.
+helm repo add openshift-helm-charts https://charts.openshift.io/
 
+# 2) Customize the values.yaml
+
+# 3) Install the Helm Chart
+helm install cluster-helm openshift-helm-charts/redhat-data-grid</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>Please, explore the documentation of the Helm Charts and the values that it accepts.</p>
+</div>
+<div class="paragraph">
+<p>Check that the previous cluster was deployed successfully.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -168,13 +332,7 @@
 <h2 id="_level_ii"><a class="anchor" href="#_level_ii"></a>Level II</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_datasources_with_sql_database"><a class="anchor" href="#_datasources_with_sql_database"></a>Datasources with SQL Database.</h3>
-<div class="paragraph">
-<p>In-line caching vs side caching.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_testing_the_cluster_using_the_rest_api"><a class="anchor" href="#_testing_the_cluster_using_the_rest_api"></a>Testing the cluster using the REST API</h3>
+<h3 id="_2_1_testing_the_cluster_using_the_rest_api"><a class="anchor" href="#_2_1_testing_the_cluster_using_the_rest_api"></a>2.1. Testing the cluster using the REST API</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -190,8 +348,14 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ldap_based_authorization"><a class="anchor" href="#_ldap_based_authorization"></a>LDAP-based Authorization</h3>
+<h3 id="_2_2_ldap_based_authorization"><a class="anchor" href="#_2_2_ldap_based_authorization"></a>2.2. LDAP-based Authorization</h3>
 
+</div>
+<div class="sect2">
+<h3 id="_2_3_datasources_with_sql_database"><a class="anchor" href="#_2_3_datasources_with_sql_database"></a>2.3. Datasources with SQL Database.</h3>
+<div class="paragraph">
+<p>In-line caching vs side caching.</p>
+</div>
 </div>
 </div>
 </div>
@@ -199,11 +363,11 @@
 <h2 id="_level_iii"><a class="anchor" href="#_level_iii"></a>Level III</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_authorization_using_rbac"><a class="anchor" href="#_authorization_using_rbac"></a>Authorization using RBAC.</h3>
+<h3 id="_3_1_authorization_using_rbac"><a class="anchor" href="#_3_1_authorization_using_rbac"></a>3.1. Authorization using RBAC.</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_cross_site_replication"><a class="anchor" href="#_cross_site_replication"></a>Cross-site replication</h3>
+<h3 id="_3_2_cross_site_replication"><a class="anchor" href="#_3_2_cross_site_replication"></a>3.2. Cross-site replication</h3>
 <div class="paragraph">
 <p>Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.</p>
 </div>

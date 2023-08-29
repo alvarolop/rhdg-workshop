@@ -175,6 +175,8 @@ Unless instructed, we expect you to execute all your exercises in the main names
 kind: Infinispan
 metadata:
   name: cluster
+  annotations:
+    infinispan.org/monitoring: 'false'
 spec:
   replicas: 1 <i class="conum" data-value="1"></i><b>(1)</b>
   security: <i class="conum" data-value="2"></i><b>(2)</b>
@@ -478,6 +480,7 @@ metadata:
   annotations:
     infinispan.org/podTargetLabels: 'domain,user'
     infinispan.org/targetLabels: domain
+    infinispan.org/monitoring: 'false'
   labels:
     domain: bookshop
     user: userX</code></pre>
