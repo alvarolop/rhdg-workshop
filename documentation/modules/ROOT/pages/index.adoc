@@ -1,5 +1,4 @@
 = Welcome to the Red Hat Data Grid Infrastructure workshop
-:page-layout: home
 :!sectids:
 
 [.text-center.strong]
