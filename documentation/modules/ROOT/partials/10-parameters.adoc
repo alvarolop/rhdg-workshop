@@ -1,20 +1,20 @@
-[cols="2*^,2*.",options="header,+attributes"]
-|===
-|**Name**|**Value**
-| Openshift Cluster API (Access CLI)
-| _https://api.%CLUSTER%:6443_
-| Openshift Cluster Console
-| _https://console-openshift-console.apps.%CLUSTER%_
-| Username
-| {user}
-| Password
-| openshift
-| App Namespace Stage
-| {user}-stage
-| App Namespace Production
-| {user}-prod
-| Continuous Deployment Namespace
-| {user}-continuous-deployment
-| ArgoCD console
-| _https://openshift-gitops-server-openshift-gitops.apps.%CLUSTER%_
-|===
+// [cols="2*^,2*.",options="header,+attributes"]
+// |===
+// |**Name**|**Value**
+// | Openshift Cluster API (Access CLI)
+// | _https://api.%CLUSTER%:6443_
+// | Openshift Cluster Console
+// | _https://console-openshift-console.apps.%CLUSTER%_
+// | Username
+// | {user}
+// | Password
+// | openshift
+// | App Namespace Stage
+// | {user}-stage
+// | App Namespace Production
+// | {user}-prod
+// | Continuous Deployment Namespace
+// | {user}-continuous-deployment
+// | ArgoCD console
+// | _https://openshift-gitops-server-openshift-gitops.apps.%CLUSTER%_
+// |===
