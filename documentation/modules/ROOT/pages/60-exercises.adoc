@@ -118,7 +118,7 @@ You may want to install the Data Grid cluster using Helm Charts due to two main 
 
 You can install the Helm chart in three quick steps:
 
-.Install the cluster
+.Install the cluster using Helm Charts
 [.console-input]
 [source, bash]
 ----
@@ -145,22 +145,88 @@ Check that the previous cluster was deployed successfully.
 
 == Level II
 
+=== 2.1. REST API for Caches
+
+Learn how to work with Caches using the REST API and various data formats. 
+
+*First*, you will need to create three caches with similar configuration. Use the knowledge of the section `Cache Configuration` to create three caches with its corresponding encoding format:
+
+* `rest-plain`: Encoding `text/plain`.
+* `rest-json`: Encoding `application/json`.
+* `rest-proto`: Encoding `application/x-protostream`.
+
+You can use either the Cache CR, the REST API, etc. https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_rest_api/rest_v2_api#rest_v2_create_cache[Here] is how to create a cache using the REST API.
+
+Use the command you learned in the Troubleshooting section to check that the caches are present in the cluster.
+
+TIP: I recommend you use the same configuration for all of them. Use a Distributed cache with two owners. Avoid setting expiration and memory. Just keep it simple! You can use the official documentation for https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/index[Cache Configuration] and for https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/cache_encoding_and_marshalling/index#cache-encoding[Encoding and Marshalling].
+
+*Second*, you will create entries in all three caches in different formats depending on the cache encoding:
+
+.Put an entry in the cache
+[.console-input]
+[source, bash]
+----
+# text/plain
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0 --data "Hello World"
+
+# application/json
+curl -X POST -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 --data '{"Hello": "World", "foo": "bar", "john": "doe"}'
+
+# application/x-protostream
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 --data "Hello World"
+----
+
+*Third*, retrieve the entries also using the REST API. 
+
+.Retrieve entries from the cache
+[.console-input]
+[source, bash]
+----
+# text/plain
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0
+
+# application/json
+curl -X GET -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 | jq .
+{
+  "Hello": "World",
+  "foo": "bar",
+  "john": "doe"
+}
+
+# application/x-protostream
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 | jq .
+{
+  "_type": "string",
+  "_value": "Hello World"
+}
+----
+
+IMPORTANT: See how, with a proto cache, you can interact with `text/plain` format in your REST queries, but it then stores the entries in Protostream format. This simplifies interoperability and allows you to consume it as Java Objects directly from a Java Hot Rod client.
+
+Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.
+
+.*Now it's your turn!*
+====
+Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.
+
+Also, in general, developers will use Protostream to store complex classes defined with a `.proto` file. Please, check how to create and delete `.proto` files with the REST API. Then, interact with the cache in the same way.
+====
 
 
-=== 2.1. Testing the cluster using the REST API
-
-* Create three caches: one for Proto, one for Plain/text, and one for JSON.
-* Perform CRUD operations over all of them using the curl command.
-* Perform a Query using REST to check that it works fine.
-
-
-=== 2.2. LDAP-based Authorization 
 
 
 
-=== 2.3. Datasources with SQL Database.
+=== 2.2 Deploying a Java client
 
-In-line caching vs side caching.
+
+
+
+
+=== 2.3. LDAP-based Authorization 
+
+
+
 
 
 
@@ -169,9 +235,14 @@ In-line caching vs side caching.
 == Level III
 
 
-=== 3.1. Authorization using RBAC.
+=== 3.1. Datasources with SQL Database.
+
+In-line caching vs side caching.
 
 
-=== 3.2. Cross-site replication
+=== 3.2. Authorization using RBAC.
+
+
+=== 3.3. Cross-site replication
 
 Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.
