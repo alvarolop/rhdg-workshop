@@ -1,0 +1,43 @@
+= Cache Configuration
+include::_attributes.adoc[]
+
+Alright, we're all set! Our server is up and running smoothly, with foundational settings neatly configured. It might be tempting to consider this sufficient for a Data Grid administrator. But beneath the surface lies a more intricate narrative.
+
+In the realm of Data Grid, the information takes residence within caches, whose configuration is typically a terrain overseen by development teams. However, the configuration of these caches holds the potential to profoundly influence your infrastructure's performance. That's precisely why it's essential to delve into mastering the cache main settings.
+
+
+== Caches in Openshift
+
+Multiple mechanisms are available to create caches within a Data Grid cluster deployed on Openshift. You have the option to use traditional methods employed in Data Grid, such as the REST endpoint, Infinispan CLI, or the server configuration file loaded during startup. However, the most effective mechanism when utilizing the operator is the Cache CRD. This Custom Resource offers full configurational flexibility, while the operator constantly monitors changes in cache configuration and promptly synchronizes them with the server.
+
+TIP: Data Grid accommodates cache and server configuration in XML, YAML, and JSON formats. The choice between these formats is a matter of personal preference. However, for the purpose of this workshop, given that we deploy on Openshift, all the examples utilize the YAML format.
+
+
+Let's create the first cache of the cluster. To do so, you just need to create the Cache CR object with the cache configuration and set the cluster where you want it to be configured. 
+
+.Cache modes
+NOTE: Remember that there are two main cache modes: Replicated and Distributed. The main difference is that replicated caches store a copy of each cache key in each node of the cluster, while Distributed caches just store N copies, determined by the `owners` field in the configuration. For the sake of simplicity, we are going to use `replicated-cache` in this workshop, but all cache configurations would be valid for `distributed-cache`.
+
+
+We are going to use one of the simplest cache configurations: Replicated cache in SYNC mode and statistics enabled.
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-01
+spec:
+  clusterName: cluster
+  name:  cache-replicated-01
+  template: |-
+    replicatedCache:
+      mode: "SYNC"
+      statistics: "true"
+  updates:
+    strategy: recreate
+----
+
+Now, please, access the web console again and check that the cache is configured. Also note that, based on your configuration, the cache is labeled with the most important features. Now, click on the cache name to explore all the information that the server can provide. You will notice that the server complains that you did not define an encoding configuration. Without it, you will lose some great features and you won't be able to store entries in the cache, so let's do it now!
+

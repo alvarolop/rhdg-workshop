@@ -1,0 +1,49 @@
+= Cache Configuration: Encoding
+include::_attributes.adoc[]
+
+Encoding is the format, identified by a media-type, that Data Grid uses to store entries (key/value pairs) in caches. You will have mainly two options: 
+
+* Protobuf: To optimize speed, ensure interoperability, perform queries on the data, or use the web console to check the cache contents.
+* Java Serialization: This option simplifies the configuration of the Java client and server with the disadvantage of losing the benefits of the previous option.
+
+
+Let's define the encoding format for both the key and the value of all the entries of the cache. By updating the cache definition with the following configuration:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-01
+spec:
+  clusterName: cluster
+  name:  cache-replicated-01
+  template: |-
+    replicatedCache:
+      mode: "SYNC"
+      statistics: "true"
+      encoding:
+        key:
+          mediaType: application/x-protostream
+        value:
+          mediaType: application/x-protostream
+  updates:
+    strategy: recreate
+----
+
+
+Great! Now, you can access the web console again. Navigate to the cache that you just updated and you will see that there is a new tab called `Entries`. 
+
+
+
+.View in the web console of the entries of a cache
+image::40-cache-rhdg-console-cache-entries.png[]
+
+
+This tab allows you to explore the cached content and add new entries if you are allowed to. Try it now! If you cannot see the `Add entry` button, make sure that you are logged in as the `admin` user.
+
+
+.Web form to add entries to a cache
+image::40-cache-rhdg-console-cache-new-entry.png[]
+

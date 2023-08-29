@@ -1,0 +1,38 @@
+= Cache Configuration: Memory
+include::_attributes.adoc[]
+
+The memory section lets you control the size of the data container by removing entries from memory when a memory or count limit is reached. 
+
+IMPORTANT: As the `spec.updates.strategy` is set to recreate, the operator will remove the cache from the cluster and create it again, so all the entries that you had created will be lost. We can discuss, if you want, the possible reasons and mitigation behind this decision.
+
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-01
+spec:
+  clusterName: cluster
+  name:  cache-replicated-01
+  template: |-
+    replicatedCache:
+      mode: "SYNC"
+      statistics: "true"
+      encoding:
+        key:
+          mediaType: application/x-protostream
+        value:
+          mediaType: application/x-protostream
+      expiration:
+        lifespan: "60000"
+      memory:
+        maxSize: "200MB"
+        whenFull: "REMOVE"
+  updates:
+    strategy: recreate
+----
+
+We are not going to test this limit, but I guess that you trust me :) If not, I recommend you try the `maxCount` limit with an extremely low threshold and add enough entries so that the cluster has to remove some of the existing ones.
+

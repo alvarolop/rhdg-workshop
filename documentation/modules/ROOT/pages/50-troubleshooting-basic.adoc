@@ -1,0 +1,165 @@
+= Troubleshooting
+include::_attributes.adoc[]
+
+As we move forward to our final phase, we enter the Troubleshooting Section. Here, we provide you with essential tools and techniques to tackle any issues that come your way. As an administrator of the infrastructure, you'll master the art of collecting cluster information for effective debugging. Join us in this enlightening section to strengthen your troubleshooting skills and enhance your cache optimization abilities.
+
+Let's start by collecting important details about the Openshift setup, including CRDs, and pod logs and events. Then, we'll dig into examining the Data Grid server, getting the caches' configuration and a complete server report. Lastly, we'll focus on JVM debugging, getting info from the Java Heap Dump and Java Thread Dump.
+
+
+== Collecting Openshift resources
+
+Ok, we don't know yet what is going on. This section will help us to identify all the components of our installation and give us a methodic way of examining issues.
+
+=== Retrieving the list of server pods
+
+This might seem trivial, but we need to list the pods to then execute other commands inside the pods. Execute the following command to retrieve the full list of pods:
+
+.Get the full list of pods
+[.console-input]
+[source, bash]
+----
+oc get pods -l user=$YOUR_USER
+----
+
+.Output
+[.console-output]
+[source, bash]
+----
+NAME        READY   STATUS    RESTARTS   AGE
+cluster-0   1/1     Running   0          19m
+cluster-1   1/1     Running   0          19m
+----
+
+
+=== Retrieving all the logs
+
+Here you have to take into account that three main components take part in the configuration and you should know their responsibilities:
+
+* `infinispan-operator-controller-manager`: This is the operator itself and runs in this workshop in a different namespace named `rhdg-operator`. It synchronizes the configuration of the CRDs with Openshift objects and the Infinispan server itself. There is an exception for the Cache CRD when the `.spec.configListener.enabled` = true in the Infinispan CRD - which is enabled by default-, this sync is delegated to the config-listener deployed for each cluster.
++
+.Check the logs of the operator pod
+[.console-input]
+[source, bash]
+----
+oc logs -f $(oc get pods -n rhdg-operator --template="{{(index .items 0).metadata.name }}") -n rhdg-operator
+----
++
+* `cluster-config-listener`: There is one per cluster and it can be disabled when `.spec.configListener.enabled` = false in the Infinispan CRD. It is responsible for the bidirectional reconciliation of cache configurations between the Data Grid server and the Cache CRD. 
++
+.Check the logs of the config-listener pod
+[.console-input]
+[source, bash]
+----
+oc logs -f $(oc get pods -l app=infinispan-config-listener-pod --template="{{(index .items 0).metadata.name }}")
+----
++
+* `cluster-pods`: These are the actual pods of the cluster. In its logs, you can see issues related to server configuration, the clustering based on JGroups, and access logs.
++
+.Check the logs of the server pods
+[.console-input]
+[source, bash]
+----
+oc logs -f cluster-0
+----
+
+
+
+
+=== Retrieving the Openshift configuration
+
+This information is essential for the Data Grid support team to have a clear idea of the issue that you are facing. The recommended way to collect information is using the inspect command:
+
+
+.Get the full report of the namespace
+[.console-input]
+[source, bash]
+----
+oc adm inspect namespace/$YOUR_USER-rhdg
+----
+
+If you don't have enough permissions to execute the above command, you will need that information manually.
+
+The `oc adm inspect` command does not collect Custom resources. Therefore, you will need to collect the separately:
+
+.Get the custom resources
+[.console-input]
+[source, bash]
+----
+oc get infinispan -o yaml > infinispan.yaml
+
+oc get cache -o yaml > caches.yaml
+----
+
+
+
+
+== The Data Grid server report
+
+Data Grid Server provides aggregated reports in tar.gz archives that contain diagnostic information about server instances and host systems. The report provides details about CPU, memory, open files, network sockets and routing, and threads, in addition to configuration and log files.
+
+Retrieving the server report takes several steps, as you have to use the Infinispan CLI. In the following command, I have automated the process so that you can generate it and download it easily:
+
+.Get the server report
+[.console-input]
+[source, bash]
+----
+# Generate the report
+oc exec cluster-0 -- bash -c 'echo "server report" | ./bin/cli.sh --trustall -c https://admin:password@$HOSTNAME:11222 -f -'
+# Download the report
+oc exec cluster-0 -- bash -c 'files=( *tar.gz* ); cat "${files[0]}"' > $(date +"%Y-%m-%d-%H-%M")-cluster-0-report.tar.gz
+----
+
+The report comprises the execution of several useful commands that will help you understand the reasons why the server might be misconfigured:
+
+.Server report output
+[.console-output]
+[source, bash]
+----
+$ ls -1 cluster-0-report
+    184
+    conf
+    cpuinfo
+    data
+    df
+    ip-address
+    ip-maddress
+    ip-mroute
+    ip-route
+    log
+    lsof
+    meminfo
+    os-release
+    ss-tcp
+    ss-udp
+    uname
+----
+
+
+== Adjusting log levels
+
+Change levels for different Data Grid logging categories when you need to debug issues. You can also adjust log levels to reduce the number of messages for certain categories to minimize the use of container resources. You can try to change the logging configuration without restarting by adding the following lines in the Infinispan CR:
+
+
+.Add custom log levels
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  logging:
+    categories:
+      org.infinispan.REST_ACCESS_LOG: trace
+----
+
+Then, you can execute the following query and you will see that access logs per REST call are only logged to stdout if `REST_ACCESS_LOG` = `trace`:
+
+.Get cache index and query statistics
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=entries
+----

@@ -1,0 +1,190 @@
+= Troubleshooting
+include::_attributes.adoc[]
+
+== Using the REST API to retrieve information from the cluster
+
+This section compiles a set of REST endpoints useful to retrieve configuration from the server.
+
+TIP: Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for you for the Advanced Exercises Section.
+
+The following REST requests have been done using the `curl` command, adapt it to any method you consider more convenient.
+
+[IMPORTANT]
+====
+You need to define the env var with the REST Endpoint before executing the next commands:
+
+.Set Data Grid server URL
+[.console-input]
+[source, bash]
+----
+RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }}')
+----
+
+====
+
+
+
+=== Problems with Server Config?
+
+You can retrieve the actual configuration of the Red Hat Data Grid server. As you know, the final configuration is the result of a merge operation between several configuration files. You can see all of them checking the command executed in the JVM (First line of the pod logs).
+
+If you want to show the resulting configuration, execute the following command:
+
+.Curl command to retrieve Server Config
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .
+----
+
+
+
+=== Problems with Protobuf? 
+
+
+You can list all the `.proto` files and also all the Proto types using the REST API.
+
+
+.Curl command to retrieve the Proto files
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .
+----
+
+.Curl command to retrieve the Proto Types (Primitives)
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .
+----
+
+
+=== Problems with cache definitions? 
+
+At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:
+
+.Get all caches
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches | jq .
+----
+
+
+.Check the status of the cluster and all the caches
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/cache-managers/default/health | jq .
+----
+
+
+.Check cache config and stats
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -P .
+----
+
+
+
+
+=== Problems with Server tasks? 
+
+You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:
+
+.List all the available Server Tasks
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .
+----
+
+
+=== Problems with the content of a cache?
+
+You can also fully interact with the cache, creating, modifying, listing and removing contents of every cache compatible with the REST interface (For example, you cannot create Java Serialized objects). Here we list some commands to get the status and debug issues. Go to the Exercises section for more tasks about the REST endpoint.
+
+.List all the entries of the cache
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=entries | jq .
+----
+
+.Clear a cache
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=clear
+----
+
+
+
+=== Problems with indexes and queries?
+
+
+Queries and indexes also provide some specific endpoints for debugging and reconfiguration. First, queries are executed over indexed caches. When you delete fields or change index field definitions, you must rebuild the index to ensure the index is consistent with the data in the cache. You can do that using the following endpoint:
+
+
+.Reindex a cache.
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/indexes?action=reindex
+----
+
+
+Once you begin to execute queries over the cache, you will be interested in debugging based on statistics. Obtain information about queries and indexes in caches with GET requests:
+
+ 
+
+.Get cache index and query statistics
+[.console-input]
+[source, bash]
+----
+# Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/stats | jq .
+----
+
+
+=== Converting Cache definitions using the REST API
+
+Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definitionin a different format and would like to convert it? That's easy! There are two use cases here. 
+
+If the cache is already in a cluster, you can retrieve it in any of the three formats just sending the proper header. Let's use the same cache as in previous exercises:
+
+
+.Get Cache Definition in different formats
+[.console-input]
+[source, bash]
+----
+# Accept YAML
+curl -s -k -u admin:password -H "Accept: application/yaml" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+# Accept XML
+curl -s -k -u admin:password -H "Accept: application/xml" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+# Accept JSON
+curl -s -k -u admin:password -H "Accept: application/json" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+----
+
+However, if the cache is not present in the cluster, you can use the convert action of the caches endpoint: 
+
+.Conver from XML to YAML
+[.console-input]
+[source, bash]
+----
+curl $RHDG_URL/rest/v2/caches?action=convert \
+  --digest -u admin:password \
+  -X POST -k \
+  -H "Accept: application/yaml" \
+  -H "Content-Type: application/xml" \
+  -d '<?xml version="1.0" encoding="UTF-8"?><replicated-cache mode="SYNC" statistics="false"><encoding media-type="application/x-protostream"/><expiration lifespan="300000" /><memory max-size="400MB" when-full="REMOVE"/><state-transfer enabled="true" await-initial-transfer="false"/></replicated-cache>'
+----
+
+TIP: This endpoint also validates the cache configuration and migrates from deprecated parameters to up-to-date ones!!
+

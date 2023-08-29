@@ -1,0 +1,106 @@
+= Cache Configuration: Cache Templates
+include::_attributes.adoc[]
+
+Templates make life easier. You can set up common settings that caches can borrow or even modify according to specific needs. This is useful if you want to simplify the onboarding of new teams or keep consistency between cache definitions.
+
+The only downside is that, in order to inherit the cache template from a Cache definition, it has to be defined upfront. The simplest way of doing so is to configure templates using the ConfigMap loaded at startup instead of using the `Cache` CRD. How to do it? It is easy, it just needs three steps:
+
+*Step 1: Create a new ConfigMap with the server configuration*
+
+First, we need to create a new ConfigMap that will add server configuration that will be combined with the configuration injected by the operator in the pod. The contents of this file are pretty large, so, for now, we will just need to know that we can add caches in that file.
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-custom-config
+data:
+  infinispan-config.yaml: >
+    infinispan:
+      cache-container:
+        name: "default"
+        statistics: "true"
+        replicatedCacheConfiguration:
+          name: "proto-repl-small-template"
+          mode: "SYNC"
+          statistics: "true"
+          encoding:
+            key:
+              mediaType: application/x-protostream
+            value:
+              mediaType: application/x-protostream
+          expiration:
+            lifespan: "5000"
+            maxIdle: "1000"
+          memory:
+            maxCount: "10"
+            whenFull: "REMOVE"
+        replicatedCacheConfiguration:
+          name: "proto-repl-big-template"
+          mode: "SYNC"
+          statistics: "true"
+          encoding:
+            key:
+              mediaType: application/x-protostream
+            value:
+              mediaType: application/x-protostream
+          expiration:
+            lifespan: "5000"
+            maxIdle: "1000"
+          memory:
+            maxCount: "1000"
+            whenFull: "REMOVE"
+----
+
+This ConfigMap just defines two cache sizes that developers will then be able to use in their applications. The only difference is that one is limited to 10 entries while the other can hold until 1000.
+
+
+*Step 2: Configure the Infinispan CR to use the new ConfigMap*
+
+Now, just instruct the Infinispan CR to mount that ConfigMap in the pod and combine the existing server configuration with the new one.
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  configMapName: cluster-custom-config 
+----
+
+Wait a few seconds until all the pods restart with the new configuration. Then, log in to the Web Console. In the main dashboard, you will see the `Display cache templates` button. Access that link to see your templates.
+
+
+*Step 3: Create a new cache using the template*
+
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-02
+spec:
+  clusterName: cluster
+  name:  cache-replicated-02
+  templateName: proto-repl-small-template
+  updates:
+    strategy: recreate
+----
+
+
+
+
+TIP: Are you interested in inheriting cache configuration but overriding any of its values? You can do it using the same mechanism. Check this https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/configuring_data_grid_caches/index#cache-templates_cache-configuration[link] to the official documentation.
+
+
+
+== Wrap Up!
+
+Wrapping up this chapter, we've laid a solid groundwork for navigating Red Hat Data Grid's cache settings. Understanding cache configuration, templates, encoding, expiration, and eviction is key to optimizing your caches. Armed with this knowledge, you're equipped to fine-tune your cache setup, ensuring efficiency and smooth operation. As we move forward, remember that these foundational insights will serve as a springboard to more advanced cache strategies and optimizations.
+
