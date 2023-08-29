@@ -1,0 +1,79 @@
+= Red Hat Data Grid Infrastructure workshop
+Álvaro López Medina <alopezme@redhat.com>
+v1.0, 2023-07
+// Metadata
+:description: This repository contains guides for a RH Data Grid workshop.
+:keywords: infinispan, datagrid, openshift, red hat, workshop
+:doctype: book
+:!sectnums: 
+// Create TOC wherever needed
+:toc: macro
+:sectanchors:
+:sectnumlevels: 3
+:sectnums: 
+:imagesdir: documentation/modules/ROOT/assets/images
+// Start: Enable admonition icons
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+// Icons for GitHub
+:yes: :heavy_check_mark:
+:no: :x:
+endif::[]
+ifndef::env-github[]
+:icons: font
+// Icons not for GitHub
+:yes: icon:check[]
+:no: icon:times[]
+endif::[]
+
+// Create the Table of contents here
+toc::[]
+
+include::documentation/modules/ROOT/pages/index.adoc[leveloffset=+1]
+
+include::documentation/modules/ROOT/pages/10-introduction.adoc[leveloffset=+1]
+
+include::documentation/modules/ROOT/pages/20-setup.adoc[leveloffset=+1]
+
+== Server Configuration
+
+include::documentation/modules/ROOT/pages/31-server-configuration-basic.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/32-server-configuration-resources.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/33-server-configuration-security.adoc[leveloffset=+2]
+
+
+include::documentation/modules/ROOT/pages/40-cache-configuration-cache-crd.adoc[leveloffset=+1]
+
+include::documentation/modules/ROOT/pages/41-cache-configuration-encoding.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/42-cache-configuration-expiration.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/43-cache-configuration-memory.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/44-cache-configuration-templates.adoc[leveloffset=+2]
+
+== Troubleshooting
+
+include::documentation/modules/ROOT/pages/50-troubleshooting-basic.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/51-troubleshooting-rest-api.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/52-troubleshooting-jvm-debugging.adoc[leveloffset=+2]
+
+
+
+include::documentation/modules/ROOT/pages/60-exercises.adoc[leveloffset=+1]
+
+include::documentation/modules/ROOT/pages/61-exercises-level-1.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/62-exercises-level-2.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/63-exercises-level-3.adoc[leveloffset=+2]
+
+include::documentation/modules/ROOT/pages/70-conclusions.adoc[leveloffset=+1]
