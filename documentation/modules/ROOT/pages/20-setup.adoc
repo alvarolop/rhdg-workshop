@@ -23,9 +23,7 @@ include::partial$10-optional-requirements.adoc[]
 [#access-console]
 == Access - OCP Console
 
-In order to check the laboratory environment, please access the Openshift Console via browser using your credentials:
-
-* https://console-openshift-console.apps.{cluster}
+In order to check the laboratory environment, please access the Openshift Console via browser using your credentials. The instructor will provide you the URL.
 
 .Openshift Console
 image::2-setup-ocp-console.png[]
@@ -41,7 +39,7 @@ Please check that you have followed the pre-requisites with your instructor and 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-oc login -u {user} -p {user} {cluster_api}
+oc login -u $YOUR_USER -p openshift $OCP_API
 ----
 
 If the login is successful, it should show an output similar to the following screenshot:
