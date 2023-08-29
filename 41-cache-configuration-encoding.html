@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to the Red Hat Data Grid Infrastructure workshop :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/index.html">
-    <link rel="next" href="10-introduction.html">
+    <title>Cache Configuration: Encoding :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/41-cache-configuration-encoding.html">
+    <link rel="prev" href="40-cache-configuration-cache-crd.html">
+    <link rel="next" href="42-cache-configuration-expiration.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -80,7 +81,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="40-cache-configuration-cache-crd.html">4.1. Cache CRD</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="41-cache-configuration-encoding.html">4.2. Encoding</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -129,63 +130,73 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="index.html">Welcome to the Red Hat Data Grid Infrastructure workshop</a></li>
+    <li>4. Cache Configuration</li>
+    <li><a href="41-cache-configuration-encoding.html">4.2. Encoding</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to the Red Hat Data Grid Infrastructure workshop</h1>
-<div class="sect1 text-center strong">
-<h2>Introduction</h2>
-<div class="sectionbody">
+<h1 class="page">Cache Configuration: Encoding</h1>
 <div class="paragraph">
-<p>Welcome to the <strong>Red Hat Data Grid Infrastructure workshop</strong>! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.</p>
+<p>Encoding is the format, identified by a media-type, that Data Grid uses to store entries (key/value pairs) in caches. You will have mainly two options:</p>
 </div>
-<div class="paragraph">
-<p>The exercises within this workshop are designed for self-paced exploration, allowing you to tailor your experience based on your interests and prior knowledge.</p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the first day, your focus will be on grasping the fundamentals of Data Grid Infrastructure. These exercises comprise commands and configurations to be applied to your server.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Protobuf: To optimize speed, ensure interoperability, perform queries on the data, or use the web console to check the cache contents.</p>
+</li>
+<li>
+<p>Java Serialization: This option simplifies the configuration of the Java client and server with the disadvantage of losing the benefits of the previous option.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><a href="20-setup.html" class="xref page">Environment Setup</a></p>
+<p>Let&#8217;s define the encoding format for both the key and the value of all the entries of the cache. By updating the cache definition with the following configuration:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-01
+spec:
+  clusterName: cluster
+  name:  cache-replicated-01
+  template: |-
+    replicatedCache:
+      mode: "SYNC"
+      statistics: "true"
+      encoding:
+        key:
+          mediaType: application/x-protostream
+        value:
+          mediaType: application/x-protostream
+  updates:
+    strategy: recreate</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><a href="31-server-configuration-basic.html" class="xref page">Server Configuration</a></p>
+<p>Great! Now, you can access the web console again. Navigate to the cache that you just updated and you will see that there is a new tab called <code>Entries</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/40-cache-rhdg-console-cache-entries.png" alt="40 cache rhdg console cache entries">
+</div>
+<div class="title">Figure 1. View in the web console of the entries of a cache</div>
 </div>
 <div class="paragraph">
-<p><a href="40-cache-configuration-cache-crd.html" class="xref page">Cache Configuration</a></p>
+<p>This tab allows you to explore the cached content and add new entries if you are allowed to. Try it now! If you cannot see the <code>Add entry</code> button, make sure that you are logged in as the <code>admin</code> user.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/40-cache-rhdg-console-cache-new-entry.png" alt="40 cache rhdg console cache new entry">
 </div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the second day, we invite you to take a step further. We will present intricate configurations along with helpful hints to guide you through the process. In this segment, you will delve into complex configurations to be executed in your own environment.</p>
-</div>
-<div class="paragraph">
-<p>These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.</p>
-</div>
-<div class="paragraph">
-<p><a href="50-troubleshooting-basic.html" class="xref page">Troubleshooting</a></p>
-</div>
-<div class="paragraph">
-<p><a href="60-exercises.html" class="xref page">Exercises</a></p>
-</div>
-<div class="paragraph">
-<p><a href="70-conclusions.html" class="xref page">Conclusions</a></p>
-</div>
-</div>
+<div class="title">Figure 2. Web form to add entries to a cache</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="prev"><a href="40-cache-configuration-cache-crd.html">4.1. Cache CRD</a></span>
+  <span class="next"><a href="42-cache-configuration-expiration.html">4.3. Expiration</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

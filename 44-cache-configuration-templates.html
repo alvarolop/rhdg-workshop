@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to the Red Hat Data Grid Infrastructure workshop :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/index.html">
-    <link rel="next" href="10-introduction.html">
+    <title>Cache Configuration: Cache Templates :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/44-cache-configuration-templates.html">
+    <link rel="prev" href="43-cache-configuration-memory.html">
+    <link rel="next" href="50-troubleshooting-basic.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -89,7 +90,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="43-cache-configuration-memory.html">4.4. Memory</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="44-cache-configuration-templates.html">4.5. Cache Templates</a>
   </li>
 </ul>
@@ -129,63 +130,136 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="index.html">Welcome to the Red Hat Data Grid Infrastructure workshop</a></li>
+    <li>4. Cache Configuration</li>
+    <li><a href="44-cache-configuration-templates.html">4.5. Cache Templates</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to the Red Hat Data Grid Infrastructure workshop</h1>
-<div class="sect1 text-center strong">
-<h2>Introduction</h2>
+<h1 class="page">Cache Configuration: Cache Templates</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to the <strong>Red Hat Data Grid Infrastructure workshop</strong>! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.</p>
+<p>Templates make life easier. You can set up common settings that caches can borrow or even modify according to specific needs. This is useful if you want to simplify the onboarding of new teams or keep consistency between cache definitions.</p>
 </div>
 <div class="paragraph">
-<p>The exercises within this workshop are designed for self-paced exploration, allowing you to tailor your experience based on your interests and prior knowledge.</p>
+<p>The only downside is that, in order to inherit the cache template from a Cache definition, it has to be defined upfront. The simplest way of doing so is to configure templates using the ConfigMap loaded at startup instead of using the <code>Cache</code> CRD. How to do it? It is easy, it just needs three steps:</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 1: Create a new ConfigMap with the server configuration</strong></p>
+</div>
+<div class="paragraph">
+<p>First, we need to create a new ConfigMap that will add server configuration that will be combined with the configuration injected by the operator in the pod. The contents of this file are pretty large, so, for now, we will just need to know that we can add caches in that file.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-custom-config
+data:
+  infinispan-config.yaml: &gt;
+    infinispan:
+      cache-container:
+        name: "default"
+        statistics: "true"
+        replicatedCacheConfiguration:
+          name: "proto-repl-small-template"
+          mode: "SYNC"
+          statistics: "true"
+          encoding:
+            key:
+              mediaType: application/x-protostream
+            value:
+              mediaType: application/x-protostream
+          expiration:
+            lifespan: "5000"
+            maxIdle: "1000"
+          memory:
+            maxCount: "10"
+            whenFull: "REMOVE"
+        replicatedCacheConfiguration:
+          name: "proto-repl-big-template"
+          mode: "SYNC"
+          statistics: "true"
+          encoding:
+            key:
+              mediaType: application/x-protostream
+            value:
+              mediaType: application/x-protostream
+          expiration:
+            lifespan: "5000"
+            maxIdle: "1000"
+          memory:
+            maxCount: "1000"
+            whenFull: "REMOVE"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This ConfigMap just defines two cache sizes that developers will then be able to use in their applications. The only difference is that one is limited to 10 entries while the other can hold until 1000.</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 2: Configure the Infinispan CR to use the new ConfigMap</strong></p>
+</div>
+<div class="paragraph">
+<p>Now, just instruct the Infinispan CR to mount that ConfigMap in the pod and combine the existing server configuration with the new one.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  configMapName: cluster-custom-config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait a few seconds until all the pods restart with the new configuration. Then, log in to the Web Console. In the main dashboard, you will see the <code>Display cache templates</code> button. Access that link to see your templates.</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 3: Create a new cache using the template</strong></p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-02
+spec:
+  clusterName: cluster
+  name:  cache-replicated-02
+  templateName: proto-repl-small-template
+  updates:
+    strategy: recreate</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Are you interested in inheriting cache configuration but overriding any of its values? You can do it using the same mechanism. Check this <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/configuring_data_grid_caches/index#cache-templates_cache-configuration">link</a> to the official documentation.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
-<div class="sect1 tiles browse">
-<h2>Day 1</h2>
+<div class="sect1">
+<h2 id="_wrap_up"><a class="anchor" href="#_wrap_up"></a>Wrap Up!</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>On the first day, your focus will be on grasping the fundamentals of Data Grid Infrastructure. These exercises comprise commands and configurations to be applied to your server.</p>
-</div>
-<div class="paragraph">
-<p><a href="20-setup.html" class="xref page">Environment Setup</a></p>
-</div>
-<div class="paragraph">
-<p><a href="31-server-configuration-basic.html" class="xref page">Server Configuration</a></p>
-</div>
-<div class="paragraph">
-<p><a href="40-cache-configuration-cache-crd.html" class="xref page">Cache Configuration</a></p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the second day, we invite you to take a step further. We will present intricate configurations along with helpful hints to guide you through the process. In this segment, you will delve into complex configurations to be executed in your own environment.</p>
-</div>
-<div class="paragraph">
-<p>These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.</p>
-</div>
-<div class="paragraph">
-<p><a href="50-troubleshooting-basic.html" class="xref page">Troubleshooting</a></p>
-</div>
-<div class="paragraph">
-<p><a href="60-exercises.html" class="xref page">Exercises</a></p>
-</div>
-<div class="paragraph">
-<p><a href="70-conclusions.html" class="xref page">Conclusions</a></p>
+<p>Wrapping up this chapter, we&#8217;ve laid a solid groundwork for navigating Red Hat Data Grid&#8217;s cache settings. Understanding cache configuration, templates, encoding, expiration, and eviction is key to optimizing your caches. Armed with this knowledge, you&#8217;re equipped to fine-tune your cache setup, ensuring efficiency and smooth operation. As we move forward, remember that these foundational insights will serve as a springboard to more advanced cache strategies and optimizations.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="prev"><a href="43-cache-configuration-memory.html">4.4. Memory</a></span>
+  <span class="next"><a href="50-troubleshooting-basic.html">5.1. Basic Troubleshooting</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

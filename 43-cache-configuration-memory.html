@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to the Red Hat Data Grid Infrastructure workshop :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/index.html">
-    <link rel="next" href="10-introduction.html">
+    <title>Cache Configuration: Memory :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/43-cache-configuration-memory.html">
+    <link rel="prev" href="42-cache-configuration-expiration.html">
+    <link rel="next" href="44-cache-configuration-templates.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -86,7 +87,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="42-cache-configuration-expiration.html">4.3. Expiration</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="43-cache-configuration-memory.html">4.4. Memory</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -129,63 +130,62 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="index.html">Welcome to the Red Hat Data Grid Infrastructure workshop</a></li>
+    <li>4. Cache Configuration</li>
+    <li><a href="43-cache-configuration-memory.html">4.4. Memory</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to the Red Hat Data Grid Infrastructure workshop</h1>
-<div class="sect1 text-center strong">
-<h2>Introduction</h2>
-<div class="sectionbody">
+<h1 class="page">Cache Configuration: Memory</h1>
 <div class="paragraph">
-<p>Welcome to the <strong>Red Hat Data Grid Infrastructure workshop</strong>! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.</p>
+<p>The memory section lets you control the size of the data container by removing entries from memory when a memory or count limit is reached.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+As the <code>spec.updates.strategy</code> is set to recreate, the operator will remove the cache from the cluster and create it again, so all the entries that you had created will be lost. We can discuss, if you want, the possible reasons and mitigation behind this decision.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-01
+spec:
+  clusterName: cluster
+  name:  cache-replicated-01
+  template: |-
+    replicatedCache:
+      mode: "SYNC"
+      statistics: "true"
+      encoding:
+        key:
+          mediaType: application/x-protostream
+        value:
+          mediaType: application/x-protostream
+      expiration:
+        lifespan: "60000"
+      memory:
+        maxSize: "200MB"
+        whenFull: "REMOVE"
+  updates:
+    strategy: recreate</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The exercises within this workshop are designed for self-paced exploration, allowing you to tailor your experience based on your interests and prior knowledge.</p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the first day, your focus will be on grasping the fundamentals of Data Grid Infrastructure. These exercises comprise commands and configurations to be applied to your server.</p>
-</div>
-<div class="paragraph">
-<p><a href="20-setup.html" class="xref page">Environment Setup</a></p>
-</div>
-<div class="paragraph">
-<p><a href="31-server-configuration-basic.html" class="xref page">Server Configuration</a></p>
-</div>
-<div class="paragraph">
-<p><a href="40-cache-configuration-cache-crd.html" class="xref page">Cache Configuration</a></p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the second day, we invite you to take a step further. We will present intricate configurations along with helpful hints to guide you through the process. In this segment, you will delve into complex configurations to be executed in your own environment.</p>
-</div>
-<div class="paragraph">
-<p>These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.</p>
-</div>
-<div class="paragraph">
-<p><a href="50-troubleshooting-basic.html" class="xref page">Troubleshooting</a></p>
-</div>
-<div class="paragraph">
-<p><a href="60-exercises.html" class="xref page">Exercises</a></p>
-</div>
-<div class="paragraph">
-<p><a href="70-conclusions.html" class="xref page">Conclusions</a></p>
-</div>
-</div>
+<p>We are not going to test this limit, but I guess that you trust me :) If not, I recommend you try the <code>maxCount</code> limit with an extremely low threshold and add enough entries so that the cluster has to remove some of the existing ones.</p>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="prev"><a href="42-cache-configuration-expiration.html">4.3. Expiration</a></span>
+  <span class="next"><a href="44-cache-configuration-templates.html">4.5. Cache Templates</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

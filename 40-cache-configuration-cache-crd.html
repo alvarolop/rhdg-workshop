@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to the Red Hat Data Grid Infrastructure workshop :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/index.html">
-    <link rel="next" href="10-introduction.html">
+    <title>Cache Configuration :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/40-cache-configuration-cache-crd.html">
+    <link rel="prev" href="32-server-configuration-security.html">
+    <link rel="next" href="41-cache-configuration-encoding.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -77,7 +78,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">4. Cache Configuration</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="40-cache-configuration-cache-crd.html">4.1. Cache CRD</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -129,63 +130,86 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="index.html">Welcome to the Red Hat Data Grid Infrastructure workshop</a></li>
+    <li>4. Cache Configuration</li>
+    <li><a href="40-cache-configuration-cache-crd.html">4.1. Cache CRD</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to the Red Hat Data Grid Infrastructure workshop</h1>
-<div class="sect1 text-center strong">
-<h2>Introduction</h2>
+<h1 class="page">Cache Configuration</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to the <strong>Red Hat Data Grid Infrastructure workshop</strong>! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.</p>
+<p>Alright, we&#8217;re all set! Our server is up and running smoothly, with foundational settings neatly configured. It might be tempting to consider this sufficient for a Data Grid administrator. But beneath the surface lies a more intricate narrative.</p>
 </div>
 <div class="paragraph">
-<p>The exercises within this workshop are designed for self-paced exploration, allowing you to tailor your experience based on your interests and prior knowledge.</p>
+<p>In the realm of Data Grid, the information takes residence within caches, whose configuration is typically a terrain overseen by development teams. However, the configuration of these caches holds the potential to profoundly influence your infrastructure&#8217;s performance. That&#8217;s precisely why it&#8217;s essential to delve into mastering the cache main settings.</p>
 </div>
 </div>
 </div>
-<div class="sect1 tiles browse">
-<h2>Day 1</h2>
+<div class="sect1">
+<h2 id="_caches_in_openshift"><a class="anchor" href="#_caches_in_openshift"></a>Caches in Openshift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>On the first day, your focus will be on grasping the fundamentals of Data Grid Infrastructure. These exercises comprise commands and configurations to be applied to your server.</p>
+<p>Multiple mechanisms are available to create caches within a Data Grid cluster deployed on Openshift. You have the option to use traditional methods employed in Data Grid, such as the REST endpoint, Infinispan CLI, or the server configuration file loaded during startup. However, the most effective mechanism when utilizing the operator is the Cache CRD. This Custom Resource offers full configurational flexibility, while the operator constantly monitors changes in cache configuration and promptly synchronizes them with the server.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Data Grid accommodates cache and server configuration in XML, YAML, and JSON formats. The choice between these formats is a matter of personal preference. However, for the purpose of this workshop, given that we deploy on Openshift, all the examples utilize the YAML format.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p><a href="20-setup.html" class="xref page">Environment Setup</a></p>
+<p>Let&#8217;s create the first cache of the cluster. To do so, you just need to create the Cache CR object with the cache configuration and set the cluster where you want it to be configured.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Cache modes</div>
+Remember that there are two main cache modes: Replicated and Distributed. The main difference is that replicated caches store a copy of each cache key in each node of the cluster, while Distributed caches just store N copies, determined by the <code>owners</code> field in the configuration. For the sake of simplicity, we are going to use <code>replicated-cache</code> in this workshop, but all cache configurations would be valid for <code>distributed-cache</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p><a href="31-server-configuration-basic.html" class="xref page">Server Configuration</a></p>
+<p>We are going to use one of the simplest cache configurations: Replicated cache in SYNC mode and statistics enabled.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-cache-replicated-01
+spec:
+  clusterName: cluster
+  name:  cache-replicated-01
+  template: |-
+    replicatedCache:
+      mode: "SYNC"
+      statistics: "true"
+  updates:
+    strategy: recreate</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><a href="40-cache-configuration-cache-crd.html" class="xref page">Cache Configuration</a></p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the second day, we invite you to take a step further. We will present intricate configurations along with helpful hints to guide you through the process. In this segment, you will delve into complex configurations to be executed in your own environment.</p>
-</div>
-<div class="paragraph">
-<p>These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.</p>
-</div>
-<div class="paragraph">
-<p><a href="50-troubleshooting-basic.html" class="xref page">Troubleshooting</a></p>
-</div>
-<div class="paragraph">
-<p><a href="60-exercises.html" class="xref page">Exercises</a></p>
-</div>
-<div class="paragraph">
-<p><a href="70-conclusions.html" class="xref page">Conclusions</a></p>
+<p>Now, please, access the web console again and check that the cache is configured. Also note that, based on your configuration, the cache is labeled with the most important features. Now, click on the cache name to explore all the information that the server can provide. You will notice that the server complains that you did not define an encoding configuration. Without it, you will lose some great features and you won&#8217;t be able to store entries in the cache, so let&#8217;s do it now!</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="prev"><a href="32-server-configuration-security.html">3.2. Security</a></span>
+  <span class="next"><a href="41-cache-configuration-encoding.html">4.2. Encoding</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

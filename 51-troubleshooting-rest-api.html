@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Troubleshooting :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/51-troubleshooting-rest-api.html">
+    <link rel="prev" href="50-troubleshooting-basic.html">
+    <link rel="next" href="52-troubleshooting-jvm-debugging.html">
+    <meta name="generator" content="Antora 3.0.3">
+    <link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="./_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://alvarolop.github.io/rhdg-workshop">RH Data Grid Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kafka-tutorial/" target="_blank">Kafka</a>
+            <a class="navbar-item" href="https://devsecops-workshop.github.io/" target="_blank">DevSecOps</a>
+            <a class="navbar-item" href="https://acidonper.github.io/redhat-workshop-cicd-gitops/redhat-workshop-cicd-gitops/" target="_blank">CI/CD & GitOps</a>
+            <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/" target="_blank">Gramola GitOps Guide</a>
+            <a class="navbar-item" href="https://luisarizmendi.github.io/tutorial-secure-onboarding/" target="_blank">Secure Edge device onboarding with RHEL and FDO</a>
+            <a class="navbar-item" href="https://xbryan1.github.io/rhte-2023-acm-docs/" target="_blank">Multicluster Application Deployment with Advanced Cluster Management and GitOps</a>
+            <a class="navbar-item" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/index.html" target="_blank">Java Inner Loop Dev Guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-introduction.html">1. Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="20-setup.html">2. Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">3. Server Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="31-server-configuration-basic.html">3.1. Basic Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="32-server-configuration-security.html">3.2. Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">4. Cache Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="40-cache-configuration-cache-crd.html">4.1. Cache CRD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="41-cache-configuration-encoding.html">4.2. Encoding</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="42-cache-configuration-expiration.html">4.3. Expiration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="43-cache-configuration-memory.html">4.4. Memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="44-cache-configuration-templates.html">4.5. Cache Templates</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">5. Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="50-troubleshooting-basic.html">5.1. Basic Troubleshooting</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="60-exercises.html">6. Exercises</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">RHDG Workshop</a></li>
+    <li>5. Troubleshooting</li>
+    <li><a href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a></li>
+  </ul>
+</nav>
+  <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
+</div>  <div class="content">
+<article class="doc">
+<h1 class="page">Troubleshooting</h1>
+<div class="sect1">
+<h2 id="_using_the_rest_api_to_retrieve_information_from_the_cluster"><a class="anchor" href="#_using_the_rest_api_to_retrieve_information_from_the_cluster"></a>Using the REST API to retrieve information from the cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section compiles a set of REST endpoints useful to retrieve configuration from the server.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for you for the Advanced Exercises Section.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following REST requests have been done using the <code>curl</code> command, adapt it to any method you consider more convenient.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You need to define the env var with the REST Endpoint before executing the next commands:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Set Data Grid server URL</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }}')</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_server_config"><a class="anchor" href="#_problems_with_server_config"></a>Problems with Server Config?</h3>
+<div class="paragraph">
+<p>You can retrieve the actual configuration of the Red Hat Data Grid server. As you know, the final configuration is the result of a merge operation between several configuration files. You can see all of them checking the command executed in the JVM (First line of the pod logs).</p>
+</div>
+<div class="paragraph">
+<p>If you want to show the resulting configuration, execute the following command:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve Server Config</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_protobuf"><a class="anchor" href="#_problems_with_protobuf"></a>Problems with Protobuf?</h3>
+<div class="paragraph">
+<p>You can list all the <code>.proto</code> files and also all the Proto types using the REST API.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve the Proto files</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve the Proto Types (Primitives)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_cache_definitions"><a class="anchor" href="#_problems_with_cache_definitions"></a>Problems with cache definitions?</h3>
+<div class="paragraph">
+<p>At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get all caches</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/caches | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Check the status of the cluster and all the caches</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/cache-managers/default/health | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Check cache config and stats</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -P .</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_server_tasks"><a class="anchor" href="#_problems_with_server_tasks"></a>Problems with Server tasks?</h3>
+<div class="paragraph">
+<p>You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">List all the available Server Tasks</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_the_content_of_a_cache"><a class="anchor" href="#_problems_with_the_content_of_a_cache"></a>Problems with the content of a cache?</h3>
+<div class="paragraph">
+<p>You can also fully interact with the cache, creating, modifying, listing and removing contents of every cache compatible with the REST interface (For example, you cannot create Java Serialized objects). Here we list some commands to get the status and debug issues. Go to the Exercises section for more tasks about the REST endpoint.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">List all the entries of the cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=entries | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Clear a cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=clear</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problems_with_indexes_and_queries"><a class="anchor" href="#_problems_with_indexes_and_queries"></a>Problems with indexes and queries?</h3>
+<div class="paragraph">
+<p>Queries and indexes also provide some specific endpoints for debugging and reconfiguration. First, queries are executed over indexed caches. When you delete fields or change index field definitions, you must rebuild the index to ensure the index is consistent with the data in the cache. You can do that using the following endpoint:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Reindex a cache.</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/indexes?action=reindex</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once you begin to execute queries over the cache, you will be interested in debugging based on statistics. Obtain information about queries and indexes in caches with GET requests:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get cache index and query statistics</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search/stats | jq .</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_converting_cache_definitions_using_the_rest_api"><a class="anchor" href="#_converting_cache_definitions_using_the_rest_api"></a>Converting Cache definitions using the REST API</h3>
+<div class="paragraph">
+<p>Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definitionin a different format and would like to convert it? That&#8217;s easy! There are two use cases here.</p>
+</div>
+<div class="paragraph">
+<p>If the cache is already in a cluster, you can retrieve it in any of the three formats just sending the proper header. Let&#8217;s use the same cache as in previous exercises:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get Cache Definition in different formats</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Accept YAML
+curl -s -k -u admin:password -H "Accept: application/yaml" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+# Accept XML
+curl -s -k -u admin:password -H "Accept: application/xml" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config
+# Accept JSON
+curl -s -k -u admin:password -H "Accept: application/json" $RHDG_URL/rest/v2/caches/cache-replicated-01?action=config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, if the cache is not present in the cluster, you can use the convert action of the caches endpoint:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Conver from XML to YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl $RHDG_URL/rest/v2/caches?action=convert \
+  --digest -u admin:password \
+  -X POST -k \
+  -H "Accept: application/yaml" \
+  -H "Content-Type: application/xml" \
+  -d '&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;replicated-cache mode="SYNC" statistics="false"&gt;&lt;encoding media-type="application/x-protostream"/&gt;&lt;expiration lifespan="300000" /&gt;&lt;memory max-size="400MB" when-full="REMOVE"/&gt;&lt;state-transfer enabled="true" await-initial-transfer="false"/&gt;&lt;/replicated-cache&gt;'</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+This endpoint also validates the cache configuration and migrates from deprecated parameters to up-to-date ones!!
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="50-troubleshooting-basic.html">5.1. Basic Troubleshooting</a></span>
+  <span class="next"><a href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="./_/js/vendor/clipboard.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+  </body>
+</html>

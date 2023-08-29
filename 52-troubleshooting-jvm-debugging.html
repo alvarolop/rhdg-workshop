@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to the Red Hat Data Grid Infrastructure workshop :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/index.html">
-    <link rel="next" href="10-introduction.html">
+    <title>Troubleshooting :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/52-troubleshooting-jvm-debugging.html">
+    <link rel="prev" href="51-troubleshooting-rest-api.html">
+    <link rel="next" href="60-exercises.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -104,7 +105,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a>
   </li>
 </ul>
@@ -129,63 +130,120 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="index.html">Welcome to the Red Hat Data Grid Infrastructure workshop</a></li>
+    <li>5. Troubleshooting</li>
+    <li><a href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to the Red Hat Data Grid Infrastructure workshop</h1>
-<div class="sect1 text-center strong">
-<h2>Introduction</h2>
+<h1 class="page">Troubleshooting</h1>
+<div class="sect1">
+<h2 id="_jvm_debugging"><a class="anchor" href="#_jvm_debugging"></a>JVM debugging</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_java_thread_dump"><a class="anchor" href="#_java_thread_dump"></a>Java Thread Dump</h3>
+<div class="paragraph">
+<p>A <strong>Java thread dump</strong> is a snapshot of what every thread in the JVM is doing at a particular point in time. Each thread in the JVM is listed with its name and ID, its current state and the Java call stack showing what monitor it has locked or is waiting on.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get a Thread Dump</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/server/threads</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_heap_dump"><a class="anchor" href="#_java_heap_dump"></a>Java Heap Dump</h3>
+<div class="paragraph">
+<p>A <strong>Java Heap Dump</strong> is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful for troubleshooting memory leak problems and optimizing memory usage in Java applications. Heap dumps are usually stored in binary format <code>hprof</code> files.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get a Heap Dump</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
+curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/server/memory?action=heap-dump
+# Take the filename from the output to copy it to your machine
+oc cp cluster-0:/opt/infinispan/server/data/$DUMP_FILENAME.prof . heapdump-cluster-0.hprof</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logging_gc_messages"><a class="anchor" href="#_logging_gc_messages"></a>Logging GC messages</h3>
+<div class="paragraph">
+<p>The Data Grid Operator does not log Garbage Collector (GC) messages by default. You can direct GC messages to stdout with the following JVM options:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Configure GC messages to stdout</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  container:
+    # If you want to keep the timezone config, just append the following to the existing config
+    extraJvmOpts: "-Xlog:gc*:stdout:time,level,tags"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If instead, you want the logs in a separate file (as it might be quite verbose), you can use a configuration like the following:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Configure GC messages to file</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  container:
+    # If you want to keep the timezone config, just append the following to the existing config
+    extraJvmOpts: "-Xlog:gc*=info:file=/tmp/gc.log:time,level,tags,uptimemillis:filecount=10,filesize=1m"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_analyzing_file_descriptions"><a class="anchor" href="#_analyzing_file_descriptions"></a>Analyzing File descriptions</h3>
+<div class="paragraph">
+<p>A file descriptor is a number that uniquely identifies an open file in a computer&#8217;s operating system. It describes a data resource, and how that resource may be accessed. It is needed to open <strong>files</strong>, <strong>network sockets</strong>, etc. There is a <strong>default limit</strong> to the number of opened file descriptors. If you suspect that you are matching that limit, you can check with the following command:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Get the opened file descriptors</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc exec cluster-0 -- lsof -P &gt; lsof-cluster-0.txt</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_useful_kcs"><a class="anchor" href="#_useful_kcs"></a>Useful KCS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to the <strong>Red Hat Data Grid Infrastructure workshop</strong>! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.</p>
+<p>Do you have other needs and you would like to have the <code>jcmd</code> command inside the pod? Try the documentation of this KCS:</p>
 </div>
-<div class="paragraph">
-<p>The exercises within this workshop are designed for self-paced exploration, allowing you to tailor your experience based on your interests and prior knowledge.</p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the first day, your focus will be on grasping the fundamentals of Data Grid Infrastructure. These exercises comprise commands and configurations to be applied to your server.</p>
-</div>
-<div class="paragraph">
-<p><a href="20-setup.html" class="xref page">Environment Setup</a></p>
-</div>
-<div class="paragraph">
-<p><a href="31-server-configuration-basic.html" class="xref page">Server Configuration</a></p>
-</div>
-<div class="paragraph">
-<p><a href="40-cache-configuration-cache-crd.html" class="xref page">Cache Configuration</a></p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Day 2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the second day, we invite you to take a step further. We will present intricate configurations along with helpful hints to guide you through the process. In this segment, you will delve into complex configurations to be executed in your own environment.</p>
-</div>
-<div class="paragraph">
-<p>These activities are generally independent of one another. However, if there are any dependencies, they will be clearly communicated at the beginning of each exercise.</p>
-</div>
-<div class="paragraph">
-<p><a href="50-troubleshooting-basic.html" class="xref page">Troubleshooting</a></p>
-</div>
-<div class="paragraph">
-<p><a href="60-exercises.html" class="xref page">Exercises</a></p>
-</div>
-<div class="paragraph">
-<p><a href="70-conclusions.html" class="xref page">Conclusions</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>KCS: <a href="https://access.redhat.com/solutions/6964022">Alternatives for creating heap dump and thread dump in a DG 8 even without the JDK</a>.</p>
+</li>
+<li>
+<p>KCS: <a href="https://access.redhat.com/solutions/6968671">Troubleshoot options for Data Grid pod crash</a>.</p>
+</li>
+<li>
+<p>KCS: <a href="https://access.redhat.com/solutions/6962483">Using inspect for DG 8 troubleshooting</a>.</p>
+</li>
+<li>
+<p>KCS: <a href="https://access.redhat.com/solutions/6452611">DG 8 Troubleshooting steps for issues in OCP 4</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="10-introduction.html">1. Introduction</a></span>
+  <span class="prev"><a href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a></span>
+  <span class="next"><a href="60-exercises.html">6. Exercises</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
