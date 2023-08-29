@@ -154,7 +154,7 @@ You need to define the env var with the REST Endpoint before executing the next 
 [.console-input]
 [source, bash]
 ----
-RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }})
+RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }}')
 ----
 
 ====
