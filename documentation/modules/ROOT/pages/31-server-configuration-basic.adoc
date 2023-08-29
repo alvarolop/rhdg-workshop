@@ -26,6 +26,8 @@ apiVersion: infinispan.org/v1
 kind: Infinispan
 metadata:
   name: cluster
+  annotations:
+    infinispan.org/monitoring: 'false'
 spec:
   replicas: 1 <1>
   security: <2>
@@ -278,6 +280,7 @@ metadata:
   annotations:
     infinispan.org/podTargetLabels: 'domain,user'
     infinispan.org/targetLabels: domain
+    infinispan.org/monitoring: 'false'
   labels:
     domain: bookshop
     user: userX
