@@ -1,4 +1,4 @@
-= Cache Configuration: Memory
+= Cache Memory
 include::_attributes.adoc[]
 
 The memory section lets you control the size of the data container by removing entries from memory when a memory or count limit is reached. 

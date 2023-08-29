@@ -1,4 +1,4 @@
-= Troubleshooting
+= Basic Troubleshooting
 include::_attributes.adoc[]
 
 As we move forward to our final phase, we enter the Troubleshooting Section. Here, we provide you with essential tools and techniques to tackle any issues that come your way. As an administrator of the infrastructure, you'll master the art of collecting cluster information for effective debugging. Join us in this enlightening section to strengthen your troubleshooting skills and enhance your cache optimization abilities.

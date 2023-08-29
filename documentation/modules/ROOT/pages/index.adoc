@@ -1,8 +1,5 @@
-= Welcome to the Red Hat Data Grid Infrastructure workshop
+= Welcome
 :!sectids:
-
-[.text-center.strong]
-== Introduction
 
 Welcome to the *Red Hat Data Grid Infrastructure workshop*! In this workshop, we will explore the significance of caches through the captivating story of an application dedicated to the best books in history.
 

@@ -1,4 +1,4 @@
-= Cache Configuration: Cache Templates
+= Cache Templates
 include::_attributes.adoc[]
 
 Templates make life easier. You can set up common settings that caches can borrow or even modify according to specific needs. This is useful if you want to simplify the onboarding of new teams or keep consistency between cache definitions.

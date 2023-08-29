@@ -1,4 +1,4 @@
-= Cache Configuration: Expiration
+= Cache Expiration
 include::_attributes.adoc[]
 
 

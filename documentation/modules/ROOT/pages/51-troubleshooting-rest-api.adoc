@@ -1,7 +1,5 @@
-= Troubleshooting
+= Troubleshooting using the REST API
 include::_attributes.adoc[]
-
-== Using the REST API to retrieve information from the cluster
 
 This section compiles a set of REST endpoints useful to retrieve configuration from the server.
 
@@ -24,7 +22,7 @@ RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }}')
 
 
 
-=== Problems with Server Config?
+== Problems with Server Config?
 
 You can retrieve the actual configuration of the Red Hat Data Grid server. As you know, the final configuration is the result of a merge operation between several configuration files. You can see all of them checking the command executed in the JVM (First line of the pod logs).
 
@@ -39,7 +37,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .
 
 
 
-=== Problems with Protobuf? 
+== Problems with Protobuf? 
 
 
 You can list all the `.proto` files and also all the Proto types using the REST API.
@@ -60,7 +58,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .
 ----
 
 
-=== Problems with cache definitions? 
+== Problems with cache definitions? 
 
 At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:
 
@@ -91,7 +89,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -
 
 
 
-=== Problems with Server tasks? 
+== Problems with Server tasks? 
 
 You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:
 
@@ -103,7 +101,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .
 ----
 
 
-=== Problems with the content of a cache?
+== Problems with the content of a cache?
 
 You can also fully interact with the cache, creating, modifying, listing and removing contents of every cache compatible with the REST interface (For example, you cannot create Java Serialized objects). Here we list some commands to get the status and debug issues. Go to the Exercises section for more tasks about the REST endpoint.
 
@@ -125,7 +123,7 @@ curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-0
 
 
 
-=== Problems with indexes and queries?
+== Problems with indexes and queries?
 
 
 Queries and indexes also provide some specific endpoints for debugging and reconfiguration. First, queries are executed over indexed caches. When you delete fields or change index field definitions, you must rebuild the index to ensure the index is consistent with the data in the cache. You can do that using the following endpoint:
@@ -153,7 +151,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search
 ----
 
 
-=== Converting Cache definitions using the REST API
+== Converting Cache definitions using the REST API
 
 Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definitionin a different format and would like to convert it? That's easy! There are two use cases here. 
 

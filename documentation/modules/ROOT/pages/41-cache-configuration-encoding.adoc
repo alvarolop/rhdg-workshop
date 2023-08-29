@@ -1,4 +1,4 @@
-= Cache Configuration: Encoding
+= Cache Encoding
 include::_attributes.adoc[]
 
 Encoding is the format, identified by a media-type, that Data Grid uses to store entries (key/value pairs) in caches. You will have mainly two options: 

@@ -1,10 +1,8 @@
-= Troubleshooting
+= JVM debugging
 include::_attributes.adoc[]
 
-== JVM debugging
 
-
-=== Java Thread Dump
+== Java Thread Dump
 
 
 A *Java thread dump* is a snapshot of what every thread in the JVM is doing at a particular point in time. Each thread in the JVM is listed with its name and ID, its current state and the Java call stack showing what monitor it has locked or is waiting on.
@@ -20,7 +18,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/server/threads
 
 
 
-=== Java Heap Dump
+== Java Heap Dump
 
 A *Java Heap Dump* is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful for troubleshooting memory leak problems and optimizing memory usage in Java applications. Heap dumps are usually stored in binary format `hprof` files.
 
@@ -37,7 +35,7 @@ oc cp cluster-0:/opt/infinispan/server/data/$DUMP_FILENAME.prof . heapdump-clust
 
 
 
-=== Logging GC messages
+== Logging GC messages
 
 The Data Grid Operator does not log Garbage Collector (GC) messages by default. You can direct GC messages to stdout with the following JVM options:
 
@@ -74,7 +72,7 @@ spec:
 
 
 
-=== Analyzing File descriptions
+== Analyzing File descriptions
 
 A file descriptor is a number that uniquely identifies an open file in a computer's operating system. It describes a data resource, and how that resource may be accessed. It is needed to open *files*, *network sockets*, etc. There is a *default limit* to the number of opened file descriptors. If you suspect that you are matching that limit, you can check with the following command:
 

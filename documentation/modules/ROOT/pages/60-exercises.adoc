@@ -1,4 +1,4 @@
-= Exercises: Level I
+= Exercises
 include::_attributes.adoc[]
 
 
