@@ -1,0 +1,128 @@
+= Exercises: Level I
+include::_attributes.adoc[]
+
+== 1.1. Affinity and anti-affinity
+
+Kubernetes includes anti-affinity capabilities that protect workloads from single points of failure. Anti-affinity works by distributing Data Grid nodes across OpenShift nodes, ensuring that your Data Grid clusters remain available even if hardware failures occur.
+
+The Data Grid operator provides three different settings regarding pod distribution on OpenShift:
+
+* *nodeAffinity*: Describes node affinity scheduling rules for the pod (e.g. avoid placing pods in nodes
+that are not intended for Data Grid).
+* *podAffinity*: Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone,
+etc. as some other pod(s)).
+* *podAntiAffinity*: Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same
+node, zone, etc. as some other pod(s)).
+
+
+.*Now it's your turn!*
+====
+The Openshift cluster for this workshop is pretty simple, so there aren't many configurations that you can do in this regard here. Anyway, we have three zones for the worker nodes:
+
+* `topology.kubernetes.io/zone: eu-west-3a`.
+* `topology.kubernetes.io/zone: eu-west-3b`.
+* `topology.kubernetes.io/zone: eu-west-3c`.
+
+Configure your Infinispan CR to deploy your cluster with affinity to one zone. Please, in order to spread the pods homogeneously, use the zone that corresponds to the modulus of your user number divided by 3. For example: 
+
+* zone A: user1, user4, user7...
+* zone B: user2, user5, user8...
+* zone C: user3, user6, user9...
+
+If you want to try another configuration, there is one Postgresql pod in each namespace `$YOUR_USERNAME-rhdg` - You will use it later to configure Datasources. Please, configure a `podAffinity` rule so that your Data Grid cluster pods are collocated in the same node.
+====
+
+
+[TIP]
+====
+If you're interested in learning more, you can find additional information at this https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#anti-affinity[link].
+====
+
+
+
+
+
+
+== 1.2. Prometheus metrics and Grafana
+
+Data Grid exposes metrics that can be used by Prometheus and Grafana for monitoring and visualizing the cluster state. Data Grid 8 exposes metrics via a `/metrics` endpoint for integration with metrics tooling such as Prometheus. If you want to begin exploring the Data Grid metrics, start enabling metrics with the Infinispan CR annotation:
+
+
+.Configure Data Grid to send metrics to the user-workload Prometheus
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  annotations:
+    # Set the monitoring field to true <---
+    infinispan.org/monitoring: 'true'
+----
+
+Wait for a minute and go to the `Developer Perspective` > `Observe` > `Metrics` tab > `Custom Query`. Query any metric beginning with `vendor_` and you will see your Data Grid cluster pods.
+
+
+.View metrics of a pod from the OCP web console
+image::60-exercises-metrics-dashboard.png[]
+
+
+.*Now it's your turn!*
+====
+Please, explore all the metrics. My recommendation is to access the `/metrics` endpoint in the Data Grid console route. Take a metric that you can monitor through time and execute changes to the cache to check how it varies through time. 
+
+It is important to know the metrics in order to improve performance.
+
+Also, please, check that all the Data Grid metrics have the `domain` tag. This is the tag that you manually added in the `Server Configuration > Basic` section yesterday. Add new tags to see how they are automatically included!
+====
+
+
+[TIP]
+====
+There are plenty of resources that you can read to get a better understanding of this topic. I recommend this:
+
+* Docs: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#monitoring-services[Monitoring Data Grid services].
+* Docs: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_performance_and_sizing_guide/deployment-planning#performance-metric-considerations_deployment-planning[Performance metric considerations].
+====
+
+
+
+
+
+
+== 1.3. Openshift Helm Chart.
+
+Helm is a tool to help you define, install, and upgrade applications running on Kubernetes. At its most basic,
+Helm is a templating engine that creates Kubernetes manifests. Helm uses a packaging format called
+charts. A chart is a collection of files that describe a related set of Kubernetes resources.
+
+You may want to install the Data Grid cluster using Helm Charts due to two main reasons:
+
+* There is already an operator in the latest version and you want to deploy an old version of Data Grid for testing or to prepare for upgrades. The DG operator version 8.4 https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_8.4_release_notes/index#rhdg-operator-84GA_rhdg-operator-releases[only supports] deploying Data Grid clusters 8.3.1 and 8.4.x.
+* To customize the Data Grid cluster with a specific configuration that is not supported with the Data Grid operator (Please, check if that is supported with the Helm Chart before going to production :) ).
+
+You can install the Helm chart in three quick steps:
+
+.Install the cluster using Helm Charts
+[.console-input]
+[source, bash]
+----
+# 1) Add the OpenShift Helm Charts repository.
+helm repo add openshift-helm-charts https://charts.openshift.io/
+
+# 2) Customize the values.yaml 
+
+# 3) Install the Helm Chart
+helm install cluster-helm openshift-helm-charts/redhat-data-grid
+----
+
+
+.*Now it's your turn!*
+====
+Please, explore the documentation of the Helm Charts and the values that it accepts.
+
+Check that the previous cluster was deployed successfully.
+====
+
+

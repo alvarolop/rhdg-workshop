@@ -1,13 +1,11 @@
 * xref:10-introduction.adoc[1. Introduction]
 
 * xref:20-setup.adoc[2. Environment Setup]
-// ** xref:20-setup.adoc#prerequisite[Prerequisites]
-// ** xref:20-setup.adoc#access-console[Access - OCP Console]
-// ** xref:20-setup.adoc#access-cli[Access - OC Client]
 
 * 3. Server Configuration
 ** xref:31-server-configuration-basic.adoc[3.1. Basic Configuration]
 ** xref:32-server-configuration-security.adoc[3.2. Security]
+
 
 * 4. Cache Configuration
 ** xref:40-cache-configuration-cache-crd.adoc[4.1. Cache CRD]
@@ -22,7 +20,11 @@
 ** xref:51-troubleshooting-rest-api.adoc[5.2. REST to retrieve information]
 ** xref:52-troubleshooting-jvm-debugging.adoc[5.3. JVM debugging]
 
-* xref:60-exercises.adoc[6. Exercises]
+
+* xref:60-exercises.adoc[6. Exercises] 
+** xref:61-exercises-level-1.adoc[6.1. Level I]
+** xref:62-exercises-level-2.adoc[6.2. Level II]
+** xref:63-exercises-level-3.adoc[6.3. Level III]
 
 * xref:70-conclusions.adoc[7. Conclusions]
 

@@ -1,0 +1,16 @@
+= Exercises: Level III
+include::_attributes.adoc[]
+
+
+
+== 3.1. Datasources with SQL Database.
+
+In-line caching vs side caching.
+
+
+== 3.2. Authorization using RBAC.
+
+
+== 3.3. Cross-site replication
+
+Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.

@@ -1,0 +1,99 @@
+= Exercises: Level II
+include::_attributes.adoc[]
+
+== 2.1. REST API for Caches
+
+Learn how to work with Caches using the REST API and various data formats. 
+
+*First*, you will need to create three caches with similar configuration. Use the knowledge of the section `Cache Configuration` to create three caches with its corresponding encoding format:
+
+* `rest-plain`: Encoding `text/plain`.
+* `rest-json`: Encoding `application/json`.
+* `rest-proto`: Encoding `application/x-protostream`.
+
+You can use either the Cache CR, the REST API, etc. https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_rest_api/rest_v2_api#rest_v2_create_cache[Here] is how to create a cache using the REST API.
+
+Use the command you learned in the Troubleshooting section to check that the caches are present in the cluster.
+
+TIP: I recommend you use the same configuration for all of them. Use a Distributed cache with two owners. Avoid setting expiration and memory. Just keep it simple! You can use the official documentation for https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/index[Cache Configuration] and for https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/cache_encoding_and_marshalling/index#cache-encoding[Encoding and Marshalling].
+
+*Second*, you will create entries in all three caches in different formats depending on the cache encoding:
+
+.Put an entry in the cache
+[.console-input]
+[source, bash]
+----
+# text/plain
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0 --data "Hello World"
+
+# application/json
+curl -X POST -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 --data '{"Hello": "World", "foo": "bar", "john": "doe"}'
+
+# application/x-protostream
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 --data "Hello World"
+----
+
+*Third*, retrieve the entries also using the REST API. 
+
+.Retrieve entries from the cache
+[.console-input]
+[source, bash]
+----
+# text/plain
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0
+
+# application/json
+curl -X GET -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 | jq .
+{
+  "Hello": "World",
+  "foo": "bar",
+  "john": "doe"
+}
+
+# application/x-protostream
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 | jq .
+{
+  "_type": "string",
+  "_value": "Hello World"
+}
+----
+
+IMPORTANT: See how, with a proto cache, you can interact with `text/plain` format in your REST queries, but it then stores the entries in Protostream format. This simplifies interoperability and allows you to consume it as Java Objects directly from a Java Hot Rod client.
+
+Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.
+
+.*Now it's your turn!*
+====
+Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.
+
+Also, in general, developers will use Protostream to store complex classes defined with a `.proto` file. Please, check how to create and delete `.proto` files with the REST API. Then, interact with the cache in the same way.
+====
+
+
+
+
+
+== 2.2. Deploying a Java client
+
+This workshop is focused on the infrastructure side of Data Grid, but maybe you are curious about the development side. Would you like to learn:
+
+* How to deploy a Java Hot Rod client on Openshift. 
+* How to configure a Java Spring Boot client to connect to a Data Grid cluster.
+* How to create caches automatically from the client application without a Cache CR.
+* How to upload proto schemas using the REST API.
+* How to perform puts, gets, queries, transactions, and listeners from an application perspective.
+* And much more!
+
+
+In such a case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy an RHDG client in a few steps: https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift
+
+
+
+
+== 2.3. LDAP-based Authorization 
+
+
+
+
+
+
