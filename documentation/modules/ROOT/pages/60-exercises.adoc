@@ -219,6 +219,17 @@ Also, in general, developers will use Protostream to store complex classes defin
 
 === 2.2 Deploying a Java client
 
+This workshop is focused on the infrastructure side of Data Grid, but maybe you are curious about the development side. Would you like to learn:
+
+* How to deploy a Java Hot Rod client on Openshift. 
+* How to configure a Java Spring Boot client to connect to a Data Grid cluster.
+* How to create caches automatically from the client application without a Cache CR.
+* How to upload proto schemas using the REST API.
+* How to perform puts, gets, queries, transactions, and listeners from an application perspective.
+* And much more!
+
+
+In such case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy a RHDG client in a few steps: https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift
 
 
 
