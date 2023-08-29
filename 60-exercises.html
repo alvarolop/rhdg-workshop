@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Practical Application :: RH Data Grid Workshop</title>
+    <title>Exercises: Level I :: RH Data Grid Workshop</title>
     <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/60-exercises.html">
     <link rel="prev" href="52-troubleshooting-jvm-debugging.html">
-    <link rel="next" href="70-conclusions.html">
+    <link rel="next" href="61-exercises-level-1.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -111,7 +111,19 @@
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="60-exercises.html">6. Exercises</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="61-exercises-level-1.html">6.1. Level I</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="62-exercises-level-2.html">6.2. Level II</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="63-exercises-level-3.html">6.3. Level III</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
@@ -136,9 +148,7 @@
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Practical Application</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Exercises: Level I</h1>
 <div class="paragraph">
 <p>As we wrap up this workshop series, it&#8217;s your turn to explore exercises that catch your attention. I recommend starting with <strong>Level I</strong>. Here, you&#8217;ll dive into monitoring capabilities, set up server pod affinity and anti-affinity within the cluster, and master the art of deploying other clusters in versions not supported by the operator resources.</p>
 </div>
@@ -148,375 +158,9 @@
 <div class="paragraph">
 <p>As you reach <strong>Level III</strong>, the focus shifts towards controlling cache access through RBAC. This advanced skillset empowers you to grant cache access to specific users, based on defined roles. But that&#8217;s not the end of the journey. You&#8217;ll also harness the cross-site replication feature, as you deploy a second Data Grid cluster. Get ready to enable cache replication through cross-site replication, facilitating seamless data sharing between clusters.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_level_i"><a class="anchor" href="#_level_i"></a>Level I</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_1_1_affinity_and_anti_affinity"><a class="anchor" href="#_1_1_affinity_and_anti_affinity"></a>1.1. Affinity and anti-affinity</h3>
-<div class="paragraph">
-<p>Kubernetes includes anti-affinity capabilities that protect workloads from single points of failure. Anti-affinity works by distributing Data Grid nodes across OpenShift nodes, ensuring that your Data Grid clusters remain available even if hardware failures occur.</p>
-</div>
-<div class="paragraph">
-<p>The Data Grid operator provides three different settings regarding pod distribution on OpenShift:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>nodeAffinity</strong>: Describes node affinity scheduling rules for the pod (e.g. avoid placing pods in nodes
-that are not intended for Data Grid).</p>
-</li>
-<li>
-<p><strong>podAffinity</strong>: Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone,
-etc. as some other pod(s)).</p>
-</li>
-<li>
-<p><strong>podAntiAffinity</strong>: Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same
-node, zone, etc. as some other pod(s)).</p>
-</li>
-</ul>
-</div>
-<div class="exampleblock">
-<div class="title">Example 1. <strong>Now it&#8217;s your turn!</strong></div>
-<div class="content">
-<div class="paragraph">
-<p>The Openshift cluster for this workshop is pretty simple, so there aren&#8217;t many configurations that you can do in this regard here. Anyway, we have three zones for the worker nodes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>topology.kubernetes.io/zone: eu-west-3a</code>.</p>
-</li>
-<li>
-<p><code>topology.kubernetes.io/zone: eu-west-3b</code>.</p>
-</li>
-<li>
-<p><code>topology.kubernetes.io/zone: eu-west-3c</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Configure your Infinispan CR to deploy your cluster with affinity to one zone. Please, in order to spread the pods homogeneously, use the zone that corresponds to the modulus of your user number divided by 3. For example:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>zone A: user1, user4, user7&#8230;&#8203;</p>
-</li>
-<li>
-<p>zone B: user2, user5, user8&#8230;&#8203;</p>
-</li>
-<li>
-<p>zone C: user3, user6, user9&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>If you want to try another configuration, there is one Postgresql pod in each namespace <code>$YOUR_USERNAME-rhdg</code> - You will use it later to configure Datasources. Please, configure a <code>podAffinity</code> rule so that your Data Grid cluster pods are collocated in the same node.</p>
-</div>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If you&#8217;re interested in learning more, you can find additional information at this <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#anti-affinity">link</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_1_2_prometheus_metrics_and_grafana"><a class="anchor" href="#_1_2_prometheus_metrics_and_grafana"></a>1.2. Prometheus metrics and Grafana.</h3>
-<div class="paragraph">
-<p>Data Grid exposes metrics that can be used by Prometheus and Grafana for monitoring and visualizing the cluster state. Data Grid 8 exposes metrics via a <code>/metrics</code> endpoint for integration with metrics tooling such as Prometheus. If you want to begin exploring the Data Grid metrics, start enabling metrics with the Infinispan CR annotation:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Configure Data Grid to send metrics to the user-workload Prometheus</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
-kind: Infinispan
-metadata:
-  name: cluster
-  annotations:
-    # Set the monitoring field to true &lt;---
-    infinispan.org/monitoring: 'true'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Wait for a minute and go to the <code>Developer Perspective</code> &gt; <code>Observe</code> &gt; <code>Metrics</code> tab &gt; <code>Custom Query</code>. Query any metric beginning with <code>vendor_</code> and you will see your Data Grid cluster pods.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/60-exercises-metrics-dashboard.png" alt="60 exercises metrics dashboard">
-</div>
-<div class="title">Figure 1. View metrics of a pod from the OCP web console</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. <strong>Now it&#8217;s your turn!</strong></div>
-<div class="content">
-<div class="paragraph">
-<p>Please, explore all the metrics. My recommendation is to access the <code>/metrics</code> endpoint in the Data Grid console route. Take a metric that you can monitor through time and execute changes to the cache to check how it varies through time.</p>
-</div>
-<div class="paragraph">
-<p>It is important to know the metrics in order to improve performance.</p>
-</div>
-<div class="paragraph">
-<p>Also, please, check that all the Data Grid metrics have the <code>domain</code> tag. This is the tag that you manually added in the <code>Server Configuration &gt; Basic</code> section yesterday. Add new tags to see how they are automatically included!</p>
-</div>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>There are plenty of resources that you can read to get a better understanding of this topic. I recommend this:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Docs: <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#monitoring-services">Monitoring Data Grid services</a>.</p>
-</li>
-<li>
-<p>Docs: <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_performance_and_sizing_guide/deployment-planning#performance-metric-considerations_deployment-planning">Performance metric considerations</a>.</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_1_3_openshift_helm_chart"><a class="anchor" href="#_1_3_openshift_helm_chart"></a>1.3. Openshift Helm Chart.</h3>
-<div class="paragraph">
-<p>Helm is a tool to help you define, install, and upgrade applications running on Kubernetes. At its most basic,
-Helm is a templating engine that creates Kubernetes manifests. Helm uses a packaging format called
-charts. A chart is a collection of files that describe a related set of Kubernetes resources.</p>
-</div>
-<div class="paragraph">
-<p>You may want to install the Data Grid cluster using Helm Charts due to two main reasons:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>There is already an operator in the latest version and you want to deploy an old version of Data Grid for testing or to prepare for upgrades. The DG operator version 8.4 <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_8.4_release_notes/index#rhdg-operator-84GA_rhdg-operator-releases">only supports</a> deploying Data Grid clusters 8.3.1 and 8.4.x.</p>
-</li>
-<li>
-<p>To customize the Data Grid cluster with a specific configuration that is not supported with the Data Grid operator (Please, check if that is supported with the Helm Chart before going to production :) ).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can install the Helm chart in three quick steps:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Install the cluster using Helm Charts</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1) Add the OpenShift Helm Charts repository.
-helm repo add openshift-helm-charts https://charts.openshift.io/
-
-# 2) Customize the values.yaml
-
-# 3) Install the Helm Chart
-helm install cluster-helm openshift-helm-charts/redhat-data-grid</code></pre>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 3. <strong>Now it&#8217;s your turn!</strong></div>
-<div class="content">
-<div class="paragraph">
-<p>Please, explore the documentation of the Helm Charts and the values that it accepts.</p>
-</div>
-<div class="paragraph">
-<p>Check that the previous cluster was deployed successfully.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_level_ii"><a class="anchor" href="#_level_ii"></a>Level II</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_2_1_rest_api_for_caches"><a class="anchor" href="#_2_1_rest_api_for_caches"></a>2.1. REST API for Caches</h3>
-<div class="paragraph">
-<p>Learn how to work with Caches using the REST API and various data formats.</p>
-</div>
-<div class="paragraph">
-<p><strong>First</strong>, you will need to create three caches with similar configuration. Use the knowledge of the section <code>Cache Configuration</code> to create three caches with its corresponding encoding format:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>rest-plain</code>: Encoding <code>text/plain</code>.</p>
-</li>
-<li>
-<p><code>rest-json</code>: Encoding <code>application/json</code>.</p>
-</li>
-<li>
-<p><code>rest-proto</code>: Encoding <code>application/x-protostream</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can use either the Cache CR, the REST API, etc. <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_rest_api/rest_v2_api#rest_v2_create_cache">Here</a> is how to create a cache using the REST API.</p>
-</div>
-<div class="paragraph">
-<p>Use the command you learned in the Troubleshooting section to check that the caches are present in the cluster.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-I recommend you use the same configuration for all of them. Use a Distributed cache with two owners. Avoid setting expiration and memory. Just keep it simple! You can use the official documentation for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/index">Cache Configuration</a> and for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/cache_encoding_and_marshalling/index#cache-encoding">Encoding and Marshalling</a>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Second</strong>, you will create entries in all three caches in different formats depending on the cache encoding:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Put an entry in the cache</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
-curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0 --data "Hello World"
-
-# application/json
-curl -X POST -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 --data '{"Hello": "World", "foo": "bar", "john": "doe"}'
-
-# application/x-protostream
-curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 --data "Hello World"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Third</strong>, retrieve the entries also using the REST API.</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Retrieve entries from the cache</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
-curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0
-
-# application/json
-curl -X GET -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 | jq .
-{
-  "Hello": "World",
-  "foo": "bar",
-  "john": "doe"
-}
-
-# application/x-protostream
-curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 | jq .
-{
-  "_type": "string",
-  "_value": "Hello World"
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-See how, with a proto cache, you can interact with <code>text/plain</code> format in your REST queries, but it then stores the entries in Protostream format. This simplifies interoperability and allows you to consume it as Java Objects directly from a Java Hot Rod client.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 4. <strong>Now it&#8217;s your turn!</strong></div>
-<div class="content">
-<div class="paragraph">
-<p>Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.</p>
-</div>
-<div class="paragraph">
-<p>Also, in general, developers will use Protostream to store complex classes defined with a <code>.proto</code> file. Please, check how to create and delete <code>.proto</code> files with the REST API. Then, interact with the cache in the same way.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_2_2_deploying_a_java_client"><a class="anchor" href="#_2_2_deploying_a_java_client"></a>2.2 Deploying a Java client</h3>
-<div class="paragraph">
-<p>This workshop is focused on the infrastructure side of Data Grid, but maybe you are curious about the development side. Would you like to learn:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>How to deploy a Java Hot Rod client on Openshift.</p>
-</li>
-<li>
-<p>How to configure a Java Spring Boot client to connect to a Data Grid cluster.</p>
-</li>
-<li>
-<p>How to create caches automatically from the client application without a Cache CR.</p>
-</li>
-<li>
-<p>How to upload proto schemas using the REST API.</p>
-</li>
-<li>
-<p>How to perform puts, gets, queries, transactions, and listeners from an application perspective.</p>
-</li>
-<li>
-<p>And much more!</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In such a case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy an RHDG client in a few steps: <a href="https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift" class="bare">https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_2_3_ldap_based_authorization"><a class="anchor" href="#_2_3_ldap_based_authorization"></a>2.3. LDAP-based Authorization</h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_level_iii"><a class="anchor" href="#_level_iii"></a>Level III</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_3_1_datasources_with_sql_database"><a class="anchor" href="#_3_1_datasources_with_sql_database"></a>3.1. Datasources with SQL Database.</h3>
-<div class="paragraph">
-<p>In-line caching vs side caching.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_3_2_authorization_using_rbac"><a class="anchor" href="#_3_2_authorization_using_rbac"></a>3.2. Authorization using RBAC.</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_3_3_cross_site_replication"><a class="anchor" href="#_3_3_cross_site_replication"></a>3.3. Cross-site replication</h3>
-<div class="paragraph">
-<p>Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.</p>
-</div>
-</div>
-</div>
-</div>
 <nav class="pagination">
   <span class="prev"><a href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a></span>
-  <span class="next"><a href="70-conclusions.html">7. Conclusions</a></span>
+  <span class="next"><a href="61-exercises-level-1.html">6.1. Level I</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

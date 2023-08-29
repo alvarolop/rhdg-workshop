@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Exercises: Level I :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/61-exercises-level-1.html">
+    <link rel="prev" href="60-exercises.html">
+    <link rel="next" href="62-exercises-level-2.html">
+    <meta name="generator" content="Antora 3.0.3">
+    <link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="./_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://alvarolop.github.io/rhdg-workshop">RH Data Grid Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kafka-tutorial/" target="_blank">Kafka</a>
+            <a class="navbar-item" href="https://devsecops-workshop.github.io/" target="_blank">DevSecOps</a>
+            <a class="navbar-item" href="https://acidonper.github.io/redhat-workshop-cicd-gitops/redhat-workshop-cicd-gitops/" target="_blank">CI/CD & GitOps</a>
+            <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/" target="_blank">Gramola GitOps Guide</a>
+            <a class="navbar-item" href="https://luisarizmendi.github.io/tutorial-secure-onboarding/" target="_blank">Secure Edge device onboarding with RHEL and FDO</a>
+            <a class="navbar-item" href="https://xbryan1.github.io/rhte-2023-acm-docs/" target="_blank">Multicluster Application Deployment with Advanced Cluster Management and GitOps</a>
+            <a class="navbar-item" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/index.html" target="_blank">Java Inner Loop Dev Guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-introduction.html">1. Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="20-setup.html">2. Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">3. Server Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="31-server-configuration-basic.html">3.1. Basic Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="32-server-configuration-security.html">3.2. Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">4. Cache Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="40-cache-configuration-cache-crd.html">4.1. Cache CRD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="41-cache-configuration-encoding.html">4.2. Encoding</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="42-cache-configuration-expiration.html">4.3. Expiration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="43-cache-configuration-memory.html">4.4. Memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="44-cache-configuration-templates.html">4.5. Cache Templates</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">5. Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="50-troubleshooting-basic.html">5.1. Basic Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="60-exercises.html">6. Exercises</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="61-exercises-level-1.html">6.1. Level I</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="62-exercises-level-2.html">6.2. Level II</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="63-exercises-level-3.html">6.3. Level III</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="70-conclusions.html">7. Conclusions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">RHDG Workshop</a></li>
+    <li><a href="60-exercises.html">6. Exercises</a></li>
+    <li><a href="61-exercises-level-1.html">6.1. Level I</a></li>
+  </ul>
+</nav>
+  <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
+</div>  <div class="content">
+<article class="doc">
+<h1 class="page">Exercises: Level I</h1>
+<div class="sect1">
+<h2 id="_1_1_affinity_and_anti_affinity"><a class="anchor" href="#_1_1_affinity_and_anti_affinity"></a>1.1. Affinity and anti-affinity</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kubernetes includes anti-affinity capabilities that protect workloads from single points of failure. Anti-affinity works by distributing Data Grid nodes across OpenShift nodes, ensuring that your Data Grid clusters remain available even if hardware failures occur.</p>
+</div>
+<div class="paragraph">
+<p>The Data Grid operator provides three different settings regarding pod distribution on OpenShift:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>nodeAffinity</strong>: Describes node affinity scheduling rules for the pod (e.g. avoid placing pods in nodes
+that are not intended for Data Grid).</p>
+</li>
+<li>
+<p><strong>podAffinity</strong>: Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone,
+etc. as some other pod(s)).</p>
+</li>
+<li>
+<p><strong>podAntiAffinity</strong>: Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same
+node, zone, etc. as some other pod(s)).</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>The Openshift cluster for this workshop is pretty simple, so there aren&#8217;t many configurations that you can do in this regard here. Anyway, we have three zones for the worker nodes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>topology.kubernetes.io/zone: eu-west-3a</code>.</p>
+</li>
+<li>
+<p><code>topology.kubernetes.io/zone: eu-west-3b</code>.</p>
+</li>
+<li>
+<p><code>topology.kubernetes.io/zone: eu-west-3c</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Configure your Infinispan CR to deploy your cluster with affinity to one zone. Please, in order to spread the pods homogeneously, use the zone that corresponds to the modulus of your user number divided by 3. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>zone A: user1, user4, user7&#8230;&#8203;</p>
+</li>
+<li>
+<p>zone B: user2, user5, user8&#8230;&#8203;</p>
+</li>
+<li>
+<p>zone C: user3, user6, user9&#8230;&#8203;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you want to try another configuration, there is one Postgresql pod in each namespace <code>$YOUR_USERNAME-rhdg</code> - You will use it later to configure Datasources. Please, configure a <code>podAffinity</code> rule so that your Data Grid cluster pods are collocated in the same node.</p>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you&#8217;re interested in learning more, you can find additional information at this <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#anti-affinity">link</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_1_2_prometheus_metrics_and_grafana"><a class="anchor" href="#_1_2_prometheus_metrics_and_grafana"></a>1.2. Prometheus metrics and Grafana</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Data Grid exposes metrics that can be used by Prometheus and Grafana for monitoring and visualizing the cluster state. Data Grid 8 exposes metrics via a <code>/metrics</code> endpoint for integration with metrics tooling such as Prometheus. If you want to begin exploring the Data Grid metrics, start enabling metrics with the Infinispan CR annotation:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Configure Data Grid to send metrics to the user-workload Prometheus</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+  annotations:
+    # Set the monitoring field to true &lt;---
+    infinispan.org/monitoring: 'true'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait for a minute and go to the <code>Developer Perspective</code> &gt; <code>Observe</code> &gt; <code>Metrics</code> tab &gt; <code>Custom Query</code>. Query any metric beginning with <code>vendor_</code> and you will see your Data Grid cluster pods.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/60-exercises-metrics-dashboard.png" alt="60 exercises metrics dashboard">
+</div>
+<div class="title">Figure 1. View metrics of a pod from the OCP web console</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>Please, explore all the metrics. My recommendation is to access the <code>/metrics</code> endpoint in the Data Grid console route. Take a metric that you can monitor through time and execute changes to the cache to check how it varies through time.</p>
+</div>
+<div class="paragraph">
+<p>It is important to know the metrics in order to improve performance.</p>
+</div>
+<div class="paragraph">
+<p>Also, please, check that all the Data Grid metrics have the <code>domain</code> tag. This is the tag that you manually added in the <code>Server Configuration &gt; Basic</code> section yesterday. Add new tags to see how they are automatically included!</p>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>There are plenty of resources that you can read to get a better understanding of this topic. I recommend this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Docs: <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#monitoring-services">Monitoring Data Grid services</a>.</p>
+</li>
+<li>
+<p>Docs: <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_performance_and_sizing_guide/deployment-planning#performance-metric-considerations_deployment-planning">Performance metric considerations</a>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_1_3_openshift_helm_chart"><a class="anchor" href="#_1_3_openshift_helm_chart"></a>1.3. Openshift Helm Chart.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Helm is a tool to help you define, install, and upgrade applications running on Kubernetes. At its most basic,
+Helm is a templating engine that creates Kubernetes manifests. Helm uses a packaging format called
+charts. A chart is a collection of files that describe a related set of Kubernetes resources.</p>
+</div>
+<div class="paragraph">
+<p>You may want to install the Data Grid cluster using Helm Charts due to two main reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>There is already an operator in the latest version and you want to deploy an old version of Data Grid for testing or to prepare for upgrades. The DG operator version 8.4 <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_8.4_release_notes/index#rhdg-operator-84GA_rhdg-operator-releases">only supports</a> deploying Data Grid clusters 8.3.1 and 8.4.x.</p>
+</li>
+<li>
+<p>To customize the Data Grid cluster with a specific configuration that is not supported with the Data Grid operator (Please, check if that is supported with the Helm Chart before going to production :) ).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can install the Helm chart in three quick steps:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Install the cluster using Helm Charts</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1) Add the OpenShift Helm Charts repository.
+helm repo add openshift-helm-charts https://charts.openshift.io/
+
+# 2) Customize the values.yaml
+
+# 3) Install the Helm Chart
+helm install cluster-helm openshift-helm-charts/redhat-data-grid</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>Please, explore the documentation of the Helm Charts and the values that it accepts.</p>
+</div>
+<div class="paragraph">
+<p>Check that the previous cluster was deployed successfully.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="60-exercises.html">6. Exercises</a></span>
+  <span class="next"><a href="62-exercises-level-2.html">6.2. Level II</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="./_/js/vendor/clipboard.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+  </body>
+</html>

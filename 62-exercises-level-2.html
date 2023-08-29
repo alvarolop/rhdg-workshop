@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Troubleshooting :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/52-troubleshooting-jvm-debugging.html">
-    <link rel="prev" href="51-troubleshooting-rest-api.html">
-    <link rel="next" href="60-exercises.html">
+    <title>Exercises: Level II :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/62-exercises-level-2.html">
+    <link rel="prev" href="61-exercises-level-1.html">
+    <link rel="next" href="63-exercises-level-3.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -105,7 +105,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a>
   </li>
 </ul>
@@ -117,7 +117,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="61-exercises-level-1.html">6.1. Level I</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="62-exercises-level-2.html">6.2. Level II</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -142,120 +142,165 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHDG Workshop</a></li>
-    <li>5. Troubleshooting</li>
-    <li><a href="52-troubleshooting-jvm-debugging.html">5.3. JVM debugging</a></li>
+    <li><a href="60-exercises.html">6. Exercises</a></li>
+    <li><a href="62-exercises-level-2.html">6.2. Level II</a></li>
   </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Troubleshooting</h1>
+<h1 class="page">Exercises: Level II</h1>
 <div class="sect1">
-<h2 id="_jvm_debugging"><a class="anchor" href="#_jvm_debugging"></a>JVM debugging</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_java_thread_dump"><a class="anchor" href="#_java_thread_dump"></a>Java Thread Dump</h3>
-<div class="paragraph">
-<p>A <strong>Java thread dump</strong> is a snapshot of what every thread in the JVM is doing at a particular point in time. Each thread in the JVM is listed with its name and ID, its current state and the Java call stack showing what monitor it has locked or is waiting on.</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Get a Thread Dump</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/server/threads</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_java_heap_dump"><a class="anchor" href="#_java_heap_dump"></a>Java Heap Dump</h3>
-<div class="paragraph">
-<p>A <strong>Java Heap Dump</strong> is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful for troubleshooting memory leak problems and optimizing memory usage in Java applications. Heap dumps are usually stored in binary format <code>hprof</code> files.</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Get a Heap Dump</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
-curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/server/memory?action=heap-dump
-# Take the filename from the output to copy it to your machine
-oc cp cluster-0:/opt/infinispan/server/data/$DUMP_FILENAME.prof . heapdump-cluster-0.hprof</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_logging_gc_messages"><a class="anchor" href="#_logging_gc_messages"></a>Logging GC messages</h3>
-<div class="paragraph">
-<p>The Data Grid Operator does not log Garbage Collector (GC) messages by default. You can direct GC messages to stdout with the following JVM options:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Configure GC messages to stdout</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
-kind: Infinispan
-metadata:
-  name: cluster
-spec:
-  container:
-    # If you want to keep the timezone config, just append the following to the existing config
-    extraJvmOpts: "-Xlog:gc*:stdout:time,level,tags"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If instead, you want the logs in a separate file (as it might be quite verbose), you can use a configuration like the following:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Configure GC messages to file</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
-kind: Infinispan
-metadata:
-  name: cluster
-spec:
-  container:
-    # If you want to keep the timezone config, just append the following to the existing config
-    extraJvmOpts: "-Xlog:gc*=info:file=/tmp/gc.log:time,level,tags,uptimemillis:filecount=10,filesize=1m"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_analyzing_file_descriptions"><a class="anchor" href="#_analyzing_file_descriptions"></a>Analyzing File descriptions</h3>
-<div class="paragraph">
-<p>A file descriptor is a number that uniquely identifies an open file in a computer&#8217;s operating system. It describes a data resource, and how that resource may be accessed. It is needed to open <strong>files</strong>, <strong>network sockets</strong>, etc. There is a <strong>default limit</strong> to the number of opened file descriptors. If you suspect that you are matching that limit, you can check with the following command:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Get the opened file descriptors</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc exec cluster-0 -- lsof -P &gt; lsof-cluster-0.txt</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_useful_kcs"><a class="anchor" href="#_useful_kcs"></a>Useful KCS</h2>
+<h2 id="_2_1_rest_api_for_caches"><a class="anchor" href="#_2_1_rest_api_for_caches"></a>2.1. REST API for Caches</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Do you have other needs and you would like to have the <code>jcmd</code> command inside the pod? Try the documentation of this KCS:</p>
+<p>Learn how to work with Caches using the REST API and various data formats.</p>
+</div>
+<div class="paragraph">
+<p><strong>First</strong>, you will need to create three caches with similar configuration. Use the knowledge of the section <code>Cache Configuration</code> to create three caches with its corresponding encoding format:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>KCS: <a href="https://access.redhat.com/solutions/6964022">Alternatives for creating heap dump and thread dump in a DG 8 even without the JDK</a>.</p>
+<p><code>rest-plain</code>: Encoding <code>text/plain</code>.</p>
 </li>
 <li>
-<p>KCS: <a href="https://access.redhat.com/solutions/6968671">Troubleshoot options for Data Grid pod crash</a>.</p>
+<p><code>rest-json</code>: Encoding <code>application/json</code>.</p>
 </li>
 <li>
-<p>KCS: <a href="https://access.redhat.com/solutions/6962483">Using inspect for DG 8 troubleshooting</a>.</p>
-</li>
-<li>
-<p>KCS: <a href="https://access.redhat.com/solutions/6452611">DG 8 Troubleshooting steps for issues in OCP 4</a>.</p>
+<p><code>rest-proto</code>: Encoding <code>application/x-protostream</code>.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>You can use either the Cache CR, the REST API, etc. <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_rest_api/rest_v2_api#rest_v2_create_cache">Here</a> is how to create a cache using the REST API.</p>
+</div>
+<div class="paragraph">
+<p>Use the command you learned in the Troubleshooting section to check that the caches are present in the cluster.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+I recommend you use the same configuration for all of them. Use a Distributed cache with two owners. Avoid setting expiration and memory. Just keep it simple! You can use the official documentation for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/index">Cache Configuration</a> and for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/cache_encoding_and_marshalling/index#cache-encoding">Encoding and Marshalling</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Second</strong>, you will create entries in all three caches in different formats depending on the cache encoding:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Put an entry in the cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0 --data "Hello World"
+
+# application/json
+curl -X POST -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 --data '{"Hello": "World", "foo": "bar", "john": "doe"}'
+
+# application/x-protostream
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 --data "Hello World"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Third</strong>, retrieve the entries also using the REST API.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Retrieve entries from the cache</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0
+
+# application/json
+curl -X GET -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 | jq .
+{
+  "Hello": "World",
+  "foo": "bar",
+  "john": "doe"
+}
+
+# application/x-protostream
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 | jq .
+{
+  "_type": "string",
+  "_value": "Hello World"
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+See how, with a proto cache, you can interact with <code>text/plain</code> format in your REST queries, but it then stores the entries in Protostream format. This simplifies interoperability and allows you to consume it as Java Objects directly from a Java Hot Rod client.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. <strong>Now it&#8217;s your turn!</strong></div>
+<div class="content">
+<div class="paragraph">
+<p>Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.</p>
+</div>
+<div class="paragraph">
+<p>Also, in general, developers will use Protostream to store complex classes defined with a <code>.proto</code> file. Please, check how to create and delete <code>.proto</code> files with the REST API. Then, interact with the cache in the same way.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_2_deploying_a_java_client"><a class="anchor" href="#_2_2_deploying_a_java_client"></a>2.2. Deploying a Java client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workshop is focused on the infrastructure side of Data Grid, but maybe you are curious about the development side. Would you like to learn:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>How to deploy a Java Hot Rod client on Openshift.</p>
+</li>
+<li>
+<p>How to configure a Java Spring Boot client to connect to a Data Grid cluster.</p>
+</li>
+<li>
+<p>How to create caches automatically from the client application without a Cache CR.</p>
+</li>
+<li>
+<p>How to upload proto schemas using the REST API.</p>
+</li>
+<li>
+<p>How to perform puts, gets, queries, transactions, and listeners from an application perspective.</p>
+</li>
+<li>
+<p>And much more!</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In such a case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy an RHDG client in a few steps: <a href="https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift" class="bare">https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_3_ldap_based_authorization"><a class="anchor" href="#_2_3_ldap_based_authorization"></a>2.3. LDAP-based Authorization</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="51-troubleshooting-rest-api.html">5.2. REST to retrieve information</a></span>
-  <span class="next"><a href="60-exercises.html">6. Exercises</a></span>
+  <span class="prev"><a href="61-exercises-level-1.html">6.1. Level I</a></span>
+  <span class="next"><a href="63-exercises-level-3.html">6.3. Level III</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
