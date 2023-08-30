@@ -63,6 +63,7 @@ IMPORTANT: See how, with a proto cache, you can interact with `text/plain` forma
 Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.
 
 .*Now it's your turn!*
+[caption=""]
 ====
 Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.
 

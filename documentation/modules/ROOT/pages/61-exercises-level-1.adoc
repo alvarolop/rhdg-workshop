@@ -16,6 +16,7 @@ node, zone, etc. as some other pod(s)).
 
 
 .*Now it's your turn!*
+[caption=""]
 ====
 The Openshift cluster for this workshop is pretty simple, so there aren't many configurations that you can do in this regard here. Anyway, we have three zones for the worker nodes:
 
@@ -69,6 +70,7 @@ image::60-exercises-metrics-dashboard.png[]
 
 
 .*Now it's your turn!*
+[caption=""]
 ====
 Please, explore all the metrics. My recommendation is to access the `/metrics` endpoint in the Data Grid console route. Take a metric that you can monitor through time and execute changes to the cache to check how it varies through time. 
 
@@ -119,6 +121,7 @@ helm install cluster-helm openshift-helm-charts/redhat-data-grid
 
 
 .*Now it's your turn!*
+[caption=""]
 ====
 Please, explore the documentation of the Helm Charts and the values that it accepts.
 
