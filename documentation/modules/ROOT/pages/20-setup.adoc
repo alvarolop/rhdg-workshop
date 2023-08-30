@@ -1,14 +1,13 @@
 = Environment Setup
 include::_attributes.adoc[]
 
-[#prerequisites]
 == Prerequisites
 
 During this tutorial, will be *required* to work with different tools for running the exercises included. Please install the following software:
 
-include::partial$10-requirements.adoc[]
+include::21-requirements.adoc[]
 
-include::partial$10-optional-requirements.adoc[]
+include::22-optional-requirements.adoc[]
 
 // [#parameters]
 // == Parameters
@@ -20,10 +19,9 @@ include::partial$10-optional-requirements.adoc[]
 // include::partial$10-parameters.adoc[]
 
 
-[#access-console]
 == Access - OCP Console
 
-In order to check the laboratory environment, please access the Openshift Console via browser using your credentials. The instructor will provide you the URL.
+In order to check the laboratory environment, please access the Openshift Console via browser using your credentials. The instructor will provide the URL.
 
 .Openshift Console
 image::2-setup-ocp-console.png[]
@@ -50,20 +48,11 @@ image::2-setup-oc-login-output.png["OC CLI Login Output"]
 TIP: Please pay special attention to *oc CLI* because you will need to use this tool several times during this tutorial.
 
 
-[#downloadtutorial]
 == Do it yourself!
 
-This workshop consists of three Git repositories:
+This workshop consists of two Git repositories:
 
 * https://github.com/alvarolop/rhdg-workshop[RHDG Workshop Guides]: Main git repository containing the guides.
-* https://github.com/alvarolop/rhdg-workshop-app[RHDG Workshop Application]: Git repository containing the application and server configuration.
 * https://github.com/alvarolop/rhdg-workshop-infra[RHDG Workshop Infrastructure]: Git repository with the automation of the user's environment.
 
-The only repository that you must clone is the Application one. However, I give you the other two repos just in case you want to see how this workshop was prepared.
-
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-git clone https://github.com/alvarolop/rhdg-workshop-app
-----
+IMPORTANT: You don't need to clone anything. just create YAML files locally to adapt them and recreate.
