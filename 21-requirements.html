@@ -3,10 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Environment Setup :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/20-setup.html">
-    <link rel="prev" href="10-introduction.html">
-    <link rel="next" href="31-server-configuration-basic.html">
+    <title>Untitled :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/21-requirements.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -59,7 +57,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="10-introduction.html">1. Introduction</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="20-setup.html">2. Environment Setup</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -143,21 +141,10 @@
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
-  <ul>
-    <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="20-setup.html">2. Environment Setup</a></li>
-  </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Environment Setup</h1>
-<div class="sect1">
-<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>During this tutorial, will be <strong>required</strong> to work with different tools for running the exercises included. Please install the following software:</p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -199,176 +186,6 @@
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The following CLI tools are <strong>optional</strong> for running the exercises in this tutorial.
-Although they are used in the tutorial, you could use others without any problem.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>Only install Docker if you cannot use Podman.</p>
-</li>
-<li>
-<p><code>jq</code> and <code>yq</code> are optional but very welcome. They prettify the output of the REST responses and will help you to understand the contents of the workshop better. <code>jq</code> works for JSON, while <code>yq</code> works for YAML and JSON.</p>
-</li>
-<li>
-<p>Don&#8217;t install <code>curl</code> if you don&#8217;t want to. In such case, you will need to adapt the commands to your own tool.</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
-<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
-<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
-<th class="tableblock halign-center valign-top"><strong>Windows</strong></th>
-<th class="tableblock halign-center valign-top"><strong>Official Documentation</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/linux-install/">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/mac-install/">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/windows-install/">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/">Git - Docs</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>jq</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq">jq v1.6.0</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>yq</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/#latest-version">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/#macos&#8212;&#8203;linux-via-homebrew">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/#latest-version">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mikefarah.gitbook.io/yq/how-it-works">yq 4.x - Docs</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>helm</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/intro/install/#from-script">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/intro/install/#from-homebrew-macos">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/intro/install/#from-script">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/">Helm -Docs</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>curl</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/linux">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/macos">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/windows">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/">curl -Docs</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_access_ocp_console"><a class="anchor" href="#_access_ocp_console"></a>Access - OCP Console</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In order to check the laboratory environment, please access the Openshift Console via browser using your credentials. The instructor will provide the URL.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/2-setup-ocp-console.png" alt="2 setup ocp console">
-</div>
-<div class="title">Figure 1. Openshift Console</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="access-cli"><a class="anchor" href="#access-cli"></a>Access - OC Client</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The OpenShift Container Platform CLI (which needs to be installed first) exposes the commands for managing your applications as well as the lower-level tools to interact with each component of your system. With the <strong>oc</strong> command, you can create applications and manage OpenShift Container Platform projects from a terminal.</p>
-</div>
-<div class="paragraph">
-<p>Please check that you have followed the pre-requisites with your instructor and connect to the cluster executing the next command from your terminal:</p>
-</div>
-<div class="listingblock lines_space console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc login -u $YOUR_USER -p openshift $OCP_API</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If the login is successful, it should show an output similar to the following screenshot:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/2-setup-oc-login-output.png" alt="OC CLI Login Output">
-</div>
-<div class="title">Figure 2. OC CLI Login Output</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Please pay special attention to <strong>oc CLI</strong> because you will need to use this tool several times during this tutorial.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_do_it_yourself"><a class="anchor" href="#_do_it_yourself"></a>Do it yourself!</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This workshop consists of two Git repositories:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/alvarolop/rhdg-workshop">RHDG Workshop Guides</a>: Main git repository containing the guides.</p>
-</li>
-<li>
-<p><a href="https://github.com/alvarolop/rhdg-workshop-infra">RHDG Workshop Infrastructure</a>: Git repository with the automation of the user&#8217;s environment.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-You don&#8217;t need to clone anything. just create YAML files locally to adapt them and recreate.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<nav class="pagination">
-  <span class="prev"><a href="10-introduction.html">1. Introduction</a></span>
-  <span class="next"><a href="31-server-configuration-basic.html">3.1. Initial Deployment</a></span>
-</nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>

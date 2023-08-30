@@ -3,10 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Exercises: Level II :: RH Data Grid Workshop</title>
-    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/62-exercises-level-2.html">
-    <link rel="prev" href="61-exercises-level-1.html">
-    <link rel="next" href="63-exercises-level-3.html">
+    <title>Untitled :: RH Data Grid Workshop</title>
+    <link rel="canonical" href="https://alvarolop.github.io/rhdg-workshop/22-optional-requirements.html">
     <meta name="generator" content="Antora 3.0.3">
     <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/img/favicon.ico" type="image/x-icon">
@@ -120,7 +118,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="61-exercises-level-1.html">6.1. Level I</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="62-exercises-level-2.html">6.2. Level II</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -143,168 +141,93 @@
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
-  <ul>
-    <li><a href="index.html">RHDG Workshop</a></li>
-    <li><a href="60-exercises.html">6. Exercises</a></li>
-    <li><a href="62-exercises-level-2.html">6.2. Level II</a></li>
-  </ul>
 </nav>
   <div style="padding: 0 0.5rem 0 0.75rem;"><a href="https://github.com/alvarolop" target="_blank" rel="noopener noreferrer"> © 2023 - Álvaro López Medina</a></div>
 </div>  <div class="content">
 <article class="doc">
-<h1 class="page">Exercises: Level II</h1>
-<div class="sect1">
-<h2 id="_2_1_rest_api_for_caches"><a class="anchor" href="#_2_1_rest_api_for_caches"></a>2.1. REST API for Caches</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Learn how to work with Caches using the REST API and various data formats.</p>
+<p>The following CLI tools are <strong>optional</strong> for running the exercises in this tutorial.
+Although they are used in the tutorial, you could use others without any problem.</p>
 </div>
-<div class="paragraph">
-<p><strong>First</strong>, you will need to create three caches with similar configuration. Use the knowledge of the section <code>Cache Configuration</code> to create three caches with its corresponding encoding format:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>rest-plain</code>: Encoding <code>text/plain</code>.</p>
-</li>
-<li>
-<p><code>rest-json</code>: Encoding <code>application/json</code>.</p>
-</li>
-<li>
-<p><code>rest-proto</code>: Encoding <code>application/x-protostream</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can use either the Cache CR, the REST API, etc. <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_rest_api/rest_v2_api#rest_v2_create_cache">Here</a> is how to create a cache using the REST API.</p>
-</div>
-<div class="paragraph">
-<p>Use the command you learned in the Troubleshooting section to check that the caches are present in the cluster.</p>
-</div>
-<div class="admonitionblock tip">
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-I recommend you use the same configuration for all of them. Use a Distributed cache with two owners. Avoid setting expiration and memory. Just keep it simple! You can use the official documentation for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/index">Cache Configuration</a> and for <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/cache_encoding_and_marshalling/index#cache-encoding">Encoding and Marshalling</a>.
+<div class="ulist">
+<ul>
+<li>
+<p>Only install Docker if you cannot use Podman.</p>
+</li>
+<li>
+<p><code>jq</code> and <code>yq</code> are optional but very welcome. They prettify the output of the REST responses and will help you to understand the contents of the workshop better. <code>jq</code> works for JSON, while <code>yq</code> works for YAML and JSON.</p>
+</li>
+<li>
+<p>Don&#8217;t install <code>curl</code> if you don&#8217;t want to. In such case, you will need to adapt the commands to your own tool.</p>
+</li>
+</ul>
+</div>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p><strong>Second</strong>, you will create entries in all three caches in different formats depending on the cache encoding:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Put an entry in the cache</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
-curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0 --data "Hello World"
-
-# application/json
-curl -X POST -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 --data '{"Hello": "World", "foo": "bar", "john": "doe"}'
-
-# application/x-protostream
-curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 --data "Hello World"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Third</strong>, retrieve the entries also using the REST API.</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Retrieve entries from the cache</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># text/plain
-curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-plain/0
-
-# application/json
-curl -X GET -k -u admin:password -H "Content-Type: application/json" $RHDG_URL/rest/v2/caches/rest-json/0 | jq .
-{
-  "Hello": "World",
-  "foo": "bar",
-  "john": "doe"
-}
-
-# application/x-protostream
-curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL/rest/v2/caches/rest-proto/0 | jq .
-{
-  "_type": "string",
-  "_value": "Hello World"
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock important">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-See how, with a proto cache, you can interact with <code>text/plain</code> format in your REST queries, but it then stores the entries in Protostream format. This simplifies interoperability and allows you to consume it as Java Objects directly from a Java Hot Rod client.
-</td>
+<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
+<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Windows</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Official Documentation</strong></th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Docker</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/linux-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/mac-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/windows-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/">Git - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>jq</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq">jq v1.6.0</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>yq</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/#latest-version">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/#macos&#8212;&#8203;linux-via-homebrew">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/#latest-version">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mikefarah.gitbook.io/yq/how-it-works">yq 4.x - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>helm</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/intro/install/#from-script">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/intro/install/#from-homebrew-macos">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/intro/install/#from-script">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/">Helm -Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>curl</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/macos">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/windows">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/">curl -Docs</a></p></td>
+</tr>
+</tbody>
 </table>
-</div>
-<div class="paragraph">
-<p>Congratulations! Now you are capable of interacting with caches from the REST API to check performance and configuration issues.</p>
-</div>
-<div class="exampleblock">
-<div class="title"><strong>Now it&#8217;s your turn!</strong></div>
-<div class="content">
-<div class="paragraph">
-<p>Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.</p>
-</div>
-<div class="paragraph">
-<p>Also, in general, developers will use Protostream to store complex classes defined with a <code>.proto</code> file. Please, check how to create and delete <code>.proto</code> files with the REST API. Then, interact with the cache in the same way.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_2_2_deploying_a_java_client"><a class="anchor" href="#_2_2_deploying_a_java_client"></a>2.2. Deploying a Java client</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This workshop is focused on the infrastructure side of Data Grid, but maybe you are curious about the development side. Would you like to learn:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>How to deploy a Java Hot Rod client on Openshift.</p>
-</li>
-<li>
-<p>How to configure a Java Spring Boot client to connect to a Data Grid cluster.</p>
-</li>
-<li>
-<p>How to create caches automatically from the client application without a Cache CR.</p>
-</li>
-<li>
-<p>How to upload proto schemas using the REST API.</p>
-</li>
-<li>
-<p>How to perform puts, gets, queries, transactions, and listeners from an application perspective.</p>
-</li>
-<li>
-<p>And much more!</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In such a case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy an RHDG client in a few steps: <a href="https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift" class="bare">https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_2_3_ldap_based_authorization"><a class="anchor" href="#_2_3_ldap_based_authorization"></a>2.3. LDAP-based Authorization</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<nav class="pagination">
-  <span class="prev"><a href="61-exercises-level-1.html">6.1. Level I</a></span>
-  <span class="next"><a href="63-exercises-level-3.html">6.3. Level III</a></span>
-</nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
