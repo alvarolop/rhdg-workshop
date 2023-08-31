@@ -2,10 +2,234 @@
 include::_attributes.adoc[]
 
 
-
 == 3.1. Datasources with SQL Database.
 
-In-line caching vs side caching.
+=== Step 1: Deploy a PostgreSQL database
+
+You already have one PostgreSQL database deployed as a single pod in another namespace: `$YOUR_NAME-db`.
+
+Go to that namespace and check the logs of the pod. Check that there aren't errors and that the logs show the following message:
+
+[.console-output]
+[source, log]
+----
+Starting server...
+2023-08-31 10:08:41.603 UTC [1] LOG: redirecting log output to logging collector process
+2023-08-31 10:08:41.603 UTC [1] HINT: Future log output will appear in directory "log".
+----
+
+This cluster has the following configuration that you will need in Step 3:
+
+* Username: `rhdguser`.
+* Password: `password`.
+* Database: `datagrid`.
+
+
+
+=== Step 2: Download and add the JDBC driver for PostgreSQL
+
+For this exercise, I recommend you use the JDBC driver for PostgreSQL, which is easy to load and configure. You use JDBC connections with SQL cache stores and JDBC string-based caches stores. It can be downloaded from here: https://jdbc.postgresql.org/download/
+
+We have to instruct RH Data Grid to download the binary and add it to the `server/lib` folder. This can be done easily with the following configuration:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  dependencies:
+    artifacts:
+      - maven: ''
+        url: https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
+----
+
+If everything went fine, you should see the following line in the logs:
+
+[.console-output]
+[source, log]
+----
+12:31:45,410 INFO  (main) [org.infinispan.SERVER] ISPN080027: Loaded extension 'org.postgresql.Driver'
+----
+
+
+.*Now it's your turn!*
+[caption=""]
+====
+If you want to keep investigating this topic, it is possible to add the drivers using a mounted PVC where you previously copied the driver. This way, you don't have any external dependencies during deploy time. You can try it using the following documentation: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#copying-code_custom-code
+====
+
+.Check that the JDBC driver was correctly added
+[TIP]
+====
+[.console-input]
+[source, bash]
+----
+# If downloaded using the URL
+oc exec -it cluster-0 -c infinispan -- ls /opt/infinispan/server/lib/external-artifacts/lib
+
+# If mounted with the PVC
+oc exec -it cluster-0 -c infinispan -- ls /opt/infinispan/server/lib
+----
+====
+
+
+=== Step 3: Add the Datasource connector configuration
+
+Data Grid allows you to create managed datasources as part of your Data Grid Server configuration to optimize connection pooling and performance for JDBC database connections. You can then specify the JDNI name of the managed datasources in your caches (Step 4), which centralizes JDBC connection configuration for your deployment.
+
+Add the Connector configuration on the `infinispan.server.datasources` section of the ConfigMap:
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-custom-config
+data:
+  infinispan-config.yaml: >
+    infinispan:
+      server:
+        dataSources:
+          - name: ds
+            jndiName: 'jdbc/postgres'
+            statistics: true
+            connectionFactory:
+              driver: "org.postgresql.Driver"
+              url: "jdbc:postgresql://postgresql.$YOUR_USER-db.svc:5432/datagrid"
+              username: "rhdguser"
+              password: "password"
+            connectionPool:
+              initialSize: 1
+              maxSize: 10
+              minSize: 3
+              backgroundValidation: 1000
+              idleRemoval: 1
+              blockingTimeout: 1000
+              leakDetection: 10000
+      cache-container:
+      # Here the previous contents of the file #
+----
+
+
+.Check that the datasource was correctly added:
+[TIP]
+====
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .
+----
+====
+
+
+
+=== Step 4: Configure the caches to persist data
+
+When you add a managed datasource to Data Grid Server you can add the JNDI name to a JDBC-based cache store configuration. Now, configure the `persistence` section of your cache. JDBC String-Based cache stores, JdbcStringBasedStore, use JDBC drivers to load and store values in the underlying database.
+
+
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-datasource-cache
+spec:
+  clusterName: cluster
+  name:  datasource-cache
+  template: |-
+    distributedCache:
+      owners: "1"
+      mode: SYNC
+      statistics: "true"
+      encoding:
+        key:
+          mediaType: application/x-protostream
+        value:
+          mediaType: application/x-protostream
+      persistence:
+        stringKeyedJdbcStore:
+          dataSource:
+            jndi-url: "jdbc/postgres"
+          stringKeyedTable:
+            prefix: "TBL"
+            dropOnExit: true
+            createOnStart: true
+            idColumn:
+              name: "ID"
+              type: "VARCHAR(255)"
+            dataColumn:
+              name: "DATA"
+              type: "BYTEA"
+            timestampColumn:
+              name: "TS"
+              type: "BIGINT"
+            segmentColumn:
+              name: "S"
+              type: "INT"
+  updates:
+    strategy: recreate
+----
+
+Now, add a new entry in the cache (For example, using the web console) and check that it is correctly added to the cache and to the data store:
+
+.Check 
+[TIP]
+====
+[.console-input]
+[source, bash]
+----
+# Check current Databases (Should show "datagrid")
+psql postgres://rhdguser:password@localhost:5432/datagrid -c '\l'
+
+# Check cache statistics
+curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/datasource-cache | yq -P .
+
+# Check DB table contents
+psql postgres://rhdguser:password@localhost:5432/datagrid -c 'SELECT * FROM "TBL_datasource_cache";'
+   id   |                                                                          data                                                                          | ts |  s  
+--------+--------------------------------------------------------------------------------------------------------------------------------------------------------+----+-----
+  8SgFj | \x9801ea078a01430a0b98010b8a01050a034a0164121c9801058a011618ffffffffffffffffff0120ffffffffffffffffff0118ffffffffffffffffff0120ffffffffffffffffff012a00 | -1 | 231
+(1 row)
+----
+====
+
+
+.*Now it's your turn!*
+[caption=""]
+====
+
+*Exercise 1*
+
+Do you want to keep learning about this topic? You should learn about Passivation. Passivation configures Data Grid to write entries to cache stores when it evicts those entries from memory. In this way, passivation ensures that only a single copy of an entry is maintained, either in-memory or in a cache store, which prevents unnecessary and potentially expensive writes to persistent storage.
+
+Please, check this https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/configuring_data_grid_caches/index#passivation_persistence[documentation] and configure Passivation in your cache.
+
+*Exercise 2*
+
+On top of that, if you are not interested in Passivation on a DB, but just on a local file, you can configure a Soft-Index File Stores. Check this https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/configuring_data_grid_caches/index#file-stores_persistence[documentation] to configure passivation on file.
+====
+
+
+
+
+=== Where can I get more info?
+
+
+The documentation is split into several documents according to the topic:
+
+* Operator: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#deploying-code[Deploying custom code to Data Grid]. This chapter helps you to add the JDBC driver to the Data Grid container during startup.
+* Server: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_server_guide/index#managed-datasources[Adding managed datasources to Data Grid Server]: To configure data sources that will then be consumed from caches.
+* Caches: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/configuring_data_grid_caches/persistence#doc-wrapper[Configuring persistent storage]. This chapter explains the configuration related to configuring persistence and passivation of cache entries.
+
+
+
+
 
 
 == 3.2. Authorization using RBAC.

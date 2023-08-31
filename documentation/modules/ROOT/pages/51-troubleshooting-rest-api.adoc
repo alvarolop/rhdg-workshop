@@ -17,7 +17,6 @@ You need to define the env var with the REST Endpoint before executing the next 
 ----
 RHDG_URL=$(oc get routes --template='https://{{(index .items 0).spec.host }}')
 ----
-
 ====
 
 
