@@ -214,7 +214,7 @@ node, zone, etc. as some other pod(s)).</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>If you want to try another configuration, there is one Postgresql pod in each namespace <code>$YOUR_USERNAME-rhdg</code> - You will use it later to configure Datasources. Please, configure a <code>podAffinity</code> rule so that your Data Grid cluster pods are collocated in the same node.</p>
+<p>If you want to try another configuration, there is one Postgresql pod in each namespace <code>$YOUR_USERNAME-rhdg</code> - You will use it later to configure Datasources. Configure a <code>podAffinity</code> rule so that your Data Grid cluster pods are collocated in the same node.</p>
 </div>
 </div>
 </div>
@@ -268,7 +268,7 @@ metadata:
 <p>Please, explore all the metrics. My recommendation is to access the <code>/metrics</code> endpoint in the Data Grid console route. Take a metric that you can monitor through time and execute changes to the cache to check how it varies through time.</p>
 </div>
 <div class="paragraph">
-<p>It is important to know the metrics in order to improve performance.</p>
+<p>It is important to know all the relevant metrics in order to improve performance.</p>
 </div>
 <div class="paragraph">
 <p>Also, please, check that all the Data Grid metrics have the <code>domain</code> tag. This is the tag that you manually added in the <code>Server Configuration &gt; Basic</code> section yesterday. Add new tags to see how they are automatically included!</p>
@@ -302,12 +302,10 @@ metadata:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_1_3_openshift_helm_chart"><a class="anchor" href="#_1_3_openshift_helm_chart"></a>1.3. Openshift Helm Chart.</h2>
+<h2 id="_1_3_openshift_helm_chart"><a class="anchor" href="#_1_3_openshift_helm_chart"></a>1.3. Openshift Helm Chart</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Helm is a tool to help you define, install, and upgrade applications running on Kubernetes. At its most basic,
-Helm is a templating engine that creates Kubernetes manifests. Helm uses a packaging format called
-charts. A chart is a collection of files that describe a related set of Kubernetes resources.</p>
+<p>Helm is a tool to help you define, install, and upgrade applications running on Kubernetes. At its most basic, Helm is a templating engine that creates Kubernetes manifests. Helm uses a packaging format called charts. A chart is a collection of files that describe a related set of Kubernetes resources.</p>
 </div>
 <div class="paragraph">
 <p>You may want to install the Data Grid cluster using Helm Charts due to two main reasons:</p>
@@ -347,6 +345,41 @@ helm install cluster-helm openshift-helm-charts/redhat-data-grid</code></pre>
 <p>Check that the previous cluster was deployed successfully.</p>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-certificates"><a class="anchor" href="#custom-certificates"></a>1.4 Using custom TLS certificates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Service certificates can be fully trusted only inside OpenShift. If you want to encrypt connections with clients running outside OpenShift, you should use custom TLS certificates. The process consists of two steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Step 1: <strong>Generate a custom certificate</strong> and add it to a Secret. You can use a service like <a href="https://letsencrypt.org/getting-started/">Let&#8217;s Encrypt</a> for that.</p>
+</li>
+<li>
+<p>Step 2: <strong>Configure the Infinispan CR</strong> to use the secret instead of a service certificate:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="title">Configure Infinispan CR</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointEncryption:
+      type: Secret
+      certSecretName: tls-secret</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want to know how to set the custom certificates, I recommend you to follow the <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#using-custom-encryption-secrets_tls">official documentation</a>.</p>
 </div>
 </div>
 </div>

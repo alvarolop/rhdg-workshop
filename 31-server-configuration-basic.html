@@ -230,7 +230,7 @@ spec:
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Disable both authentication and encryption. (They come enabled by default).</td>
+<td>Disable both authentication and encryption.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -238,7 +238,7 @@ spec:
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><code>type: DataGrid</code> is the full version.</td>
+<td><code>type: DataGrid</code> is the full version of the deployment with all the features.</td>
 </tr>
 </table>
 </div>
@@ -251,7 +251,7 @@ spec:
 <p><code>cluster-0</code> is the real pod of Data Grid. It contains the server itself.</p>
 </li>
 <li>
-<p><code>cluster-config-listener-&#8230;&#8203;</code> is an extra pod deployed per Data Grid cluster that synchronizes the cache configurations with the pods of a cluster to keep consistency. This pod is optional but recommended. We will take advantage of it in the following section.</p>
+<p><code>cluster-config-listener-&#8230;&#8203;</code> is an auxiliary pod deployed per Data Grid cluster that synchronizes the cache configurations with the pods of a cluster to keep consistency. This pod is optional but recommended. We will take advantage of it in the following chapter.</p>
 </li>
 </ul>
 </div>
@@ -317,7 +317,7 @@ oc get routes --template='http://{{(index .items 0).spec.host }}'</code></pre>
 <div class="title">Figure 1. Data Grid web console welcome message</div>
 </div>
 <div class="paragraph">
-<p>This is the main dashboard. You can use it to see Cache and cluster metrics, Cache configuration, clustering information, server version, cache entries, etc.</p>
+<p>This is the main dashboard. Here, you can explore the configured caches, with their statistics, entries, configuration, etc. You can also check cluster configuration, like statistics and metrics, clustering, server version, <code>proto</code> files, counters, etc.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -331,10 +331,10 @@ oc get routes --template='http://{{(index .items 0).spec.host }}'</code></pre>
 <h2 id="_labels"><a class="anchor" href="#_labels"></a>Labels</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As you progress through this workshop, it&#8217;s time to explore how to apply labels to services and pods, enabling streamlined filtering based on these labels. Additionally, these labels can be utilized to enrich Prometheus metrics.</p>
+<p>As you progress through this workshop, it&#8217;s time to explore how to apply labels to services and pods, enabling streamlined filtering based on these labels. Additionally, they can be utilized to enrich Prometheus metrics.</p>
 </div>
 <div class="paragraph">
-<p>You can check the  labels of the cluster pods using the following command:</p>
+<p>You can check the labels of the cluster pods using the following command:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -373,7 +373,7 @@ metadata:
 </div>
 </div>
 <div class="paragraph">
-<p>You will see after new labels to your Infinispan CR, those labels are not populated to the server pods:</p>
+<p>You will see that new labels where applied to your Infinispan CR, but not populated to the server pods:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -381,15 +381,15 @@ metadata:
 </div>
 </div>
 <div class="paragraph">
-<p>Therefore, we need to add some annotations to instruct the operator to propagate those labels to pods and/or services. There are two:</p>
+<p>Therefore, we need to add extra annotations to instruct the operator to propagate those labels to pods and/or services. There are two:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>infinispan.org/targetLabels</code> to add those labels to the services.</p>
+<p><code>infinispan.org/targetLabels</code> to label the services.</p>
 </li>
 <li>
-<p><code>infinispan.org/podTargetLabels</code> to add those labels to the pods.</p>
+<p><code>infinispan.org/podTargetLabels</code> to label the pods.</p>
 </li>
 </ul>
 </div>
@@ -437,6 +437,9 @@ metadata:
   "user": "user1"
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Great! You got it! Now, continue to the new section to explore all the resourcing configuration.</p>
 </div>
 </div>
 </div>

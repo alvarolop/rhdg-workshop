@@ -146,32 +146,23 @@
 </div>  <div class="content">
 <article class="doc">
 <div class="paragraph">
-<p>The following CLI tools are <strong>optional</strong> for running the exercises in this tutorial.
-Although they are used in the tutorial, you could use others without any problem.</p>
+<p>The following CLI tools are <strong>optional</strong> for running the exercises in this tutorial. Although they are used in the tutorial, you could use others you are used to. <strong>Do not worry about them, and install them when needed</strong>. Please, read this information to decide if you need any of these tools:</p>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Only install Docker if you cannot use Podman.</p>
+<p><code>curl</code> or an equivalent tool to perform REST requests is needed for all the chapters of the second day.</p>
 </li>
 <li>
-<p><code>jq</code> and <code>yq</code> are optional but very welcome. They prettify the output of the REST responses and will help you to understand the contents of the workshop better. <code>jq</code> works for JSON, while <code>yq</code> works for YAML and JSON.</p>
+<p><code>jq</code> and <code>yq</code> are formatting tools that allow you to easily visualize the output of REST commands and oc CLI. I strongly recommend them if you will continuously use the <code>curl</code> command.</p>
 </li>
 <li>
-<p>Don&#8217;t install <code>curl</code> if you don&#8217;t want to. In such case, you will need to adapt the commands to your own tool.</p>
+<p><code>helm</code> is only needed for Helm Exercise, where you install a Data Grid cluster with Helm instead of the operator.</p>
+</li>
+<li>
+<p>Git and Podman are only needed if you want to replicate those deployments locally on your laptop.</p>
 </li>
 </ul>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -192,11 +183,11 @@ Although they are used in the tutorial, you could use others without any problem
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/linux-install/">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/mac-install/">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/windows-install/">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/">Git - Docs</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>curl</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/macos">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/windows">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/">curl -Docs</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><code>jq</code></p></td>
@@ -220,11 +211,25 @@ Although they are used in the tutorial, you could use others without any problem
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://helm.sh/docs/">Helm -Docs</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>curl</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/linux">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/macos">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/get/windows">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://everything.curl.dev/">curl -Docs</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Git</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/mac">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/win">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com">Git - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Podman</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/docs/installation#installing-on-linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/docs/installation#macos">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/docs/installation#windows">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://podman.io/">Podman - Docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Docker</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/linux-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/mac-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/desktop/install/windows-install/">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/">Git - Docs</a></p></td>
 </tr>
 </tbody>
 </table>

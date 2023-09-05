@@ -154,10 +154,10 @@
 <article class="doc">
 <h1 class="page">Cache Expiration</h1>
 <div class="paragraph">
-<p>Old stuff isn&#8217;t always useful. We&#8217;ll show you how to set a timer. The Expiration section instructs Data Grid to remove entries from caches when they reach their time limit regarding expiration or idling.</p>
+<p>Old stuff isn&#8217;t always useful. We&#8217;ll show you <strong>how to set a timer</strong>. The Expiration section instructs Data Grid to remove entries from caches when they reach their time limit regarding expiration or idling.</p>
 </div>
 <div class="paragraph">
-<p>For this purpose, we will reuse the same cache and modify it to add the new configuration:</p>
+<p>For this purpose, reuse the same cache modifying it to add the new configuration:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -178,10 +178,18 @@ spec:
         value:
           mediaType: application/x-protostream
       expiration:
-        lifespan: "60000"
+        lifespan: "60000" <i class="conum" data-value="1"></i><b>(1)</b>
   updates:
     strategy: recreate</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This setting makes sure that entries expire from the cache after 60 seconds.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Now, access the web console again and add a second entry. You will notice that new entries will have the configured expiration time, while the old ones are kept forever. There are mechanisms to make sure that all existing entries will expire after the expiration time set in the configuration.</p>
@@ -191,6 +199,18 @@ spec:
 <img src="_images/40-cache-rhdg-console-cache-expiration.png" alt="40 cache rhdg console cache expiration">
 </div>
 <div class="title">Figure 1. View entries in the web console with its expiration time</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Data Grid also allows you to specify how long entries can <strong>remain idle before removing</strong> the entry from the cache. You can set that with the <code>expiration.maxIdle</code> parameter. I recommend you try it and check if it&#8217;s interesting for you!
+</td>
+</tr>
+</table>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="41-cache-configuration-encoding.html">4.2. Encoding</a></span>

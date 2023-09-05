@@ -154,10 +154,10 @@
 <article class="doc">
 <h1 class="page">Basic Configuration</h1>
 <div class="sect1">
-<h2 id="_high_availability_using_several_replicas"><a class="anchor" href="#_high_availability_using_several_replicas"></a>High availability using several replicas</h2>
+<h2 id="_high_availability"><a class="anchor" href="#_high_availability"></a>High availability</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In a production environment, you will always be interested in a high-availability configuration with several replicas, so that restarts of a container in Openshift don&#8217;t impact the availability of the Data Grid cluster. Enabling it is as simple as modifying the number of replicas of your cluster. You can play with the YAML definition to change the number of replicas.</p>
+<p>In a production environment, you will always be interested in a high-availability configuration with several replicas, so that restarts don&#8217;t impact the availability of the Data Grid cluster. Enabling it is as simple as modifying the number of replicas of your cluster. You can play with the YAML definition to change the number of replicas.</p>
 </div>
 <div class="paragraph">
 <p>First, configure three replicas of your cluster by modifying the following configuration:</p>
@@ -169,7 +169,7 @@ kind: Infinispan
 metadata:
   name: cluster
 spec:
-# Here the previous YAML content #
+# Here is the previous YAML content #
   replicas: 3</code></pre>
 </div>
 </div>
@@ -218,7 +218,7 @@ cluster-config-listener-7db8d897bc-ft59v   1/1     Running   0          21m</cod
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Please, before continuing to the next section, scale down the cluster to two replicas to save resources in Openshift.
+Please, before continuing to the next section, <strong>scale down the cluster to two replicas</strong> to save resources in Openshift.
 </td>
 </tr>
 </table>
@@ -254,7 +254,19 @@ spec:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This configuration is strongly recommended to ensure that the server does not restart due to an OutOfMemory error or the Java Garbage Collector does not have enough resources to perform efficiently.
+<div class="paragraph">
+<p>This configuration is <strong>strongly recommended</strong>. Many factors can affect the performance of Data Grid due to its nature as an in-memory cache. Even so, there are at least two common errors related to these settings:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Although most of the time, the CPU consumption will remain low, the CPU is crucial for the quick execution of the JVM Garbage collector. Therefore, limiting the CPU without proper analysis severely impacts performance.</p>
+</li>
+<li>
+<p>The Data Grid image automatically calculates the bounds of the JVM Heap based on the container limit and request. For that reason, it is recommended to assign the same value for both parameters to avoid recalculations.</p>
+</li>
+</ul>
+</div>
 </td>
 </tr>
 </table>

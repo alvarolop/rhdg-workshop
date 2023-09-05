@@ -167,7 +167,7 @@
 <h2 id="_collecting_openshift_resources"><a class="anchor" href="#_collecting_openshift_resources"></a>Collecting Openshift resources</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Ok, we don&#8217;t know yet what is going on. This section will help us to identify all the components of our installation and give us a methodic way of examining issues.</p>
+<p>Okay, we have an issue, but we don&#8217;t know yet what is going on. This section will help us to identify all the components of our installation and give us a methodic way of examining issues.</p>
 </div>
 <div class="sect2">
 <h3 id="_retrieving_the_list_of_server_pods"><a class="anchor" href="#_retrieving_the_list_of_server_pods"></a>Retrieving the list of server pods</h3>
@@ -197,7 +197,17 @@ cluster-1   1/1     Running   0          19m</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><code>infinispan-operator-controller-manager</code>: This is the operator itself and runs in this workshop in a different namespace named <code>rhdg-operator</code>. It synchronizes the configuration of the CRDs with Openshift objects and the Infinispan server itself. There is an exception for the Cache CRD when the <code>.spec.configListener.enabled</code> = true in the Infinispan CRD - which is enabled by default-, this sync is delegated to the config-listener deployed for each cluster.</p>
+<p><code>infinispan-operator-controller-manager</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is the operator itself. In this workshop, it runs in a different namespace dubbed <code>rhdg-operator</code>.</p>
+</li>
+<li>
+<p>It syncs the configuration of the CRs (Except Caches) with Openshift objects and the Infinispan server itself.</p>
+</li>
+<li>
+<p>When configListener is enabled (default) in the Infinispan CRD, the <code>config-listener</code> pod syncs the Cache CRs.</p>
 <div class="listingblock console-input">
 <div class="title">Check the logs of the operator pod</div>
 <div class="content">
@@ -205,8 +215,21 @@ cluster-1   1/1     Running   0          19m</code></pre>
 </div>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
-<p><code>cluster-config-listener</code>: There is one per cluster and it can be disabled when <code>.spec.configListener.enabled</code> = false in the Infinispan CRD. It is responsible for the bidirectional reconciliation of cache configurations between the Data Grid server and the Cache CRD.</p>
+<p><code>cluster-config-listener</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>There is one per Data Grid cluster.</p>
+</li>
+<li>
+<p>It can be disabled by setting <code>.spec.configListener.enabled</code> to <code>false</code> in the Infinispan CRD.</p>
+</li>
+<li>
+<p>It is responsible for the bidirectional reconciliation of cache configurations between the Data Grid server and the Cache CRs.</p>
 <div class="listingblock console-input">
 <div class="title">Check the logs of the config-listener pod</div>
 <div class="content">
@@ -214,13 +237,26 @@ cluster-1   1/1     Running   0          19m</code></pre>
 </div>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
-<p><code>cluster-pods</code>: These are the actual pods of the cluster. In its logs, you can see issues related to server configuration, the clustering based on JGroups, and access logs.</p>
+<p><code>cluster-X</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>These are the actual pods of the cluster.</p>
+</li>
+<li>
+<p>In its logs, you can see issues related to server configuration, the clustering based on JGroups, and access logs.</p>
 <div class="listingblock console-input">
 <div class="title">Check the logs of the server pods</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f cluster-0</code></pre>
 </div>
+</div>
+</li>
+</ul>
 </div>
 </li>
 </ul>
@@ -237,8 +273,17 @@ cluster-1   1/1     Running   0          19m</code></pre>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc adm inspect namespace/$YOUR_USER-rhdg</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>If you don&#8217;t have enough permissions to execute the above command, you will need that information manually.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you don&#8217;t have enough permissions to execute the above command, you will need that information manually.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The <code>oc adm inspect</code> command does not collect Custom resources. Therefore, you will need to collect the separately:</p>
@@ -258,10 +303,10 @@ oc get cache -o yaml &gt; caches.yaml</code></pre>
 <h2 id="_the_data_grid_server_report"><a class="anchor" href="#_the_data_grid_server_report"></a>The Data Grid server report</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Data Grid Server provides aggregated reports in tar.gz archives that contain diagnostic information about server instances and host systems. The report provides details about CPU, memory, open files, network sockets and routing, and threads, in addition to configuration and log files.</p>
+<p>Data Grid Server provides aggregated reports in <code>tar.gz</code> archives that contain diagnostic information about server instances and host systems. The report provides details about CPU, memory, open files, network sockets and routing, and threads, in addition to configuration and log files.</p>
 </div>
 <div class="paragraph">
-<p>Retrieving the server report takes several steps, as you have to use the Infinispan CLI. In the following command, I have automated the process so that you can generate it and download it easily:</p>
+<p>Retrieving the server report takes several steps, as you have to use the Infinispan CLI. In the following command, I have automated the process so that you can generate and download it easily:</p>
 </div>
 <div class="listingblock console-input">
 <div class="title">Get the server report</div>
@@ -303,7 +348,7 @@ oc exec cluster-0 -- bash -c 'files=( *tar.gz* ); cat "${files[0]}"' &gt; $(date
 <h2 id="_adjusting_log_levels"><a class="anchor" href="#_adjusting_log_levels"></a>Adjusting log levels</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Change levels for different Data Grid logging categories when you need to debug issues. You can also adjust log levels to reduce the number of messages for certain categories to minimize the use of container resources. You can try to change the logging configuration without restarting by adding the following lines in the Infinispan CR:</p>
+<p>Change levels for different Data Grid logging categories when you need to debug issues. You can also adjust log levels to reduce the number of messages for certain categories to minimize the use of container resources. You can try changing the logging configuration without restarting by adding the following lines in the Infinispan CR:</p>
 </div>
 <div class="listingblock console-input">
 <div class="title">Add custom log levels</div>

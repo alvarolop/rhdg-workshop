@@ -165,7 +165,7 @@
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for you for the Advanced Exercises Section.
+Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for <a href="60-exercises.html" class="xref page">Exercises Section</a>.
 </td>
 </tr>
 </table>
@@ -207,28 +207,21 @@ Some of the objects of this section might be new to you: Proto files, server tas
 <div class="listingblock console-input">
 <div class="title">Curl command to retrieve Server Config</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -H "Accept: application/xml" -u admin:password $RHDG_URL/rest/v2/server/config</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_problems_with_protobuf"><a class="anchor" href="#_problems_with_protobuf"></a>Problems with Protobuf?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can list all the <code>.proto</code> files and also all the Proto types using the REST API.</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">Curl command to retrieve the Proto files</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="title">Curl command to retrieve the Proto Types (Primitives)</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .</code></pre>
-</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">You tried a configuration that is preventing the REST API from being ready?</div>
+Set the logging category <code>org.infinispan.SERVER</code> to DEBUG. It will print the merged configuration in the stdout logs so that you can check if you missed a config part.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -236,7 +229,7 @@ Some of the objects of this section might be new to you: Proto files, server tas
 <h2 id="_problems_with_cache_definitions"><a class="anchor" href="#_problems_with_cache_definitions"></a>Problems with cache definitions?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:</p>
+<p>At some point, you will want to know if a certain cache is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:</p>
 </div>
 <div class="listingblock console-input">
 <div class="title">Get all caches</div>
@@ -260,20 +253,6 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -
 </div>
 </div>
 <div class="sect1">
-<h2 id="_problems_with_server_tasks"><a class="anchor" href="#_problems_with_server_tasks"></a>Problems with Server tasks?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:</p>
-</div>
-<div class="listingblock console-input">
-<div class="title">List all the available Server Tasks</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_problems_with_the_content_of_a_cache"><a class="anchor" href="#_problems_with_the_content_of_a_cache"></a>Problems with the content of a cache?</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -291,6 +270,40 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Change "cache-replicated-01" to your desired cache name
 curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=clear</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_problems_with_protobuf"><a class="anchor" href="#_problems_with_protobuf"></a>Problems with Protobuf?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can list all the <code>.proto</code> files and also all the protobuf types using the REST API.</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve the Proto files</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Curl command to retrieve the Proto Types (Primitives)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_problems_with_server_tasks"><a class="anchor" href="#_problems_with_server_tasks"></a>Problems with Server tasks?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:</p>
+</div>
+<div class="listingblock console-input">
+<div class="title">List all the available Server Tasks</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .</code></pre>
 </div>
 </div>
 </div>
@@ -324,10 +337,10 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search
 <h2 id="_converting_cache_definitions_using_the_rest_api"><a class="anchor" href="#_converting_cache_definitions_using_the_rest_api"></a>Converting Cache definitions using the REST API</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definitionin a different format and would like to convert it? That&#8217;s easy! There are two use cases here.</p>
+<p>Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definition in a different format and would like to convert it? That&#8217;s easy! There are two use cases here.</p>
 </div>
 <div class="paragraph">
-<p>If the cache is already in a cluster, you can retrieve it in any of the three formats just sending the proper header. Let&#8217;s use the same cache as in previous exercises:</p>
+<p>If the cache is already in a cluster, you can retrieve it in any of the three formats just by sending the proper header. Let&#8217;s use the same cache as in previous exercises:</p>
 </div>
 <div class="listingblock console-input">
 <div class="title">Get Cache Definition in different formats</div>

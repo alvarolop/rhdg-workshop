@@ -195,7 +195,7 @@ Server and client identities when they negotiate connections.</p>
 </td>
 <td class="content">
 <div class="title">Level up!</div>
-If you are interested in other Realms you can investigate further during the second day of the workshop. Especially, you will find some tips for the LDAP Realm in the Advanced Exercises Section.
+If you are interested in other Realms you can investigate further during the second day of the workshop. Especially, you will find some tips for the LDAP Realm in the <a href="62-exercises-level-2.html#_2_3_ldap_based_authorization" class="xref page">Exercises Section</a>.
 </td>
 </tr>
 </table>
@@ -204,7 +204,7 @@ If you are interested in other Realms you can investigate further during the sec
 <p><strong>Step 1: Create a secret with the credentials</strong></p>
 </div>
 <div class="paragraph">
-<p>First, create a Secret that contains all the users and their passwords:</p>
+<p>First, create a Secret containing all the users and their passwords:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -266,13 +266,13 @@ permissions, from read-only access to full, superuser privileges.</p>
 </td>
 <td class="content">
 <div class="title">Level up!</div>
-Do you want to make sure that users belong to a role with sufficient permissions before they can perform operations on a specific Cache? You can explore that configuration in the Advanced Exercises Section.
+Do you want to make sure that users belong to a role with sufficient permissions before they can perform operations on a specific Cache? You can explore that configuration in the <a href="63-exercises-level-3.html#authorization-using-rbac" class="xref page">Exercises Section</a>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s make sure that the admin user has ADMIN rights to the Data Grid cluster, but the user1 has monitor and read-only capabilities. Configuring authorization using the operator consists of two steps.</p>
+<p>Let&#8217;s make sure that the <code>admin</code> user has ADMIN rights to the Data Grid cluster, but the <code>user1</code> has monitor and read-only capabilities. Configuring authorization using the operator consists of two steps.</p>
 </div>
 <div class="paragraph">
 <p><strong>Step 1: Modify the credentials secret with the roles</strong></p>
@@ -345,7 +345,7 @@ spec:
 </div>
 </div>
 <div class="paragraph">
-<p>If you log in to the web console, you will quickly see the differences between each user: The <code>admin</code> has a button to create caches; <code>user1</code> does not, but can check the server statistics; <code>developer</code> cannot retrieve the statistics as he does not belong to a role with the MONITOR permission.</p>
+<p>If you log in to the web console, you will quickly see the differences between each user: The <code>admin</code> has a button to create caches; <code>user1</code> does not, but can check the server statistics; <code>developer</code> cannot retrieve the statistics as it doesn&#8217;t belong to a role with the MONITOR permission.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -374,7 +374,7 @@ spec:
 <p>Encryption allows encrypting connections between clients and Data Grid pods with Red Hat OpenShift service certificates or custom TLS certificates. Whether you opt for one or the other, remember that encryption is a great tool for safeguarding your cache infrastructure and keeping your cache information safe during transit.</p>
 </div>
 <div class="paragraph">
-<p>With the service certificates, the Data Grid Operator automatically generates TLS certificates that are signed by the Red Hat OpenShift service CA. Data Grid Operator then stores the certificates and keys in a k8s Secret so you can retrieve them and use them with remote clients.</p>
+<p>With the service certificates, the Data Grid Operator <strong>automatically generates TLS certificates</strong> that are signed by the Red Hat OpenShift service CA. Data Grid Operator then stores the certificates and keys in a k8s Secret so you can retrieve them and use them with remote clients.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -384,7 +384,7 @@ spec:
 </td>
 <td class="content">
 <div class="title">Level up!</div>
-Do you want to explore the usage of custom certificates? You can explore that configuration in the Advanced Exercises Section.
+Do you want to explore the usage of custom certificates? You can explore that configuration in the <a href="61-exercises-level-1.html#custom-certificates" class="xref page">Exercises Section</a>.
 </td>
 </tr>
 </table>
