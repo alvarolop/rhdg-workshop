@@ -129,3 +129,31 @@ Check that the previous cluster was deployed successfully.
 ====
 
 
+== 1.4 Using custom TLS certificates
+
+Service certificates can be fully trusted only inside OpenShift. If you want to encrypt connections with clients running outside OpenShift, you should use custom TLS certificates. The process consists of two steps:
+
+* Step 1: *Generate a custom certificate* and add it to a Secret. You can use a service like https://letsencrypt.org/getting-started/[Let's Encrypt] for that.
+
+* Step 2: *Configure the Infinispan CR* to use the secret instead of a service certificate:
+
+.Configure Infinispan CR
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    endpointEncryption:
+      type: Secret
+      certSecretName: tls-secret
+----
+
+
+
+
+If you want to know how to set the custom certificates, I recommend you to follow the https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#using-custom-encryption-secrets_tls[official documentation].
+
