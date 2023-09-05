@@ -22,12 +22,12 @@ Server and client identities when they negotiate connections.
 To ensure that we learn gradually all the aspects of the server configuration, we are going to start with the *Properties Realm*. Configuring Properties Realm authentication using the operator consists of two steps.
 
 .Level up!
-TIP: If you are interested in other Realms you can investigate further during the second day of the workshop. Especially, you will find some tips for the LDAP Realm in the Advanced Exercises Section.
+TIP: If you are interested in other Realms you can investigate further during the second day of the workshop. Especially, you will find some tips for the LDAP Realm in the xref:62-exercises-level-2.adoc#_2_3_ldap_based_authorization[Exercises Section].
 
 
 *Step 1: Create a secret with the credentials*
 
-First, create a Secret that contains all the users and their passwords:
+First, create a Secret containing all the users and their passwords:
 
 [.console-input]
 [source, yaml]
@@ -76,9 +76,9 @@ caches or interact with Data Grid resources. You assign roles to users that prov
 permissions, from read-only access to full, superuser privileges. 
 
 .Level up!
-TIP: Do you want to make sure that users belong to a role with sufficient permissions before they can perform operations on a specific Cache? You can explore that configuration in the Advanced Exercises Section.
+TIP: Do you want to make sure that users belong to a role with sufficient permissions before they can perform operations on a specific Cache? You can explore that configuration in the xref:63-exercises-level-3.adoc#authorization-using-rbac[Exercises Section].
 
-Let's make sure that the admin user has ADMIN rights to the Data Grid cluster, but the user1 has monitor and read-only capabilities. Configuring authorization using the operator consists of two steps.
+Let's make sure that the `admin` user has ADMIN rights to the Data Grid cluster, but the `user1` has monitor and read-only capabilities. Configuring authorization using the operator consists of two steps.
 
 
 *Step 1: Modify the credentials secret with the roles*
@@ -138,7 +138,7 @@ spec:
 ----
 
 
-If you log in to the web console, you will quickly see the differences between each user: The `admin` has a button to create caches; `user1` does not, but can check the server statistics; `developer` cannot retrieve the statistics as he does not belong to a role with the MONITOR permission.
+If you log in to the web console, you will quickly see the differences between each user: The `admin` has a button to create caches; `user1` does not, but can check the server statistics; `developer` cannot retrieve the statistics as it doesn't belong to a role with the MONITOR permission.
 
 
 .Web console for the user admin
@@ -158,10 +158,10 @@ image::32-server-rhdg-console-developer.png[]
 
 Encryption allows encrypting connections between clients and Data Grid pods with Red Hat OpenShift service certificates or custom TLS certificates. Whether you opt for one or the other, remember that encryption is a great tool for safeguarding your cache infrastructure and keeping your cache information safe during transit.
 
-With the service certificates, the Data Grid Operator automatically generates TLS certificates that are signed by the Red Hat OpenShift service CA. Data Grid Operator then stores the certificates and keys in a k8s Secret so you can retrieve them and use them with remote clients.
+With the service certificates, the Data Grid Operator *automatically generates TLS certificates* that are signed by the Red Hat OpenShift service CA. Data Grid Operator then stores the certificates and keys in a k8s Secret so you can retrieve them and use them with remote clients.
 
 .Level up!
-TIP: Do you want to explore the usage of custom certificates? You can explore that configuration in the Advanced Exercises Section.
+TIP: Do you want to explore the usage of custom certificates? You can explore that configuration in the xref:61-exercises-level-1.adoc#custom-certificates[Exercises Section].
 
 
 [.console-input]

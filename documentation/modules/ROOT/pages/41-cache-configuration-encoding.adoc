@@ -3,11 +3,11 @@ include::_attributes.adoc[]
 
 Encoding is the format, identified by a media-type, that Data Grid uses to store entries (key/value pairs) in caches. You will have mainly two options: 
 
-* Protobuf: To optimize speed, ensure interoperability, perform queries on the data, or use the web console to check the cache contents.
-* Java Serialization: This option simplifies the configuration of the Java client and server with the disadvantage of losing the benefits of the previous option.
+* *Protobuf*: To optimize speed, ensure interoperability, perform queries on the data, or use the web console to check the cache contents.
+* *Java Serialization*: This option simplifies the configuration of the Java client and server with the disadvantage of losing the benefits of the previous option.
 
 
-Let's define the encoding format for both the key and the value of all the entries of the cache. By updating the cache definition with the following configuration:
+Let's define the encoding format for both the key and the value of all the entries of the cache by updating the cache definition with the following configuration:
 
 [.console-input]
 [source, yaml]
@@ -33,7 +33,7 @@ spec:
 ----
 
 
-Great! Now, you can access the web console again. Navigate to the cache that you just updated and you will see that there is a new tab called `Entries`. 
+Great! Now, access the web console again. Navigate to the cache and see that there is a new tab called `Entries`. 
 
 
 

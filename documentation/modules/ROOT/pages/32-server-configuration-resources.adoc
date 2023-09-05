@@ -2,9 +2,9 @@
 include::_attributes.adoc[]
 
 
-== High availability using several replicas
+== High availability
 
-In a production environment, you will always be interested in a high-availability configuration with several replicas, so that restarts of a container in Openshift don't impact the availability of the Data Grid cluster. Enabling it is as simple as modifying the number of replicas of your cluster. You can play with the YAML definition to change the number of replicas. 
+In a production environment, you will always be interested in a high-availability configuration with several replicas, so that restarts don't impact the availability of the Data Grid cluster. Enabling it is as simple as modifying the number of replicas of your cluster. You can play with the YAML definition to change the number of replicas. 
 
 First, configure three replicas of your cluster by modifying the following configuration:
 
@@ -16,7 +16,7 @@ kind: Infinispan
 metadata:
   name: cluster
 spec:
-# Here the previous YAML content #
+# Here is the previous YAML content #
   replicas: 3
 ----
 
@@ -57,7 +57,7 @@ Access the logs of all the Data Grid pods to check that they clustered automagic
 
 ****
 
-IMPORTANT: Please, before continuing to the next section, scale down the cluster to two replicas to save resources in Openshift. 
+IMPORTANT: Please, before continuing to the next section, *scale down the cluster to two replicas* to save resources in Openshift. 
 
 
 
@@ -88,8 +88,13 @@ spec:
 
 After confirming the new definition of the Infinispan CR, the operator will trigger an ordered restart of the cluster with the new configuration ensuring that there is no loss of service.
 
-NOTE: This configuration is strongly recommended to ensure that the server does not restart due to an OutOfMemory error or the Java Garbage Collector does not have enough resources to perform efficiently.
-  
+[NOTE]
+====
+This configuration is *strongly recommended*. Many factors can affect the performance of Data Grid due to its nature as an in-memory cache. Even so, there are at least two common errors related to these settings:
+
+* Although most of the time, the CPU consumption will remain low, the CPU is crucial for the quick execution of the JVM Garbage collector. Therefore, limiting the CPU without proper analysis severely impacts performance.
+* The Data Grid image automatically calculates the bounds of the JVM Heap based on the container limit and request. For that reason, it is recommended to assign the same value for both parameters to avoid recalculations. 
+====
 
 
 

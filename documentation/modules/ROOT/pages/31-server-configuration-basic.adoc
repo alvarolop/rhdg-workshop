@@ -41,14 +41,14 @@ spec:
 ----
 
 <1> Only one replica for the simplest deployment.
-<2> Disable both authentication and encryption. (They come enabled by default).
+<2> Disable both authentication and encryption.
 <3> Don't request a PVC, as it won't be needed by now.
-<4> `type: DataGrid` is the full version.
+<4> `type: DataGrid` is the full version of the deployment with all the features.
 
 After creating this CR in your namespace, you should see that the operator triggers the creation of several resources and after a few seconds, two pods will be running in your namespace:
 
 * `cluster-0` is the real pod of Data Grid. It contains the server itself.
-* `cluster-config-listener-...` is an extra pod deployed per Data Grid cluster that synchronizes the cache configurations with the pods of a cluster to keep consistency. This pod is optional but recommended. We will take advantage of it in the following section.
+* `cluster-config-listener-...` is an auxiliary pod deployed per Data Grid cluster that synchronizes the cache configurations with the pods of a cluster to keep consistency. This pod is optional but recommended. We will take advantage of it in the following chapter.
 
 
 
@@ -107,16 +107,16 @@ Once you access the web console, you will see a welcome message. You just need t
 .Data Grid web console welcome message
 image::31-server-rhdg-console-welcome.png[]
 
-This is the main dashboard. You can use it to see Cache and cluster metrics, Cache configuration, clustering information, server version, cache entries, etc.
+This is the main dashboard. Here, you can explore the configured caches, with their statistics, entries, configuration, etc. You can also check cluster configuration, like statistics and metrics, clustering, server version, `proto` files, counters, etc.
 
 .Data Grid web console dashboard
 image::31-server-rhdg-console-dashboard.png[]
 
 == Labels
 
-As you progress through this workshop, it's time to explore how to apply labels to services and pods, enabling streamlined filtering based on these labels. Additionally, these labels can be utilized to enrich Prometheus metrics. 
+As you progress through this workshop, it's time to explore how to apply labels to services and pods, enabling streamlined filtering based on these labels. Additionally, they can be utilized to enrich Prometheus metrics. 
 
-You can check the  labels of the cluster pods using the following command:
+You can check the labels of the cluster pods using the following command:
 
 [.console-input]
 [source, bash]
@@ -157,7 +157,7 @@ metadata:
     user: userX
 ----
 
-You will see after new labels to your Infinispan CR, those labels are not populated to the server pods:
+You will see that new labels where applied to your Infinispan CR, but not populated to the server pods:
 
 [.console-input]
 [source, bash]
@@ -166,10 +166,10 @@ oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq
 ----
 
 
-Therefore, we need to add some annotations to instruct the operator to propagate those labels to pods and/or services. There are two:
+Therefore, we need to add extra annotations to instruct the operator to propagate those labels to pods and/or services. There are two:
 
-* `infinispan.org/targetLabels` to add those labels to the services.
-* `infinispan.org/podTargetLabels` to add those labels to the pods.
+* `infinispan.org/targetLabels` to label the services.
+* `infinispan.org/podTargetLabels` to label the pods.
 
 As we need them in the following exercises, let's add `domain` and `user` labels to the pods, but only `domain` to the services. 
 
@@ -218,3 +218,4 @@ oc get pod cluster-0 -o jsonpath="{.metadata.labels}" | jq
 ----
 
 
+Great! You got it! Now, continue to the new section to explore all the resourcing configuration.

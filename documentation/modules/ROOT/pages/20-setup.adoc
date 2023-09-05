@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == Prerequisites
 
-During this tutorial, will be *required* to work with different tools for running the exercises included. Please install the following software:
+During this tutorial, you will be *required* to work with different tools for running the exercises included. Please install the following software:
 
 include::21-requirements.adoc[]
 
@@ -21,7 +21,7 @@ include::22-optional-requirements.adoc[]
 
 == Access - OCP Console
 
-In order to check the laboratory environment, please access the Openshift Console via browser using your credentials. The instructor will provide the URL.
+In order to access the laboratory environment, please access the Openshift Console via browser using your credentials. The instructor will provide the URL.
 
 .Openshift Console
 image::2-setup-ocp-console.png[]
@@ -45,14 +45,15 @@ If the login is successful, it should show an output similar to the following sc
 .OC CLI Login Output 
 image::2-setup-oc-login-output.png["OC CLI Login Output"]
 
-TIP: Please pay special attention to *oc CLI* because you will need to use this tool several times during this tutorial.
+TIP: Please, pay special attention to *oc CLI* because you will need to use this tool several times during this tutorial.
 
 
 == Do it yourself!
+
+IMPORTANT: You don't need to clone anything. Just create YAML files locally to adapt and create them. This section is just informative if you want to recreate the same deployment.
 
 This workshop consists of two Git repositories:
 
 * https://github.com/alvarolop/rhdg-workshop[RHDG Workshop Guides]: Main git repository containing the guides.
 * https://github.com/alvarolop/rhdg-workshop-infra[RHDG Workshop Infrastructure]: Git repository with the automation of the user's environment.
 
-IMPORTANT: You don't need to clone anything. just create YAML files locally to adapt them and recreate.

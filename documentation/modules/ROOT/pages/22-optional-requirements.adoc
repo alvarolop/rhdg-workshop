@@ -1,23 +1,19 @@
-The following CLI tools are *optional* for running the exercises in this tutorial.
-Although they are used in the tutorial, you could use others without any problem.
+The following CLI tools are *optional* for running the exercises in this tutorial. Although they are used in the tutorial, you could use others you are used to. *Do not worry about them, and install them when needed*. Please, read this information to decide if you need any of these tools:
 
-[WARNING]
-====
-* Only install Docker if you cannot use Podman.
-* `jq` and `yq` are optional but very welcome. They prettify the output of the REST responses and will help you to understand the contents of the workshop better. `jq` works for JSON, while `yq` works for YAML and JSON.
-* Don't install `curl` if you don't want to. In such case, you will need to adapt the commands to your own tool.
-====
-
+* `curl` or an equivalent tool to perform REST requests is needed for all the chapters of the second day. 
+* `jq` and `yq` are formatting tools that allow you to easily visualize the output of REST commands and oc CLI. I strongly recommend them if you will continuously use the `curl` command.
+* `helm` is only needed for Helm Exercise, where you install a Data Grid cluster with Helm instead of the operator.
+* Git and Podman are only needed if you want to replicate those deployments locally on your laptop.
 
 [cols="5*^,5*.",options="header,+attributes"]
 |===
 |**Tool**|**Fedora**|**macOS**|**Windows**|**Official Documentation**
 
-| Docker
-| https://docs.docker.com/desktop/install/linux-install/[Download]
-| https://docs.docker.com/desktop/install/mac-install/[Download]
-| https://docs.docker.com/desktop/install/windows-install/[Download]
-| https://docs.docker.com/[Git - Docs]
+| `curl`
+| https://everything.curl.dev/get/linux[Download]
+| https://everything.curl.dev/get/macos[Download]
+| https://everything.curl.dev/get/windows[Download]
+| https://everything.curl.dev/[curl -Docs]
 
 | `jq`
 | https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64[Download]
@@ -37,10 +33,22 @@ Although they are used in the tutorial, you could use others without any problem
 | https://helm.sh/docs/intro/install/#from-script[Download]
 | https://helm.sh/docs/[Helm -Docs]
 
-| `curl`
-| https://everything.curl.dev/get/linux[Download]
-| https://everything.curl.dev/get/macos[Download]
-| https://everything.curl.dev/get/windows[Download]
-| https://everything.curl.dev/[curl -Docs]
+| Git
+| https://git-scm.com/download/linux[Download]
+| https://git-scm.com/download/mac[Download]
+| https://git-scm.com/download/win[Download]
+| https://git-scm.com[Git - Docs]
+
+| Podman
+| https://podman.io/docs/installation#installing-on-linux[Download]
+| https://podman.io/docs/installation#macos[Download]
+| https://podman.io/docs/installation#windows[Download]
+| https://podman.io/[Podman - Docs]
+
+| Docker
+| https://docs.docker.com/desktop/install/linux-install/[Download]
+| https://docs.docker.com/desktop/install/mac-install/[Download]
+| https://docs.docker.com/desktop/install/windows-install/[Download]
+| https://docs.docker.com/[Git - Docs]
 
 |===

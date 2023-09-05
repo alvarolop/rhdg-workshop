@@ -1,7 +1,7 @@
 = Cache Memory
 include::_attributes.adoc[]
 
-The memory section lets you control the size of the data container by removing entries from memory when a memory or count limit is reached. 
+The memory section lets you control the size of the data container by removing entries from memory when a `memory` or `count` limit is reached. 
 
 IMPORTANT: As the `spec.updates.strategy` is set to recreate, the operator will remove the cache from the cluster and create it again, so all the entries that you had created will be lost. We can discuss, if you want, the possible reasons and mitigation behind this decision.
 
@@ -34,5 +34,5 @@ spec:
     strategy: recreate
 ----
 
-We are not going to test this limit, but I guess that you trust me :) If not, I recommend you try the `maxCount` limit with an extremely low threshold and add enough entries so that the cluster has to remove some of the existing ones.
+We are not going to test this limit, but I guess that you trust me :) If not, try the `maxCount` limit with an extremely low threshold and add enough entries so that the cluster has to remove some of the existing ones.
 

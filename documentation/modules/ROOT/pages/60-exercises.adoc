@@ -2,9 +2,10 @@
 include::_attributes.adoc[]
 
 
-As we wrap up this workshop series, it's your turn to explore exercises that catch your attention. I recommend starting with *Level I*. Here, you'll dive into monitoring capabilities, set up server pod affinity and anti-affinity within the cluster, and master the art of deploying other clusters in versions not supported by the operator resources.
-
-Moving on to *Level II*, you'll delve into the realm of Proto caches, learning how to interact with them using various data formats. Next up, you'll transition into LDAP-based authorization, where user management shifts from an OCP secret to an external LDAP system. And that's not all—you'll also master the art of configuring a datasource to persist cache entries in a SQL database.
+As we wrap up this workshop series, it's your turn to explore exercises that catch your attention. I recommend starting with *Level I*. Here, you'll dive into monitoring capabilities, set up server pod affinity and anti-affinity within the cluster, and master the art of deploying other clusters in versions not supported by the operator resources. You will also explore how to add custom certificates for the Web Console and the Hot Rod endpoint.
 
 
-As you reach *Level III*, the focus shifts towards controlling cache access through RBAC. This advanced skillset empowers you to grant cache access to specific users, based on defined roles. But that's not the end of the journey. You'll also harness the cross-site replication feature, as you deploy a second Data Grid cluster. Get ready to enable cache replication through cross-site replication, facilitating seamless data sharing between clusters.
+Moving on to *Level II*, you'll delve into the realm of Proto caches, learning how to interact with them using various data formats. Next up, you will deploy a Java client application to test the features that you just configured and see how the cluster performs. And that's not all, you'll transition into LDAP-based authorization, where user management shifts from an OCP secret to an external LDAP system. 
+
+
+As you reach *Level III*, the focus shifts towards more complex scenarios. First, you'll configure a datasource to persist cache entries in a SQL database. You will play with passivation to control if the cache keeps the entry in memory when it is persisted in the Database or not. Then, you will master the authorization configuration by controlling per-cache access through RBAC. This advanced configuration empowers you to grant cache access to specific users, based on custom roles. Finally, you'll harness the cross-site replication feature, as you deploy a second Data Grid cluster. Get ready to enable cache replication through cross-site replication, facilitating seamless data sharing between clusters.

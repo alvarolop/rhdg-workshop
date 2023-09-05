@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 This section compiles a set of REST endpoints useful to retrieve configuration from the server.
 
-TIP: Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for you for the Advanced Exercises Section.
+TIP: Some of the objects of this section might be new to you: Proto files, server tasks, indexes, etc. Do not worry, these commands will be useful for xref:60-exercises.adoc[Exercises Section].
 
 The following REST requests have been done using the `curl` command, adapt it to any method you consider more convenient.
 
@@ -31,35 +31,19 @@ If you want to show the resulting configuration, execute the following command:
 [.console-input]
 [source, bash]
 ----
-curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .
+curl -s -k -H "Accept: application/xml" -u admin:password $RHDG_URL/rest/v2/server/config
 ----
 
+.You tried a configuration that is preventing the REST API from being ready?
+TIP: Set the logging category `org.infinispan.SERVER` to DEBUG. It will print the merged configuration in the stdout logs so that you can check if you missed a config part.
 
 
-== Problems with Protobuf? 
 
-
-You can list all the `.proto` files and also all the Proto types using the REST API.
-
-
-.Curl command to retrieve the Proto files
-[.console-input]
-[source, bash]
-----
-curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .
-----
-
-.Curl command to retrieve the Proto Types (Primitives)
-[.console-input]
-[source, bash]
-----
-curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .
-----
 
 
 == Problems with cache definitions? 
 
-At some point, you will want to know if a certain cache name is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:
+At some point, you will want to know if a certain cache is configured in the cluster, or if the cache definition was correctly applied. You can check the status and configuration of the caches with the following commands:
 
 .Get all caches
 [.console-input]
@@ -86,20 +70,6 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01 | yq -
 ----
 
 
-
-
-== Problems with Server tasks? 
-
-You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:
-
-.List all the available Server Tasks
-[.console-input]
-[source, bash]
-----
-curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .
-----
-
-
 == Problems with the content of a cache?
 
 You can also fully interact with the cache, creating, modifying, listing and removing contents of every cache compatible with the REST interface (For example, you cannot create Java Serialized objects). Here we list some commands to get the status and debug issues. Go to the Exercises section for more tasks about the REST endpoint.
@@ -119,6 +89,43 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action
 # Change "cache-replicated-01" to your desired cache name
 curl -X POST -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01?action=clear
 ----
+
+
+
+== Problems with Protobuf? 
+
+
+You can list all the `.proto` files and also all the protobuf types using the REST API.
+
+
+.Curl command to retrieve the Proto files
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas | jq .
+----
+
+.Curl command to retrieve the Proto Types (Primitives)
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/schemas?action=types | jq .
+----
+
+
+== Problems with Server tasks? 
+
+You can also define Server Tasks in Java and load them on the server. Then, you will be able to execute them using REST or Hot Rod. You can list the Server tasks with the following REST call:
+
+.List all the available Server Tasks
+[.console-input]
+[source, bash]
+----
+curl -s -k -u admin:password $RHDG_URL/rest/v2/tasks | jq .
+----
+
+
+
 
 
 
@@ -152,9 +159,9 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/caches/cache-replicated-01/search
 
 == Converting Cache definitions using the REST API
 
-Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definitionin a different format and would like to convert it? That's easy! There are two use cases here. 
+Do you like a specific format to define caches (YAML, XML, JSON), but you found a tutorial with a cache definition in a different format and would like to convert it? That's easy! There are two use cases here. 
 
-If the cache is already in a cluster, you can retrieve it in any of the three formats just sending the proper header. Let's use the same cache as in previous exercises:
+If the cache is already in a cluster, you can retrieve it in any of the three formats just by sending the proper header. Let's use the same cache as in previous exercises:
 
 
 .Get Cache Definition in different formats

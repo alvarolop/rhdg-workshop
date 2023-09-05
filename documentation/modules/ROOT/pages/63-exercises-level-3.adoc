@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 
 
-== 3.1. Datasources with SQL Database.
+== 3.1. Datasources with SQL Database
 
 === Step 1: Deploy a PostgreSQL database
 
@@ -231,8 +231,8 @@ The documentation is split into several documents according to the topic:
 
 
 
-
-== 3.2. Authorization using RBAC.
+[#authorization-using-rbac]
+== 3.2. Authorization using RBAC
 
 
 == 3.3. Cross-site replication
