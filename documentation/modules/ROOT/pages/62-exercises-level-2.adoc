@@ -67,7 +67,7 @@ Congratulations! Now you are capable of interacting with caches from the REST AP
 ====
 Please, keep exploring all the capabilities of the REST API. Try to query one of those Caches, retrieve the statistics for every hit and miss, etc.
 
-Also, in general, developers will use Protostream to store complex classes defined with a `.proto` file. Please, check how to create and delete `.proto` files with the REST API. Then, interact with the cache in the same way.
+In general, developers will use Protostream to store complex classes defined with a `.proto` file. Please, check how to create and delete `.proto` files with the REST API. Then, interact with the cache in the same way.
 ====
 
 
@@ -83,7 +83,7 @@ This workshop is focused on the infrastructure side of Data Grid, but maybe you 
 * How to create caches automatically from the client application without a Cache CR.
 * How to upload proto schemas using the REST API.
 * How to perform puts, gets, queries, transactions, and listeners from an application perspective.
-* And much more!
+* And much more?
 
 
 In such a case, I strongly recommend you check the following GitHub repository where we have an example application and all the Openshift resources to deploy an RHDG client in a few steps: https://github.com/alvarolop/rhdg8-client#42-run-it-on-openshift
@@ -94,7 +94,128 @@ In such a case, I strongly recommend you check the following GitHub repository w
 == 2.3. LDAP-based Authorization 
 
 
+Okay! In the xref:33-server-configuration-security.adoc[Security Section], we explored how to configure authentication and authorization in Data Grid based on the most basic Security Realm, the `Properties realm`. While it is easy to configure and use, the main disadvantage is that modifying users and roles implies a restart of the server pods to update the Secret. 
+
+In this section, we will explore the LDAP realm. The LDAP realm connects to LDAP servers, such as OpenLDAP, Red Hat Directory Server, Apache Directory Server, or Microsoft Active Directory, to authenticate users and obtain membership information.
+
+In order to simplify the deployment and configuration, a shared OpenLDAP deployment is running in the `openldap` namespace in Openshift. It is already preconfigured with a set of users and clients. There is a tree with `users` belonging to `groups` for real employees that log in to the Data Grid cluster, and `clients` belonging to `roles` for client applications accessing Data Grid using Hot Rod. 
 
 
+.LDAP users
+// [.console-output]
+[source, bash]
+----
+dn: dc=acme,dc=org
+
+dn: ou=people,dc=acme,dc=org
+    dn: uid=user-01,ou=people,dc=acme,dc=org
+    dn: uid=user-02,ou=people,dc=acme,dc=org
+
+dn: ou=groups,dc=acme,dc=org
+    dn: cn=developer,ou=groups,dc=acme,dc=org
+        member: uid=user-01,ou=people,dc=acme,dc=org
+    dn: cn=admin,ou=groups,dc=acme,dc=org
+        member: uid=user-02,ou=people,dc=acme,dc=org
+----
 
 
+.LDAP clients
+// [.console-output]
+[source, bash]
+----
+dn: dc=acme,dc=org
+
+dn: ou=clients,dc=acme,dc=org
+    dn: uid=client-01,ou=clients,dc=acme,dc=org
+    dn: uid=client-02,ou=clients,dc=acme,dc=org
+    dn: uid=client-11,ou=clients,dc=acme,dc=org
+    dn: uid=client-12,ou=clients,dc=acme,dc=org
+
+dn: ou=roles,dc=acme,dc=org
+    dn: cn=normalusers,ou=roles,dc=acme,dc=org
+        member: uid=client-01,ou=clients,dc=acme,dc=org
+        member: uid=client-02,ou=clients,dc=acme,dc=org
+
+    dn: cn=admin,ou=roles,dc=acme,dc=org
+        member: uid=client-11,ou=clients,dc=acme,dc=org
+        member: uid=client-12,ou=clients,dc=acme,dc=org
+----
+
+
+The operator does not provide the capability to configure the LDAP realm using the operator. However, this is not an issue, as you can use the `.spec.configMapName` field of the Infinispan CR to inject or override almost any kind of Data Grid configuration during the server startup.
+
+TIP: Do not remove the cache templates configuration, just add this LDAP configuration in the same ConfigMap!
+
+*How can I do it?*
+
+Go to the https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_security_guide/index#ldap-security-realms_security-realms[LDAP realm] official documentation and check the proposed configuration in YAML. 
+
+What you will do is override the `default` Realm Configuration that the operator autogenerates. For that, you just need to add your configuration under the following structure:
+
+[source, yaml]
+----
+infinispan:
+  server:
+    security:
+      securityRealms:
+        - name: default
+          serverIdentities:
+            ssl:
+              keystore:
+                path: "/etc/security/conf/operator-security/keystore.pem"
+                keystorePassword: ""
+          ldapRealm:
+          # Here is the LDAP config
+    endpoints:
+    # Here is the Endpoints config explained below.
+  cache-container:
+  # Here is the previously configured Cache Templates
+----
+
+You will need to perform several modifications to make it work:
+
+* `url`: The OpenLDAP server is exposed with a service at `server.openldap.svc`.
+* `principal`: This is the admin user: `cn=admin,dc=acme,dc=org`.
+* `credential`: This is the admin password: `adminpassword`.
+* Inside the `identityMapping` section, you will need to make the match between groups and roles. Make the query to transform the membership of a group to a Data Grid role. To simplify the conversion, the OpenLDAP group `admin` will easily transform to the Data Grid `admin` role with the correct query.
+* You need to add the following configuration under the `identityMapping` section: 
++
+[source, yaml]
+----
+  ldapRealm:
+    identityMapping:
+      userPasswordMapper:
+        from: "userPassword"
+----
+
+If you are going to use directVerification, you need to change the auth mechanisms to use those that provide the password in clear text. Add the following to your Data Grid configuration in the appropriate section:
+
+[source, yaml]
+----
+infinispan:
+  server:
+    endpoints:
+      endpoint:
+        socketBinding: default
+        securityRealm: default
+        hotrodConnector:
+          authentication:
+            securityRealm: default
+            sasl:
+              serverName: infinispan
+              mechanisms:
+                - PLAIN
+              qop:
+                - auth
+        restConnector:
+          authentication:
+            securityRealm: default
+            mechanisms:
+              - DIGEST
+              - BASIC
+----
+
+
+*How to test it?*
+
+Just repeat any of the REST requests or access the Web Console and try to log in with the new users. The old ones should not be valid anymore.
