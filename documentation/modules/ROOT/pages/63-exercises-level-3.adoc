@@ -28,7 +28,7 @@ This cluster has the following configuration that you will need in Step 3:
 
 === Step 2: Download and add the JDBC driver for PostgreSQL
 
-For this exercise, I recommend you use the JDBC driver for PostgreSQL, which is easy to load and configure. You use JDBC connections with SQL cache stores and JDBC string-based caches stores. It can be downloaded from here: https://jdbc.postgresql.org/download/
+For this exercise, I recommend you use the JDBC driver for PostgreSQL, which is easy to load and configure. You can use JDBC connections with SQL cache stores and JDBC string-based cache stores. It can be downloaded from here: https://jdbc.postgresql.org/download/
 
 We have to instruct RH Data Grid to download the binary and add it to the `server/lib` folder. This can be done easily with the following configuration:
 
@@ -58,7 +58,7 @@ If everything went fine, you should see the following line in the logs:
 .*Now it's your turn!*
 [caption=""]
 ====
-If you want to keep investigating this topic, it is possible to add the drivers using a mounted PVC where you previously copied the driver. This way, you don't have any external dependencies during deploy time. You can try it using the following documentation: https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#copying-code_custom-code
+If you want to keep investigating this topic, it is possible to add the drivers using a mounted PVC where you previously copied the driver. This way, you don't have any external dependencies during start time. You can try it with the https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#copying-code_custom-code[official documentation]. 
 ====
 
 .Check that the JDBC driver was correctly added
@@ -129,7 +129,7 @@ curl -s -k -u admin:password $RHDG_URL/rest/v2/server/config | yq -P .
 
 === Step 4: Configure the caches to persist data
 
-When you add a managed datasource to Data Grid Server you can add the JNDI name to a JDBC-based cache store configuration. Now, configure the `persistence` section of your cache. JDBC String-Based cache stores, JdbcStringBasedStore, use JDBC drivers to load and store values in the underlying database.
+When you add a managed datasource to Data Grid Server you can add the JNDI name to a JDBC-based cache store configuration. Now, configure the `persistence` section of your cache. JDBC String-Based cache stores, `JdbcStringBasedStore`, use JDBC drivers to load and store values in the underlying database.
 
 
 [.console-input]
@@ -176,7 +176,7 @@ spec:
     strategy: recreate
 ----
 
-Now, add a new entry in the cache (For example, using the web console) and check that it is correctly added to the cache and to the data store:
+Now, add a new entry in the cache (For example, using the web console) and check that it is correctly added to the cache and DB:
 
 .Check 
 [TIP]
@@ -233,6 +233,115 @@ The documentation is split into several documents according to the topic:
 
 [#authorization-using-rbac]
 == 3.2. Authorization using RBAC
+
+
+Here we are! We deployed the Data Grid cluster and it's used by several applications. Each of them declares their own caches and stores their information there. At some point, an application wants to store information and prevent other teams from being able to access their data.
+
+In this situation, you have several simpler alternatives, like just deploying a new small cluster for the second application, but Data Grid also provides the possibility of *creating custom roles with reduced permissions* and then configuring *certain caches to only allow certain roles*.
+
+IMPORTANT: You can do all this using RBAC, but to make Exercises independent from each other, this documentation is based on the Properties Realm, not the LDAP Realm. Please revert the configuration that you set up in xref:62-exercises-level-2.adoc#_2_3_ldap_based_authorization[Exercise 2.3 LDAP-based Authorization].
+
+
+=== The scenario
+
+In the bookshop, we have two applications using Data Grid:
+
+* The *Products* team, which stores the information of the books, the stock information, prices, etc. in different caches.
+* The *Discounts* team, which has the discount codes and stores them in a cache.
+
+Each application has two caches and access to the caches should be limited as follows:
+
+* *discounts-01*: `Discounts` has read-write permission and `Products` has read.
+* *discounts-02*: `Discounts` has read-write permission and `Products` has none.
+* *products-01*: `Products` has read-write permission and `Discounts` has read.
+* *products-02*: `Products` has read-write permission and `Discounts` has none.
+
+
+=== Step 1: Create roles and assign them permissions
+
+First, we need to create new roles that will then determine who can access which cache. Roles are configured at the cluster level, so we will modify the Infinispan CR to create new roles and then assign permissions to them.
+
+
+.Infinispan CR
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  security:
+    authorization:
+      enabled: true
+      roles:
+        - name: products-write
+          permissions:
+          - ALL_WRITE
+          - MONITOR
+        - name: products-read
+          permissions:
+          - ALL_READ
+          - MONITOR
+        - name: discounts-write
+          permissions:
+          - ALL_WRITE
+          - MONITOR
+        - name: discounts-read
+          permissions:
+          - ALL_READ
+          - MONITOR
+----
+
+
+=== Step 2: Assign roles to users
+
+TIP: You already did this in xref:33-server-configuration-security#_security_ii_authorization_with_rbac[Security II: Authorization with RBAC]. The procedure is the same, but using custom roles instead of default roles like `admin`.
+
+
+
+=== Step 3: Assign roles to caches
+
+Now, create four new caches with authorization enabled. Please, find an example below:
+
+
+.Cache CR
+[.console-input]
+[source, yaml]
+----
+kind: Cache
+apiVersion: infinispan.org/v2alpha1
+metadata:
+  name: cluster-discounts-01
+spec:
+  clusterName: cluster
+  name: discounts-01
+  template: |
+    distributedCache:
+      encoding:
+        key:
+          mediaType: application/x-protostream
+        value:
+          mediaType: application/x-protostream
+      memory:
+        maxSize: 500MB
+        whenFull: REMOVE
+      mode: SYNC
+      owners: "1"
+      security:
+        authorization:
+          enabled: true
+          roles:
+          - admin
+          - observer
+          - discounts-write
+          - discounts-read
+          - products-read
+      statistics: "true"
+----
+
+TIP: Please, create the rest of the caches and make sure that you understand how to configure this kind of setting. Take into account that in the Cache CR you do not set permissions, you set roles.
+
 
 
 == 3.3. Cross-site replication
