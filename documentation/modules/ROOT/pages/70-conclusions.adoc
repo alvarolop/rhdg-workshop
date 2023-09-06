@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 
 
-Throughout this workshop, we have explored the vital role of caches in optimizing system performance. As we conclude this journey, let's recap the key takeaways that will empower you, to make informed caching decisions and effectively manage caches for your applications. Let's delve into the essential lessons learned and best practices for cache implementation and management:
+Throughout this workshop, we have explored the vital role of caches in *optimizing system performance*. As we conclude this journey, let's recap the key takeaways that will empower you, to make informed caching decisions and effectively manage caches for your applications. Let's delve into the essential lessons learned and best practices for cache implementation and management:
 
 
 * *Caches Enhance Performance*: Caches play a vital role in improving system performance by storing frequently accessed data closer to the application, reducing response times, and alleviating the load on the database.
@@ -18,4 +18,4 @@ Throughout this workshop, we have explored the vital role of caches in optimizin
 * *Continuous Learning*: Caching is a dynamic and evolving field. Staying informed about the latest developments and best practices ensures ongoing optimization and efficient cache management.
 
 
-In conclusion, caches are invaluable tools for application developers seeking to optimize application performance. By intelligently using caches and making strategic decisions, you can create a fast, responsive, and reliable system that delights users and contributes to the success of your application. Keep exploring and experimenting with caches to unlock their full potential in your unique environment. Happy caching
+In conclusion, caches are invaluable tools for application developers seeking to optimize application performance. By intelligently using caches and making strategic decisions, you can create a fast, responsive, and reliable system that delights users and contributes to the success of your application. Keep exploring and experimenting with caches to unlock their full potential in your unique environment. *Happy caching!!*

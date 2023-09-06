@@ -346,4 +346,160 @@ TIP: Please, create the rest of the caches and make sure that you understand how
 
 == 3.3. Cross-site replication
 
-Finally, we unravel the complexities of cross-site data replication within your cluster. This advanced feature ties together all the previous sections, showcasing how the cumulative knowledge gained contributes to a robust cache optimization strategy.
+Finally, we will set up cross-site data replication. Data Grid can *back up data between clusters running in geographically dispersed data centers and across different cloud providers*. Cross-site replication provides Data Grid with a global cluster view and:
+
+* Guarantees *service continuity* in the event of outages or disasters.
+* Presents client applications with a *single point of access* to data in globally distributed caches.
+
+TIP: For evaluation and demonstration purposes, we will configure the Data Grid servers to back up between pods in the same OpenShift cluster (In two different DG clusters). In your production environment, this will probably not be a realistic scenario and you will want to configure cross-site replication between two different OCP clusters.
+
+
+Cross-site replication is always established at two *levels*. First, we *configure the Data Grid clusters* that will have a global cluster view. This won't sync any data. Then, we configure the *backup cluster where we want to sync data for each cache*. This replication can be Active/Passive or Active/Active.
+
+
+
+=== Step 1: Configure the cluster for xsite 
+
+.Infinispan CR
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: cluster
+spec:
+  service:
+    sites:
+      local:
+        expose:
+          type: ClusterIP
+        maxRelayNodes: 1
+        name: SiteA
+      locations:
+        - name: SiteB
+          clusterName: cluster
+          namespace: user1-rhdg-2
+----
+
+.Did I Get It Right?
+****
+Access the logs of the `cluster-0` pod, you should see the following message: 
+
+[source, txt]
+----
+14:44:14,746 INFO  (jgroups-5,cluster-0-36753) [org.infinispan.XSITE] ISPN000439: Received new cross-site view: [SiteA]
+----
+****
+
+
+[IMPORTANT]
+====
+Be sure to adjust logging categories in your Infinispan CR to decrease log levels for JGroups TCP and RELAY2 protocols. This prevents a large number of log files from using container storage.
+
+[source, yaml]
+----
+spec:
+  logging:
+    categories:
+      org.jgroups.protocols.TCP: error
+      org.jgroups.protocols.relay.RELAY2: error
+----
+====
+
+
+Any issues? Check the https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html-single/data_grid_operator_guide/index#configuring-sites-in-clusters_cross-site[official documentation] of cross-site using the operator.
+
+
+
+=== Step 2: Create the second cluster
+
+
+Create a second cluster with a similar configuration as the original cluster but in the second namespace.
+
+Check the logs of the new pod `cluster-router-*` to make sure that there aren't any issues.
+
+TIP: Do not configure the `cache-replicated-XX` caches in the second cluster. You will see that those are not replicated. This is correct. Caches have to be configured independently for each cluster!
+
+.Did I Get It Right?
+****
+Access the logs of the `cluster-0` pod, you should see the following message: 
+
+[source, txt]
+----
+14:44:14,746 INFO  (jgroups-5,cluster-0-36753) [org.infinispan.XSITE] ISPN000439: Received new cross-site view: [SiteA, SiteB]
+----
+
+Now, both clusters are in the cluster view!
+****
+
+Any issues? Check the https://access.redhat.com/webassets/avalon/d/red-hat-data-grid/8.4/html-reports/logs.html[Cross-site replication log messages] documentation.
+
+
+
+=== Step 3: Configure a cache backup
+
+Okay, let's configure a cache backup for the `cluster-rest-proto` cache in both clusters. How to do that? Just modify the cache definition *in both clusters* to point to the other site name:
+
+
+.Cache CR: Backup configuration in cluster A
+[.console-input]
+[source, yaml]
+----
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: cluster-rest-proto
+spec:
+  template: |-
+    distributedCache:
+      backups: 
+        SiteB: 
+          backup: 
+            strategy: "SYNC"
+            twoPhaseCommit: "false"
+----
+
+TIP: Make sure that you are using the site name, not the `clusterName`.
+
+
+If your configuration is correct, you should see something like this in the web console:
+
+* On top, the web console shows that you are in `Site: SiteA`.
+* In the `rest-proto` cache, it says that the cache feature is `Backups`. 
+
+.View the xsite configuration from the OCP web console
+image::60-exercises-xsite-dashboard.png[]
+
+
+=== Step 4: Test it!
+
+Let's make sure that everything is configured correctly. Although you can use the web console, we will show how to check it using the REST API for documentation purposes:
+
+.Retrieve the RHDG URLs
+[.console-input]
+[source, bash]
+----
+RHDG_URL_A=$(oc get routes -n user1-rhdg --template='https://{{(index .items 0).spec.host }}')
+RHDG_URL_B=$(oc get routes -n user1-rhdg-2 --template='https://{{(index .items 0).spec.host }}')
+----
+
+Now, put an entry and retrieve it from the other cluster:
+
+.Perform request
+[.console-input]
+[source, bash]
+----
+# PUT the entry in SiteA
+curl -X POST -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL_A/rest/v2/caches/rest-proto/0 --data "Hello World"
+
+# GET the entry in SiteA
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL_A/rest/v2/caches/rest-proto/0
+
+# GET the entry in SiteB
+curl -X GET -k -u admin:password -H "Content-Type: text/plain" $RHDG_URL_B/rest/v2/caches/rest-proto/0
+----
+
+Great! It worked! We can see the values from both clusters! There's a lot of work to do with cross-site replication if you want to keep investigating this topic, but this is up to you.
+
+Now, continue to the Conclusions section, were we will wrap up all the contents covered in this course.
