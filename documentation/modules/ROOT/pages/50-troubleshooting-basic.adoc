@@ -112,10 +112,12 @@ Retrieving the server report takes several steps, as you have to use the Infinis
 [source, bash]
 ----
 # Generate the report
-oc exec cluster-0 -- bash -c 'echo "server report" | ./bin/cli.sh --trustall -c https://admin:password@$HOSTNAME:11222 -f -'
+oc exec cluster-0 -- bash -c 'echo "server report" | /opt/infinispan/bin/cli.sh --trustall -c https://admin:password@$HOSTNAME:11222 -f -'
 # Download the report
 oc exec cluster-0 -- bash -c 'files=( *tar.gz* ); cat "${files[0]}"' > $(date +"%Y-%m-%d-%H-%M")-cluster-0-report.tar.gz
 ----
+
+NOTE: If you didn't configure encryption, then you need to change the report generation command to : `oc exec cluster-0 -- bash -c 'echo "server report" | /opt/infinispan/bin/cli.sh -c http://admin:password@$HOSTNAME:11222 -f -'`
 
 The report comprises the execution of several useful commands that will help you understand the reasons why the server might be misconfigured:
 
