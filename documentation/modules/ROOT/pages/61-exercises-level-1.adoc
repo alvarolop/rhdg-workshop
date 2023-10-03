@@ -89,6 +89,36 @@ There are plenty of resources that you can read to get a better understanding of
 ====
 
 
+=== What should I monitor?
+
+Red Hat Data Grid provides many metrics related to the cluster, caches, and JVM. OpenShift also provides
+metrics about memory, CPU, etc. Although all metrics are relevant, the following list provides a subset of
+metrics that provide a good knowledge of the health of the cluster:
+
+==== *1. OpenShift*
+
+* Memory per pod: `sum(container_memory_working_set_bytes{pod=\~"$pod",namespace=~"$ns",container='',}) BY (pod, namespace)``.
+* CPU per pod: `pod:container_cpu_usage:sum{namespace="$ns",pod=~"$pod"}`.
+* Network TX: `rate({__name__=\~"container_network_receive_bytes_total",namespace=~"$ns",pod=~"$pod"}[5m])`.
+
+
+==== *2. DG Cluster and JVM*
+
+* Heap consumption per node: `base_memory_usedHeap_bytes`.
+* Threads on the JVM: `base_thread_count`.
+* Young and Old GC times: `base_gc_time_total_seconds`.
+
+==== *3. DG Caches*
+
+* Entries: `vendor_cache_manager_default_cache_<cache>_statistics_number_of_entries`.
+* Hits: `vendor_cache_manager_default_cache_<cache>_statistics_hits`.
+* Misses: `vendor_cache_manager_default_cache_<cache>_statistics_misses`.
+* Evictions: `vendor_cache_manager_default_cache_<cache>_statistics_evictions`.
+* Read times: `vendor_cache_manager_default_cache_<cache>_statistics_average_read_time`.
+* Write times: `vendor_cache_manager_default_cache_<cache>_statistics_average_write_time`.
+* Heap usage: `vendor_cache_manager_default_cache_<cache>_statistics_data_memory_used`.
+
+
 
 
 
