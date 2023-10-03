@@ -299,6 +299,74 @@ metadata:
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_what_should_i_monitor"><a class="anchor" href="#_what_should_i_monitor"></a>What should I monitor?</h3>
+<div class="paragraph">
+<p>Red Hat Data Grid provides many metrics related to the cluster, caches, and JVM. OpenShift also provides
+metrics about memory, CPU, etc. Although all metrics are relevant, the following list provides a subset of
+metrics that provide a good knowledge of the health of the cluster:</p>
+</div>
+<div class="sect3">
+<h4 id="_1_openshift"><a class="anchor" href="#_1_openshift"></a><strong>1. OpenShift</strong></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Memory per pod: <code>sum(container_memory_working_set_bytes{pod=~"$pod",namespace=~"$ns",container='',}) BY (pod, namespace)`</code>.</p>
+</li>
+<li>
+<p>CPU per pod: <code>pod:container_cpu_usage:sum{namespace="$ns",pod=~"$pod"}</code>.</p>
+</li>
+<li>
+<p>Network TX: <code>rate({<em>name</em>=~"container_network_receive_bytes_total",namespace=~"$ns",pod=~"$pod"}[5m])</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_dg_cluster_and_jvm"><a class="anchor" href="#_2_dg_cluster_and_jvm"></a><strong>2. DG Cluster and JVM</strong></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Heap consumption per node: <code>base_memory_usedHeap_bytes</code>.</p>
+</li>
+<li>
+<p>Threads on the JVM: <code>base_thread_count</code>.</p>
+</li>
+<li>
+<p>Young and Old GC times: <code>base_gc_time_total_seconds</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_dg_caches"><a class="anchor" href="#_3_dg_caches"></a><strong>3. DG Caches</strong></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Entries: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_number_of_entries</code>.</p>
+</li>
+<li>
+<p>Hits: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_hits</code>.</p>
+</li>
+<li>
+<p>Misses: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_misses</code>.</p>
+</li>
+<li>
+<p>Evictions: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_evictions</code>.</p>
+</li>
+<li>
+<p>Read times: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_average_read_time</code>.</p>
+</li>
+<li>
+<p>Write times: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_average_write_time</code>.</p>
+</li>
+<li>
+<p>Heap usage: <code>vendor_cache_manager_default_cache_&lt;cache&gt;_statistics_data_memory_used</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
