@@ -236,6 +236,35 @@ spec:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_jdk_flight_recorder_jfr"><a class="anchor" href="#_jdk_flight_recorder_jfr"></a>JDK Flight Recorder (JFR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JFR provides <strong>insights into various aspects of JVM performance</strong> to ease cluster inspection and debugging. Depending on your requirements, you can store and analyze your recordings using the integrated tools provided by Cryostat or export the recordings to an external monitoring application.</p>
+</div>
+<div class="paragraph">
+<p><strong>Cryostat</strong> is a container-native Java application based on JDK Flight Recorder (JFR) that you can use to monitor Java Virtual Machine (JVM) performance for containerized workloads that run on a Red Hat OpenShift cluster.</p>
+</div>
+<div class="paragraph">
+<p>The installation of the Cryostat and its dependency, the <code>cert-manager</code> operator is out of the scope of this workshop. Therefore, although it is part of the debugging options, we are not presenting detailed steps on how to generate a JFR using Cryostat.</p>
+</div>
+<div class="paragraph">
+<p>Check the <a href="https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_operator_guide/monitoring-services#deploying-cryostat_monitor">JFR section in the Data Grid documentation</a> and the <a href="https://access.redhat.com/documentation/en-us/red_hat_build_of_cryostat/2/html-single/getting_started_with_cryostat/index#installing-cryostat-on-openshift-using-an-operator_cryostat">Getting started section of Cryostat</a> to get more information on how to install and configure it.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you want a simple guide on how to deploy the infrastructure for JFR and a walkthrough on Cryostat, check the <a href="https://github.com/alvarolop/rhdg8-server#7-java-flight-recorder">following GH repository</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_useful_kcs"><a class="anchor" href="#_useful_kcs"></a>Useful KCS</h2>
 <div class="sectionbody">
 <div class="paragraph">
