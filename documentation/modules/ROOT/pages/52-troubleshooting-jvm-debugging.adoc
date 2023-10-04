@@ -87,10 +87,20 @@ oc exec cluster-0 -- lsof -P > lsof-cluster-0.txt
 
 
 
+== JDK Flight Recorder (JFR)
+
+JFR provides *insights into various aspects of JVM performance* to ease cluster inspection and debugging. Depending on your requirements, you can store and analyze your recordings using the integrated tools provided by Cryostat or export the recordings to an external monitoring application.
+
+*Cryostat* is a container-native Java application based on JDK Flight Recorder (JFR) that you can use to monitor Java Virtual Machine (JVM) performance for containerized workloads that run on a Red Hat OpenShift cluster.
+
+
+The installation of the Cryostat and its dependency, the `cert-manager` operator is out of the scope of this workshop. Therefore, although it is part of the debugging options, we are not presenting detailed steps on how to generate a JFR using Cryostat.
 
 
 
+Check the https://access.redhat.com/documentation/en-us/red_hat_data_grid/8.4/html/data_grid_operator_guide/monitoring-services#deploying-cryostat_monitor[JFR section in the Data Grid documentation] and the https://access.redhat.com/documentation/en-us/red_hat_build_of_cryostat/2/html-single/getting_started_with_cryostat/index#installing-cryostat-on-openshift-using-an-operator_cryostat[Getting started section of Cryostat] to get more information on how to install and configure it.
 
+TIP: If you want a simple guide on how to deploy the infrastructure for JFR and a walkthrough on Cryostat, check the https://github.com/alvarolop/rhdg8-server#7-java-flight-recorder[following GH repository].
 
 
 
